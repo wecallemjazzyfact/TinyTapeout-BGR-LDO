@@ -1,0 +1,17 @@
+# OS / Editor temporary files
+*.bak
+*~
+.DS_Store
+Thumbs.db
+
+# Simulation outputs
+*.raw
+*.log
+*.tmp
+*.bin
+*.out
+
+# Large clone directories / Tools / PDKs
+open-source/
+repos/
+tt-analog/

@@ -1,0 +1,12 @@
+puts "LCL_XSCHEMRC_LOADED"
+
+# Force PDK and PDKPATH environment variables to sky130A for this project
+set env(PDK) sky130A
+set env(PDKPATH) /foss/pdks/sky130A
+
+# Load the main sky130A PDK configuration
+source /foss/pdks/sky130A/libs.tech/xschem/xschemrc
+
+# Append the sky130_fd_pr device library folder directly to the library path list
+# so it permanently appears in xschem's 'Insert' file selection dialog
+append XSCHEM_LIBRARY_PATH :/foss/pdks/sky130A/libs.tech/xschem/sky130_fd_pr
