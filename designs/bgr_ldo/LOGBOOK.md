@@ -48,3 +48,11 @@
   - $V(VBE1) = 777.16\,\text{mV}$, $V(net1) = 777.15\,\text{mV}$로 양 노드 전압차가 **단 $7.64\,\text{µV}$** 수준으로 정밀 잠금(Lock) 완료.
   - 바이어스 전압 $V(V\_ctrl) = 0.764\,\text{V}$ 수렴에 의거해 자율 공급 전류 **$7.639\,\text{µA}$** 획득.
   - 내부 전류 수식 검증 결과 $I_{CTAT} \approx 4.32\,\text{µA}$, $I_{PTAT} \approx 3.32\,\text{µA}$로 합산 전류가 공급 전류와 완벽 정합하여 active BGR 밸런스 검증에 완전히 통과함.
+
+## [2026-07-12] 자율 바이어스 BGR 코어 미세 튜닝 및 최적 저항값 확정
+- **상황:** $110\,\text{k}\Omega \sim 130\,\text{k}\Omega$ 범위에서 $3\,\text{k}\Omega$ 간격으로 미세 스윕(Fine Sweep)을 돌려 제로 온도 계수(Zero-TC) 포인트 실측.
+- **결정:**
+  - **`dc5` ($R_6 = R_7 = 122\,\text{k}\Omega$)**에서 전체 온도 영역($-40\sim125^\circ\text{C}$)에 걸쳐 $I_{total} \approx 9.68\,\text{µA}$로 완벽한 수평(Zero-TC) 곡선 형성 확인.
+  - 실제 Active Current Mirror 장착 시 동작점 이동 및 레이아웃 상의 단위 저항(Unit Resistor) 매칭 제약을 고려하여, 더 이상의 이상 소자 미세 스윕은 생략하고 **$122\,\text{k}\Omega$ (Typical Target: $120\,\text{k}\Omega$)**을 Baseline으로 확정.
+- **결과:** 이상 소자 기반 BGR Core 설계 목표 달성. 실물 트랜지스터(Cascode PMOS Mirror) 적용 단계로 진입.
+

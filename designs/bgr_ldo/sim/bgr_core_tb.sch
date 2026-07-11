@@ -64,30 +64,29 @@ spiceprefix=X
 }
 C {gnd.sym} -200 100 0 0 {name=l6 lab=0}
 C {vsource.sym} -460 -40 0 0 {name=VSource value=3.3 savecurrent=false}
-C {code_shown.sym} 370 -640 0 0 {name=SIM_CONTROL only_toplevel=false 
-value=".nodeset v(vbe1)=0.75 v(net1)=0.75 v(v_ctrl)=1.0
+C {code_shown.sym} 420 -910 0 0 {name=SIM_CONTROL only_toplevel=false 
+value=".nodeset v(vbe1)=0.88 v(net1)=0.88 v(v_ctrl)=1.5
 .param R7_val=180k
 .save all
+.save @r1[i]
+.save @r6[i]
+.dc temp -40 125 5
 
 .control
-  * R7 스윕 루프는 주석 처리
-  * let r_start = 120k
-  * let r_stop = 250k
-  * let r_step = 20k
-  * let r_curr = r_start
-  * while r_curr <= r_stop
-  *   alterparam R7_val = $&r_curr
-  *   reset
-  *   run
-  *   let r_curr = r_curr + r_step
-  * end
+  let r_start = 110k
+  let r_stop = 130k
+  let r_step = 3k
+  let r_curr = r_start
 
-  * 27도 단일 동작점 해석 실행
-  op
-  
-  * 결과 보고용 데이터 출력 (에러 방지용 수식 적용)
-  print v(vbe1) v(net1) (v(vbe1)-v(net1)) v(v_ctrl) v(vbe8)
-  print (v(vbe1)/180k) ((v(net1)-v(vbe8))/17.7k) ((v(vbe1)/180k) + ((v(net1)-v(vbe8))/17.7k))
+  while r_curr <= r_stop
+    alterparam R7_val = $&r_curr
+    reset
+    nodeset v(vbe1)=0.88 v(net1)=0.88 v(v_ctrl)=1.5
+    run
+    let r_curr = r_curr + r_step
+  end
+
+  plot dc1.@r1[i]+dc1.@r6[i] dc2.@r1[i]+dc2.@r6[i] dc3.@r1[i]+dc3.@r6[i] dc4.@r1[i]+dc4.@r6[i] dc5.@r1[i]+dc5.@r6[i] dc6.@r1[i]+dc6.@r6[i] dc7.@r1[i]+dc7.@r6[i]
 .endc"}
 C {code.sym} 460 -140 0 0 {
 name=TT_MODELS
