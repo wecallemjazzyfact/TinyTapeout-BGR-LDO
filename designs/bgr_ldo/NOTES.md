@@ -199,6 +199,17 @@ BGR 설계의 핵심 요소인 BJT 코어 단일 소자의 $V_{BE}$ 전압 특�
   * 합산 전류: $I_{total} = I(R_1) + I(R_6) \approx \mathbf{7.64\,\text{µA}}$
 * **결론:** 합산 전류와 피드백이 공급하는 전류가 완벽히 $7.64\,\text{µA}$로 일치하며, 0V 축퇴 상태를 탈출하여 정상적인 Banba current-mode 활성 영역 동작점에 완벽히 수렴하였습니다.
 
+### 6.3. 자율 바이어스 루프 미세 튜닝 (Fine Sweep) 결과
+* **스윕 조건:** $110\,\text{k}\Omega \sim 130\,\text{k}\Omega$ 범위에서 $3\,\text{k}\Omega$ 간격으로 미세 스윕 수행.
+* **측정 결과:**
+  * **`dc5` ($R_6 = R_7 = 122\,\text{k}\Omega$):** 전체 온도 영역($-40\sim125^\circ\text{C}$)에 걸쳐 합산 전류 $I_{total} \approx 9.68\,\text{µA}$ 선상에서 가장 완벽한 수평(Zero-TC) 곡선 형성.
+  * `dc1`~`dc4` ($110\text{k}\sim119\text{k}$): 약한 CTAT 성분(우하향 곡선) 잔존.
+  * `dc6`~`dc7` ($125\text{k}\sim128\text{k}$): 약한 PTAT 성분(우상향 곡선) 발현.
+* **최종 설계 타겟 확정:**
+  * 이상적인 자율 바이어스 루프 상태에서의 최적의 $R_6, R_7$ 값은 **$122\,\text{k}\Omega$** 입니다.
+  * **설계 실무 반영:** 실제 Active Cascode PMOS Mirror 소자(`pfet_01v8_lvt`)의 채널 길이 변조 효과 및 레이아웃 상의 **단위 저항(Unit Resistor, e.g. $20\,\text{k}\Omega$ 단위)** 정수배 정합 제약을 고려하여, 이상 소자 상태의 미세 스윕은 본 단계에서 성공적으로 마무리하고 해당 값을 Typical Baseline으로 확정합니다.
+
+
 
 
 
