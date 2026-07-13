@@ -15,3 +15,7 @@ Thumbs.db
 open-source/
 repos/
 tt-analog/
+
+# Temporary simulation files
+designs/bgr_ldo/sim/run_*.spice
+

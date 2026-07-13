@@ -5,90 +5,201 @@ V {}
 S {}
 F {}
 E {}
-P 4 1 -260 180 {}
-P 4 1 -260 180 {}
-N -200 40 -200 100 {lab=0}
-N -460 -10 -460 90 {lab=0}
-N -200 40 -200 100 {lab=0}
-N -380 -660 -200 -660 {lab=VAPWR}
-N -460 -410 -460 -270 {lab=VAPWR}
-N -460 -10 -460 90 {lab=0}
-N -200 -90 -200 -20 {lab=VBE1}
-N -60 10 -20 10 {lab=0}
-N -60 10 -60 70 {lab=0}
-N -60 70 20 70 {lab=0}
-N -60 10 -20 10 {lab=0}
-N -60 10 -60 70 {lab=0}
-N -60 70 20 70 {lab=0}
-N 20 -90 20 -20 {lab=VBE8}
-N 20 40 20 70 {lab=0}
-N -200 70 20 70 {lab=0}
-N -200 -660 20 -660 {lab=VAPWR}
-N 20 -660 20 -600 {lab=VAPWR}
-N -460 -270 -460 -70 {lab=VAPWR}
-N -460 -660 -380 -660 {lab=VAPWR}
-N -330 -20 -330 70 {lab=0}
-N -460 70 -200 70 {lab=0}
-N -240 10 -240 70 {lab=0}
-N -330 -110 -330 -80 {lab=VBE1}
-N -330 -110 -200 -110 {lab=VBE1}
-N 110 -50 110 -0 {lab=0}
-N 110 -0 150 -0 {lab=0}
-N 150 -20 150 -0 {lab=0}
-N 150 -20 150 -0 {lab=0}
-N 150 0 150 70 {lab=0}
-N 20 70 150 70 {lab=0}
-N 150 -120 150 -80 {lab=#net1}
-N -370 -50 -370 -0 {lab=0}
-N -370 -0 -330 0 {lab=0}
-N 20 -190 150 -190 {lab=#net1}
-N 150 -190 150 -120 {lab=#net1}
-N -460 -660 -460 -410 {lab=VAPWR}
-N -200 -210 -200 -90 {lab=VBE1}
-N 20 -190 20 -150 {lab=#net1}
-N -200 -260 -200 -210 {lab=VBE1}
-N 20 -260 20 -190 {lab=#net1}
-N -200 -660 -200 -600 {lab=VAPWR}
-N 20 -410 20 -260 {lab=#net1}
-N -200 -540 -200 -260 {lab=VBE1}
-N 20 -540 20 -410 {lab=#net1}
-N -200 -360 -140 -360 {lab=VBE1}
-N -140 -320 -140 -190 {lab=#net1}
-N -140 -190 20 -190 {lab=#net1}
-N -100 -420 -100 -370 {lab=V_ctrl}
-N -100 -310 -100 70 {lab=0}
-C {pnp_05v5.sym} -220 10 0 0 {name=QA
+P 4 1 -410 180 {}
+P 4 1 -410 180 {}
+N -350 40 -350 100 {lab=0}
+N -1460 -10 -1460 90 {lab=0}
+N -350 40 -350 100 {lab=0}
+N -530 -800 -350 -800 {lab=VAPWR}
+N -1460 -410 -1460 -270 {lab=VAPWR}
+N -1460 -10 -1460 90 {lab=0}
+N -210 10 -170 10 {lab=0}
+N -210 10 -210 70 {lab=0}
+N -210 70 -130 70 {lab=0}
+N -210 10 -170 10 {lab=0}
+N -210 10 -210 70 {lab=0}
+N -210 70 -130 70 {lab=0}
+N -130 -90 -130 -20 {lab=VBE8}
+N -130 40 -130 70 {lab=0}
+N -350 70 -130 70 {lab=0}
+N -350 -800 -130 -800 {lab=VAPWR}
+N -130 -800 -130 -740 {lab=VAPWR}
+N -1460 -270 -1460 -70 {lab=VAPWR}
+N -610 -800 -530 -800 {lab=VAPWR}
+N -480 -20 -480 70 {lab=0}
+N -610 70 -350 70 {lab=0}
+N -390 10 -390 70 {lab=0}
+N -480 -110 -480 -80 {lab=VBE1}
+N -480 -110 -350 -110 {lab=VBE1}
+N -40 -50 -40 0 {lab=0}
+N -40 0 0 0 {lab=0}
+N 0 -20 0 0 {lab=0}
+N 0 -20 0 0 {lab=0}
+N 0 0 0 70 {lab=0}
+N -130 70 0 70 {lab=0}
+N 0 -120 0 -80 {lab=#net1}
+N -520 -50 -520 0 {lab=0}
+N -520 0 -480 0 {lab=0}
+N -130 -190 0 -190 {lab=#net1}
+N 0 -190 0 -120 {lab=#net1}
+N -1460 -660 -1460 -410 {lab=VAPWR}
+N -130 -190 -130 -150 {lab=#net1}
+N -350 -800 -350 -740 {lab=VAPWR}
+N -350 -110 -350 -20 {lab=VBE1}
+N -380 -710 -350 -710 {lab=VAPWR}
+N -390 -710 -380 -710 {lab=VAPWR}
+N -390 -760 -390 -710 {lab=VAPWR}
+N -390 -760 -350 -760 {lab=VAPWR}
+N -130 -710 -90 -710 {lab=VAPWR}
+N -90 -760 -90 -710 {lab=VAPWR}
+N -130 -760 -90 -760 {lab=VAPWR}
+N -310 -710 -170 -710 {lab=V_gate_top}
+N -350 -680 -350 -640 {lab=#net2}
+N -240 -710 -240 -660 {lab=V_gate_top}
+N -130 -680 -130 -640 {lab=#net3}
+N -350 -350 -350 -300 {lab=V_mid1}
+N -130 -350 -130 -300 {lab=V_gate_top}
+N -310 -270 -170 -270 {lab=V_mid1}
+N -350 -330 -240 -330 {lab=V_mid1}
+N -240 -330 -240 -270 {lab=V_mid1}
+N 10 -710 50 -710 {lab=V_gate_top}
+N 10 -710 10 -660 {lab=V_gate_top}
+N -130 -240 -130 -190 {lab=#net1}
+N -350 -240 -350 -110 {lab=VBE1}
+N -1460 -800 -1460 -660 {lab=VAPWR}
+N -350 -640 -350 -600 {lab=#net2}
+N -350 -540 -350 -350 {lab=V_mid1}
+N -130 -540 -130 -350 {lab=V_gate_top}
+N -130 -640 -130 -600 {lab=#net3}
+N -390 -570 -350 -570 {lab=VAPWR}
+N -390 -710 -390 -570 {lab=VAPWR}
+N -130 -570 -90 -570 {lab=VAPWR}
+N -90 -710 -90 -570 {lab=VAPWR}
+N -130 -800 90 -800 {lab=VAPWR}
+N 90 -800 90 -740 {lab=VAPWR}
+N 90 -710 130 -710 {lab=VAPWR}
+N 130 -760 130 -710 {lab=VAPWR}
+N 90 -760 130 -760 {lab=VAPWR}
+N 90 -680 90 -600 {lab=#net4}
+N 90 -570 130 -570 {lab=VAPWR}
+N -310 -570 -170 -570 {lab=V_bias}
+N 10 -570 50 -570 {lab=V_bias}
+N -520 -490 -490 -490 {lab=V_bias}
+N -490 -490 -490 -450 {lab=V_bias}
+N -560 -450 -490 -450 {lab=V_bias}
+N -560 -460 -560 -430 {lab=V_bias}
+N 130 -710 130 -570 {lab=VAPWR}
+N 90 -540 90 -510 {lab=VREF_LOW}
+N 90 -510 90 -330 {lab=VREF_LOW}
+N 90 -270 90 70 {lab=0}
+N 0 70 90 70 {lab=0}
+N -420 -270 -350 -270 {lab=0}
+N -130 -270 -70 -270 {lab=0}
+N -70 -270 -70 -230 {lab=0}
+N -590 -490 -560 -490 {lab=VAPWR}
+N -590 -540 -590 -490 {lab=VAPWR}
+N -590 -540 -560 -540 {lab=VAPWR}
+N -240 -660 10 -660 {lab=V_gate_top}
+N -240 -660 -240 -510 {lab=V_gate_top}
+N -240 -510 -130 -510 {lab=V_gate_top}
+N -280 -570 -280 -490 {lab=V_bias}
+N -220 -490 10 -490 {lab=V_bias}
+N 10 -570 10 -490 {lab=V_bias}
+N -420 -490 -220 -490 {lab=V_bias}
+N -1050 -800 -610 -800 {lab=VAPWR}
+N -1050 70 -610 70 {lab=0}
+N -560 -800 -560 -520 {lab=VAPWR}
+N -820 -660 -780 -660 {lab=VAPWR}
+N -820 -720 -820 -660 {lab=VAPWR}
+N -820 -720 -780 -720 {lab=VAPWR}
+N -780 -630 -780 -560 {lab=V_bias_n}
+N -560 -350 -560 -300 {lab=V_bias}
+N -560 -240 -560 -190 {lab=0}
+N -780 -240 -780 -110 {lab=0}
+N -850 -270 -780 -270 {lab=0}
+N -560 -270 -500 -270 {lab=0}
+N -740 -270 -600 -270 {lab=V_bias_n}
+N -780 -110 -780 70 {lab=0}
+N -850 -270 -850 -210 {lab=0}
+N -850 -210 -780 -210 {lab=0}
+N -560 -190 -560 70 {lab=0}
+N -500 -270 -500 -210 {lab=0}
+N -560 -210 -500 -210 {lab=0}
+N -500 -270 -420 -270 {lab=0}
+N -780 -330 -670 -330 {lab=V_bias_n}
+N -670 -330 -670 -270 {lab=V_bias_n}
+N -740 -660 -240 -660 {lab=V_gate_top}
+N -780 -800 -780 -690 {lab=VAPWR}
+N -780 -560 -780 -300 {lab=V_bias_n}
+N -560 -430 -560 -350 {lab=V_bias}
+N -490 -490 -420 -490 {lab=V_bias}
+N -1290 70 -1050 70 {lab=0}
+N -1290 -800 -1050 -800 {lab=VAPWR}
+N -1010 -530 -780 -530 {lab=V_bias_n}
+N -1280 -500 -1280 -410 {lab=sense_out}
+N -670 -660 -670 -480 {lab=V_gate_top}
+N -930 -480 -700 -480 {lab=V_gate_top}
+N -1090 -480 -1090 -440 {lab=V_gate_top}
+N -1210 -410 -1130 -410 {lab=sense_out}
+N -930 -410 -850 -410 {lab=0}
+N -1090 -380 -1090 -330 {lab=V_su_mid}
+N -1090 -320 -1020 -320 {lab=V_su_mid}
+N -1020 -320 -1020 -270 {lab=V_su_mid}
+N -1050 -270 -1020 -270 {lab=V_su_mid}
+N -1160 -270 -1090 -270 {lab=0}
+N -1160 -270 -1160 -210 {lab=0}
+N -1160 -210 -1090 -210 {lab=0}
+N -850 -410 -850 -270 {lab=0}
+N -700 -480 -670 -480 {lab=V_gate_top}
+N -1090 -330 -1090 -300 {lab=V_su_mid}
+N -1090 -240 -1090 70 {lab=0}
+N -1090 -480 -930 -480 {lab=V_gate_top}
+N -1090 -410 -930 -410 {lab=0}
+N -1170 -530 -1010 -530 {lab=V_bias_n}
+N -1460 -800 -1290 -800 {lab=VAPWR}
+N -1460 70 -1290 70 {lab=0}
+N -1240 -270 -1200 -270 {lab=VBE1}
+N -1280 -240 -1280 70 {lab=0}
+N -1310 -270 -1280 -270 {lab=0}
+N -1330 -270 -1330 -210 {lab=0}
+N -1310 -210 -1280 -210 {lab=0}
+N -1280 -410 -1280 -300 {lab=sense_out}
+N -1240 -530 -1170 -530 {lab=V_bias_n}
+N -1280 -410 -1210 -410 {lab=sense_out}
+N -1330 -270 -1310 -270 {lab=0}
+N -1330 -210 -1310 -210 {lab=0}
+N -1330 -530 -1280 -530 {lab=VAPWR}
+N -1330 -600 -1330 -530 {lab=VAPWR}
+N -1330 -600 -1280 -600 {lab=VAPWR}
+N -1330 -670 -1330 -600 {lab=VAPWR}
+N -1330 -670 -1280 -670 {lab=VAPWR}
+N -1330 -740 -1330 -670 {lab=VAPWR}
+N -1280 -640 -1280 -630 {lab=#net5}
+N -1280 -570 -1280 -560 {lab=#net6}
+N -1330 -800 -1330 -740 {lab=VAPWR}
+N -1280 -800 -1280 -700 {lab=VAPWR}
+N -1240 -670 -1180 -670 {lab=V_bias_n}
+N -1180 -670 -1180 -530 {lab=V_bias_n}
+N -1240 -600 -1180 -600 {lab=V_bias_n}
+C {pnp_05v5.sym} -370 10 0 0 {name=XQA
 model=pnp_05v5_W0p68L0p68
 m=1
 spiceprefix=X
 }
-C {gnd.sym} -200 100 0 0 {name=l6 lab=0}
-C {vsource.sym} -460 -40 0 0 {name=VSource value=3.3 savecurrent=false}
-C {code_shown.sym} 420 -910 0 0 {name=SIM_CONTROL only_toplevel=false 
-value=".nodeset v(vbe1)=0.88 v(net1)=0.88 v(v_ctrl)=1.5
-.param R7_val=180k
-.save all
-.save @r1[i]
-.save @r6[i]
+C {gnd.sym} -350 100 0 0 {name=l6 lab=0}
+C {vsource.sym} -1460 -40 0 0 {name=VSource value=3.3 savecurrent=false}
+C {code_shown.sym} 380 -660 0 0 {name=SIM_CONTROL only_toplevel=false 
+value=".save all @m.xxm_su_n1.msky130_fd_pr__nfet_g5v0d10v5[id]
 .dc temp -40 125 5
 
 .control
-  let r_start = 110k
-  let r_stop = 130k
-  let r_step = 3k
-  let r_curr = r_start
-
-  while r_curr <= r_stop
-    alterparam R7_val = $&r_curr
-    reset
-    nodeset v(vbe1)=0.88 v(net1)=0.88 v(v_ctrl)=1.5
-    run
-    let r_curr = r_curr + r_step
-  end
-
-  plot dc1.@r1[i]+dc1.@r6[i] dc2.@r1[i]+dc2.@r6[i] dc3.@r1[i]+dc3.@r6[i] dc4.@r1[i]+dc4.@r6[i] dc5.@r1[i]+dc5.@r6[i] dc6.@r1[i]+dc6.@r6[i] dc7.@r1[i]+dc7.@r6[i]
+  tran 10n 10u uic
+  echo ===== TEST D: power-up =====
+  plot v(vapwr) v(vref_low)
+  plot v(sense_out) v(v_bias_n) v(v_gate_top)
+  write startup_tran.raw
 .endc"}
-C {code.sym} 460 -140 0 0 {
+C {code.sym} 330 -1000 0 0 {
 name=TT_MODELS
 only_toplevel=true
 format="tcleval( @value )"
@@ -98,35 +209,308 @@ value="
 "
 spice_ignore=false
       }
-C {gnd.sym} -460 90 0 0 {name=l8 lab=0}
-C {lab_pin.sym} -250 -660 0 0 {name=p7 sig_type=std_logic lab=VAPWR
+C {gnd.sym} -1460 90 0 0 {name=l8 lab=0}
+C {lab_pin.sym} -400 -800 0 0 {name=p7 sig_type=std_logic lab=VAPWR
 }
-C {lab_pin.sym} -200 -70 0 0 {name=p8 sig_type=std_logic lab=VBE1
+C {lab_pin.sym} -350 -70 0 0 {name=p8 sig_type=std_logic lab=VBE1
 }
-C {pnp_05v5.sym} 0 10 0 0 {name=QB
+C {pnp_05v5.sym} -150 10 0 0 {name=XQB
 model=pnp_05v5_W0p68L0p68
 m=8
 spiceprefix=X
 }
-C {lab_pin.sym} 20 -60 0 0 {name=p1 sig_type=std_logic lab=VBE8
+C {lab_pin.sym} -130 -60 0 0 {name=p1 sig_type=std_logic lab=VBE8
 }
-C {res.sym} 20 -120 0 0 {name=R1
+C {res.sym} -130 -120 0 0 {name=R1
 value=17.7k
 footprint=1206
 device=resistor
 m=1}
-C {res.sym} 150 -50 0 0 {name=R7
-value=\{R7_val\}
+C {res.sym} 0 -50 0 0 {name=R7
+value=120k
 footprint=1206
 device=resistor
 m=1}
-C {res.sym} -330 -50 0 0 {name=R6
-value=\{R7_val\}
+C {res.sym} -480 -50 0 0 {name=R6
+value=120k
 footprint=1206
 device=resistor
 m=1}
-C {vcvs.sym} -100 -340 0 0 {name=E1 value=1e5}
-C {bsource.sym} -200 -570 0 0 {name=B1 VAR=I FUNC="10u * V(V_ctrl) * u(V(V_ctrl))" m=1}
-C {bsource.sym} 20 -570 0 0 {name=B2 VAR=I FUNC="10u * V(V_ctrl) * u(V(V_ctrl))" m=1}
-C {lab_pin.sym} -100 -410 0 0 {name=p2 sig_type=std_logic lab=V_ctrl
+C {pfet_g5v0d10v5.sym} -330 -710 0 1 {name=XM_top1
+W=10
+L=2
+nf=1
+mult=4
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {pfet_g5v0d10v5.sym} -150 -710 0 0 {name=XM_top2
+W=10
+L=2
+nf=1
+mult=4
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {pfet_g5v0d10v5.sym} 70 -710 0 0 {name=XM_top5
+W=10
+L=2
+nf=1
+mult=4
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {nfet_g5v0d10v5.sym} -330 -270 0 1 {name=XM3
+W=10
+L=2
+nf=1
+mult=2
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=nfet_g5v0d10v5
+spiceprefix=X
+}
+C {nfet_g5v0d10v5.sym} -150 -270 0 0 {name=XM4
+W=10
+L=2
+nf=1
+mult=2
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=nfet_g5v0d10v5
+spiceprefix=X
+}
+C {pfet_g5v0d10v5.sym} -330 -570 0 1 {name=XM_bot1
+W=10
+L=2
+nf=1
+mult=4
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {pfet_g5v0d10v5.sym} -150 -570 0 0 {name=XM_bot2
+W=10
+L=2
+nf=1
+mult=4
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {pfet_g5v0d10v5.sym} 70 -570 0 0 {name=XM_bot5
+W=10
+L=2
+nf=1
+mult=4
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {pfet_g5v0d10v5.sym} -540 -490 0 1 {name=XM_bias
+W=10
+L=4
+nf=1
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {res.sym} 90 -300 0 0 {name=R2
+value=124k
+footprint=1206
+device=resistor
+m=1}
+C {lab_pin.sym} -70 -250 0 1 {name=p4 sig_type=std_logic lab=0
+}
+C {lab_pin.sym} 90 -390 0 1 {name=p5 sig_type=std_logic lab=VREF_LOW
+}
+C {lab_pin.sym} -240 -680 0 0 {name=p6 sig_type=std_logic lab=V_gate_top
+}
+C {lab_pin.sym} -280 -510 0 0 {name=p9 sig_type=std_logic lab=V_bias
+}
+C {lab_pin.sym} -350 -360 0 0 {name=p10 sig_type=std_logic lab=V_mid1
+}
+C {pfet_g5v0d10v5.sym} -760 -660 0 1 {name=XM_bias_mir
+W=10
+L=2
+nf=1
+mult=4
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {lab_pin.sym} -780 -590 0 0 {name=p2 sig_type=std_logic lab=V_bias_n
+
+}
+C {nfet_g5v0d10v5.sym} -760 -270 0 1 {name=XM_bias_n1
+W=10
+L=2
+nf=1
+mult=2
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=nfet_g5v0d10v5
+spiceprefix=X
+}
+C {nfet_g5v0d10v5.sym} -580 -270 0 0 {name=XM_bias_n2
+W=10
+L=2
+nf=1
+mult=2
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=nfet_g5v0d10v5
+spiceprefix=X
+}
+C {nfet_g5v0d10v5.sym} -1110 -410 0 0 {name=XM_su_n1
+W=1
+L=2
+nf=1
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=nfet_g5v0d10v5
+spiceprefix=X
+}
+C {nfet_g5v0d10v5.sym} -1070 -270 0 1 {name=XM_su_n2
+W=1
+L=20
+nf=1
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=nfet_g5v0d10v5
+spiceprefix=X
+}
+C {lab_pin.sym} -1280 -460 0 0 {name=p3 sig_type=std_logic lab=sense_out
+
+}
+C {lab_pin.sym} -1090 -320 0 0 {name=p12 sig_type=std_logic lab=V_su_mid
+
+}
+C {nfet_g5v0d10v5.sym} -1260 -270 0 1 {name=XM_pd
+W=12
+L=2
+nf=1
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=nfet_g5v0d10v5
+spiceprefix=X
+}
+C {pfet_g5v0d10v5.sym} -1260 -530 0 1 {name=XM_su1a
+W=0.42
+L=20
+nf=1
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {lab_pin.sym} -1210 -270 1 0 {name=p11 sig_type=std_logic lab=VBE1
+}
+C {pfet_g5v0d10v5.sym} -1260 -600 0 1 {name=XM_su1b
+W=0.42
+L=20
+nf=1
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
+}
+C {pfet_g5v0d10v5.sym} -1260 -670 0 1 {name=XM_su1c
+W=0.42
+L=20
+nf=1
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_g5v0d10v5
+spiceprefix=X
 }

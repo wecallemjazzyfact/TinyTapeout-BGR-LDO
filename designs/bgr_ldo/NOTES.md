@@ -209,7 +209,22 @@ BGR 설계의 핵심 요소인 BJT 코어 단일 소자의 $V_{BE}$ 전압 특�
   * 이상적인 자율 바이어스 루프 상태에서의 최적의 $R_6, R_7$ 값은 **$122\,\text{k}\Omega$** 입니다.
   * **설계 실무 반영:** 실제 Active Cascode PMOS Mirror 소자(`pfet_01v8_lvt`)의 채널 길이 변조 효과 및 레이아웃 상의 **단위 저항(Unit Resistor, e.g. $20\,\text{k}\Omega$ 단위)** 정수배 정합 제약을 고려하여, 이상 소자 상태의 미세 스윕은 본 단계에서 성공적으로 마무리하고 해당 값을 Typical Baseline으로 확정합니다.
 
+### 6.4. 확정 회로 상태 (Confirmed Circuit State)
+Milestone 06 완료 시점 기준, 검증을 통과한 Startup 회로 및 BGR 코어의 확정 소자 사양입니다.
 
+* **Startup 회로 (4소자 최종 사이징):**
+  * PMOS 감지단 (`XM_su1a/b/c`): `pfet_g5v0d10v5` $W = 0.42\,\mu\text{m} / L = 20.0\,\mu\text{m}$ 3개 직렬 스택 (게이트: `V_bias_n`, 소스/벌크: `VAPWR`) $\rightarrow$ 누설 전류 억제용
+  * NMOS 풀다운 (`XM_pd`): `nfet_g5v0d10v5` $W = 12.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ 단일 소자 (게이트: `VBE1` — 감지점, 소스/벌크: `GND`)
+  * 기동 NMOS 스위치 (`XM_su_n1`): `nfet_g5v0d10v5` $W = 1.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ (게이트: `sense_out`, 드레인: `V_gate_top`, 소스: `V_su_mid`)
+  * 전류 제한 NMOS 다이오드 (`XM_su_n2`): `nfet_g5v0d10v5` $W = 1.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ (다이오드 결선, 게이트/드레인: `V_su_mid`, 소스/벌크: `GND`)
 
+---
 
+## 📝 7. To-Do / Open Issues (확인필요 사항)
 
+* [ ] **[Step 2.7] 실저항 소자 교체 및 특성 재스윕 (최상위 우선순위):**
+  * 회로 내 모든 이상 저항($R_1/R_6/R_7/R_2$)을 실제 고시트 poly 저항 소자(`sky130_fd_pr__res_high_po`)로 마이그레이션.
+  * **예상 영향:** 실제 저항 소자의 강한 자체 온도 계수(TC)로 인해 BGR 최적 저항값 최적점이 이동하므로 전면 온도 재스윕 및 튜닝 필요.
+  * **공정 산포 대처:** 코너별 저항 절대값 산포가 $\pm 20\%$에 달하므로, 각 코너에서 3-bit BGR 저항 트림 회로 동작 범위 및 해상도 근거 데이터 확보 필요.
+* [ ] **[Step 2.8] LDO 오차 증폭기(EA) 연동 및 보상망 설계:**
+  * BGR 출력을 입력으로 받아 안정적으로 LDO를 동작시키기 위한 전체 컨트롤 루프 설계.
