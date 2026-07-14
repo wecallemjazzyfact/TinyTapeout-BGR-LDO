@@ -8,3 +8,6 @@ source /foss/pdks/sky130A/libs.tech/xschem/xschemrc
 # Append the sky130_fd_pr device library folder directly to the library path list
 # so it permanently appears in xschem's 'Insert' file selection dialog
 append XSCHEM_LIBRARY_PATH :/foss/pdks/sky130A/libs.tech/xschem/sky130_fd_pr
+
+
+set netlist_dir /foss/designs/designs/bgr_ldo/sim
