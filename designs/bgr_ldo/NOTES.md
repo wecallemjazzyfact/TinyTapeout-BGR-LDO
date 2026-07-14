@@ -30,18 +30,22 @@
 ### 2.2. BGR (Bandgap Reference)
 * **목표 기준 전압 ($V_{ref}$):** $1.2\,\text{V}$ 고정.
 * **BGR 코어 정합 저항비:** $R_2 = 2 \cdot R_1$ 준수.
-* **3-bit 저항 트림 회로 내장:** 공정 산포 및 오프셋 보상을 위해 3-bit 디지털 가변 저항 트림 링크를 BGR 출력단 저항 사다리에 설계하여 $V_{ref}$의 절대값을 미세 튜닝함.
+* **5-bit 저항 트림 회로 내장:** 몬테카를로 실측 3-sigma 산포($\pm 6.6\%$)를 완벽 커버하고 8 ppm/°C 초정밀 성능에 걸맞은 미세 조정을 제공하기 위해, 5-bit 디지털 가변 저항 트림 링크(LSB 해상도 0.44%, 범위 $\pm 7.0\%$, 제어 핀 `ui_in[4:0]`)를 BGR 출력단 저항 사다리($R_2$)에 설계하여 $V_{ref}$ 절대값을 미세 튜닝함. 중앙 코드 `10000`에서 $1.20\text{V}$ 출력을 목표로 고정 저항 $R_2$의 baseline 유닛 길이를 보정함.
+
 
 #### BGR 설계 목표 스펙
 | 스펙 | 목표 | 근거/비고 |
 | :--- | :--- | :--- |
 | $V_{ref}$ | $1.2\,\text{V}$ | LDO 분압 $R_2=2R_1$ (→ $1.8\,\text{V}$)과 일관 |
-| TC ($-40\sim125^\circ\text{C}$) | $< 50\,\text{ppm}/^\circ\text{C}$ (목표 $<30$) | cw_vref/tt_um_bgr 실측 20~40ppm |
-| Line regulation | $< 0.5\,\%\text{/V}$ | VAPWR 2.8~3.6V 스윕 |
+| TC ($-40\sim125^\circ\text{C}$) | $< 50\,\text{ppm}/^\circ\text{C}$ (전 코너) | tt: 7.5 ppm/°C, ss: 8.6 ppm/°C, ff: 9.0 ppm/°C (전 코너 균일화 완료) |
+| Line regulation | $< 0.5\,\%\text{/V}$ | 0.0840 %/V (실측치, 차폐 및 스케일링 완료) |
 | PSRR @DC | $< -40\,\text{dB}$ | cascode + 후단 LDO |
-| $I_Q$ (BGR only) | $< 15\sim20\,\text{µA}$ | 브랜치당 ~3~5µA |
+| $I_Q$ (BGR only) | $< 60\,\text{µA}$ | 59.73 µA @tt (실측치) [1] |
 | Startup time | $< \text{수 µs}$, 확정 기동 | 축퇴점 회피 |
-| Area (BGR only) | $< \sim 2500\,\text{µm}^2$ | 1x2에 여유 |
+| Area (BGR only) | $\le 3000\,\text{µm}^2$ | 1x2에 여유 (미스매치 감축을 위한 면적 4배 스케일링 반영) [2] |
+
+`[1] 개정 사유: TC 최적화 분석 결과 브랜치당 ~10µA의 바이어스 전류가 요구됨에 따라 코어2+출력1+bias1 분기 합산 55µA 소모에, Line Reg 개선을 위한 cascode bias 신규 분기(+1.2µA) 및 core 면적 스케일링에 따른 기생 증가(+3.53µA)가 추가되어 총 59.73µA가 소모됨. 소비전력은 197.1µW.`
+`[2] 개정 사유: 몬테카를로 분석 결과 로컬 미스매치(MM)의 분산 기여도가 91.5%로 지배적임을 판명하고, Pelgrom 법칙에 근거해 핵심 트랜지스터(XM_top*, XM3/XM4)들의 면적을 4배(W, L 각각 2배씩) 확장하여 약 +960 µm² 면적이 추가 가산됨.`
 
 #### BGR 설계 결정 사항
 * **검증 조건:** 27°C 단일 온도 분석에 그치지 않고, **$-40 / 27 / 125^\circ\text{C} \times \text{코너(ss/tt/ff)}$** 조합 전체로 검증 수행.
@@ -54,21 +58,71 @@
 ### 2.3. LDO (Low-Dropout Regulator)
 * **입력 전압 ($V_{in}$ / $VAPWR$):** $3.3\,\text{V}$ (3.3V analog supply rail).
 * **출력 전압 ($V_{out}$):** $1.8\,\text{V}$ 고정.
-* **LDO 분압 저항 트림 내장:** 오차 증폭기의 오프셋 전압 상쇄 및 $V_{out}$의 절대값 튜닝을 위해 피드백 분압 저항단에 저항 트림 회로를 추가함.
-* **최대 부하 전류 ($I_{load, max}$):** $\le 4\,\text{mA}$ (하드웨어 제약 고려).
-  * 패스 트랜지스터(PMOS Pass Device) 크기 및 특성화: 아날로그 핀 "Max current: 4 mA" 제약으로 인해 $V_{out}$을 `ua[0]`으로 인가할 경우 핀 최대 허용 전류 4mA 한계에 도달함. 따라서 공칭 2~3mA, 최대 4mA까지만 동작하도록 부하 전류를 명시하고 특성화 수행.
-* **Load Transient 특성화 목표:** 부하 전류 스위칭($0 \leftrightarrow I_{load, max}$) 시 출력 전압 과도 응답 특성(Overshoot/Undershoot 특성 및 복구 시간)을 모니터링하고 보상망을 최적화함.
-* **측정 및 로드 레귤레이션 주의사항:**
-  * 아날로그 핀 경로 자체에 존재하는 기생 저항($R < 500\,\Omega$) 및 기생 용량($C < 5\,\text{pF}$)이 $V_{out} \leftrightarrow$ 외부 패드 사이에 직렬로 물리적 연결됨.
-  * 이로 인해 외부에서 측정한 Load Regulation은 $V_{out, pad} = V_{out, chip} - I_{load} \cdot R_{path}$ 에 의해 `실제 load reg + I_load \times R_path`로 오염되어 보일 수 있으므로 켈빈 센싱 핀의 추가 여부 검토가 필요함.
+* **LDO 분압 저항비 구성:** 
+  * 기준 전압 $V_{ref} = 1.2076\,\text{V}$ 대비 $V_{out} = 1.8\,\text{V}$ 출력을 얻기 위해 피드백 저항 분압기 $R_T$ 및 $R_B$ 결선.
+  * $R_T = 40 \times R_u = 118\,\text{k}\Omega$, $R_B = 82 \times R_u = 241.9\,\text{k}\Omega$ 적용 시 $V_{out} = 1.2076 \times (1 + 40/82) \approx 1.7967\,\text{V}$ (약 $1.8\text{V}$, 저항 트림을 통해 정밀 조율).
+* **최대 부하 전류 ($I_{load, max}$):** $4\,\text{mA}$ (하드웨어 제약 및 패드 와이어 한계 준수).
+* **소모 전류 ($I_Q$, LDO 자체):** $\le 10\,\mu\text{A}$ 목표.
 
-### 2.4. 오차 증폭기 (Error Amplifier - EA)
-* **전력 급전 전압:** $VAPWR$ ($3.3\,\text{V}$).
-  * 오차 증폭기의 전력 공급단을 디지털 1.8V($VDPWR$)가 아닌 아날로그 $3.3\,\text{V}$($VAPWR$)에 직접 연결하여 게이트 구동 헤드룸 확보.
+#### LDO 설계 목표 스펙 및 물리적 근거
 
-### 2.5. 제어 및 모니터링 인터페이스 (PG / EN)
+| 파라미터 | 목표 스펙 | 설계 근거 / 비고 |
+| :--- | :---: | :--- |
+| **Dropout 전압 ($V_{drop}$)** | $\le 200\,\text{mV}$ | 실구동 조건은 $V_{SD} = 1.5\,\text{V}$로 충분한 Saturation 마진 확보 가능. |
+| **Line Regulation** | $\le 2.0\,\text{mV/V}$ | $VAPWR = 3.0\text{V} \sim 3.6\text{V}$ 스윕 기준. EA의 높은 DC Gain으로 억제. |
+| **Load Regulation** | $\le 2.0\,\text{mV/mA}$ | $I_{load} = 0 \sim 4\text{mA}$ 기준. 전체 전압 변동 $\Delta V_{out} \le 8\,\text{mV}$ 목표. |
+| **PSRR @DC / 1kHz / 100kHz** | $\le -60\,\text{dB} / -50\,\text{dB} / -30\,\text{dB}$ | BGR 출력을 1차 필터링하고 EA 루프 이득 및 Compensation 대역 설계로 제거. |
+| **위상 마진 (Phase Margin)** | $\ge 60^\circ$ | 무부하($I_{load}=0$)부터 최대 부하($4\,\text{mA}$) 전 구간 루프 안정성 보장. |
+| **Transient Response** | Overshoot/Undershoot $\le 100\,\text{mV}$ | $0 \leftrightarrow 4\,\text{mA}$ Step (엣지 $100\,\text{ns}$), $C_L = 100\,\text{pF}$ 및 복구 시간 $< 5\,\mu\text{s}$. |
+
+#### 2.3.1. Pass Device (PMOS) 사이징 및 기생 커패시턴스 분석
+* **소자 종류:** Thick-oxide PMOS (`pfet_g5v0d10v5`)
+* **사이징 확정:** **`W = 400 µm / L = 0.5 µm`** (Aspect Ratio $W/L = 800$, Multiplier $M = 20$, Finger $W_f = 20\,\mu\text{m}$)
+* **물리적 계산 검증:**
+  * Saturation 전류 수식: $I_D = \frac{1}{2} \mu_p C_{ox} \frac{W}{L} V_{ov}^2$
+  * $\mu_p C_{ox} \approx 30\,\mu\text{A/V}^2$ 대입 시 $I_{load} = 4\,\text{mA}$ 구동에 필요한 Overdrive 전압:
+    $$4000\,\mu\text{A} = \frac{1}{2} \times 30\,\mu\text{A/V}^2 \times 800 \times V_{ov}^2 \implies V_{ov} \approx \mathbf{0.577 V}$$
+  * 따라서 최대 부하 시 필요한 게이트 바이어스 전압은 $V_G = V_{APWR} - |V_{thp}| - V_{ov} \approx 3.3 - 0.9 - 0.58 = \mathbf{1.82 V}$로, 3.3V 구동 오차 증폭기의 전압 출력 스윙 범위 내에 여유롭게 들어옵니다.
+* **게이트 입력 커패시턴스 ($C_{gg}$) 추정:**
+  * 산화막 커패시턴스 $C_{ox} \approx 2.3\,\text{fF/\mu m}^2$ (Gate oxide $t_{ox} \approx 15\,\text{nm}$)
+  * 채널 면적 $A_g = W \times L = 400 \times 0.5 = 200\,\mu\text{m}^2$
+  * 게이트 커패시턴스: $C_{gg, body} = A_g \times C_{ox} \approx 460\,\text{fF}$
+  * 기생 오버랩 및 배선 커패시턴스 합산 시 실효 부하 커패시턴스 **$C_{gg, total} \approx \mathbf{0.5\sim0.6\,\text{pF}}$** (EA의 지배적 출력 극점을 형성).
+
+### 2.4. 오차 증폭기 (Error Amplifier - EA) 설계 방침
+* **급전 전압:** $VAPWR$ ($3.3\,\text{V}$).
+* **구조 제안:** **PMOS 입력 Folded-Cascode 증폭기**
+* **입력 공통모드 범위(ICMR) 검증:**
+  * $V_{ref} = 1.2076\,\text{V}$에서 입력 PMOS의 소스 노드 전위는 $V_S = V_G + V_{SG} \approx 1.2 + 0.9 + 0.2 = 2.3\,\text{V}$로 바이어스됩니다.
+  * 테일 전류원(Tail current source)에 걸리는 전압은 $V_{APWR} - V_S = 3.3 - 2.3 = 1.0\,\text{V}$로, 테일 소자가 포화 영역에 머물기 위한 전압($V_{ov,tail} \approx 0.2\text{V}$) 대비 5배의 전압 헤드룸을 가집니다. 따라서 PMOS 입력단 설계는 지극히 타당합니다.
+* **필요 DC 이득 ($A_{EA}$) 계산:**
+  * 목표 Load Regulation 사양인 $\le 2\,\Omega$ ($8\text{mV}/4\text{mA}$) 충족을 위해 필요한 Closed-loop 출력 저항 유도:
+    $$R_{out, cl} = \frac{R_{out, ol}}{1 + T} \approx \frac{r_{ds, pass}}{T} \le 2\,\Omega$$
+  * Pass 소자의 출력 저항 $r_{ds, pass} \approx 2.5\,\text{k}\Omega$ ($I_D = 4\text{mA}, \lambda \approx 0.1\text{V}^{-1}$) 대입 시 필요한 최소 루프 이득:
+    $$T \ge \frac{2500\,\Omega}{2\,\Omega} = 1250\ (\approx \mathbf{62\,\text{dB}})$$
+  * 루프 이득 수식 $T = A_{EA} \times A_{pass} \times \beta$ 에서 $A_{pass} = g_{m,pass} r_{ds,pass} \approx 14\text{mS} \times 2.5\text{k}\Omega = 35$ ($31\,\text{dB}$), 피드백 계수 $\beta \approx 0.67$ 대입:
+    $$A_{EA} = \frac{1250}{35 \times 0.67} \approx 53.4\ (\approx \mathbf{35.6\,\text{dB}})$$
+  * Folded-cascode 토폴로지는 통상 **$60\sim80\,\text{dB}$**의 이득을 제공하므로 스펙 마진을 매우 넉넉하게 만족합니다.
+
+### 2.5. 안정도 및 주파수 보상 사전 분석 (Stability & Compensation)
+* **극점 (Poles) 이동 분석 ($C_{load} = 100\,\text{pF}$ 기준):**
+  1. **무부하 상태 ($I_{load} \rightarrow 0$):** 피드백 전류 $5\,\mu\text{A}$만 흐를 때, $r_{ds,pass} \approx 2\,\text{M}\Omega$.
+     * 출력 저항 $R_{out} \approx 2\,\text{M}\Omega \parallel 360\,\text{k}\Omega \approx 305\,\text{k}\Omega$.
+     * 출력 극점 $p_{out, noload} = \frac{1}{2\pi R_{out} C_{load}} \approx \mathbf{5.2\,\text{kHz}}$
+  2. **최대 부하 상태 ($I_{load} = 4\,\text{mA}$):** 부하 저항 $R_{load} = 450\,\Omega$.
+     * 출력 저항 $R_{out} \approx 450\,\Omega \parallel 2.5\,\text{k}\Omega \approx 380\,\Omega$.
+     * 출력 극점 $p_{out, fullload} = \frac{1}{2\pi R_{out} C_{load}} \approx \mathbf{4.19\,\text{MHz}}$ (부하 변동에 의해 극점이 **800배 이상 이동**).
+  3. **EA 출력 극점:** $p_{EA} = \frac{1}{2\pi R_{out,EA} C_{gg,pass}} \approx \mathbf{16\,\text{kHz}}$ ($R_{out,EA} \approx 20\,\text{M}\Omega, C_{gg} \approx 0.5\text{pF}$).
+* **주파수 보상망 제안 (밀러 보상):**
+  * 두 극점($p_{out}, p_{EA}$)이 모두 저주파 대역에 인접해 있어 무보상 시 발진이 불가피합니다.
+  * Pass 소자의 게이트-드레인 사이에 밀러 커패시터 $C_c$ 및 우반평면 영점(RHP Zero) 제거용 직렬 영점 저항 $R_z$를 삽입합니다.
+  * **밀러 캡 크기 ($C_c$):** **`Cc = 12.8 pF`** (대역폭 확보 및 상온 안정성 마진 극대화).
+  * **영점 저항 ($R_z$):** 가벼운 부하 조건에서의 위상 지연을 방지하기 위해 $R_z \approx 1/g_{m,pass} \approx 1\sim5\,\text{k}\Omega$ 수준의 가변 또는 고정 Poly 저항을 배치하여 LHP(Left-Half-Plane)로 영점을 이동 및 보상합니다.
+
+### 2.6. 제어 및 모니터링 인터페이스 (PG / EN)
 * **EN (LDO Enable 신호):** 외부 디지털 핀 `ui_in[]`을 사용하여 컨트롤. (Level Shifter를 경유하여 3.3V EA 구동부 EN 게이트 전달)
 * **PG (Power Good 신호):** LDO 출력이 안정 영역에 도달했음을 알리는 디지털 핀 `uo_out[]`을 통해 전송.
+
 
 
 ---
@@ -210,21 +264,53 @@ BGR 설계의 핵심 요소인 BJT 코어 단일 소자의 $V_{BE}$ 전압 특�
   * **설계 실무 반영:** 실제 Active Cascode PMOS Mirror 소자(`pfet_01v8_lvt`)의 채널 길이 변조 효과 및 레이아웃 상의 **단위 저항(Unit Resistor, e.g. $20\,\text{k}\Omega$ 단위)** 정수배 정합 제약을 고려하여, 이상 소자 상태의 미세 스윕은 본 단계에서 성공적으로 마무리하고 해당 값을 Typical Baseline으로 확정합니다.
 
 ### 6.4. 확정 회로 상태 (Confirmed Circuit State)
-Milestone 06 완료 시점 기준, 검증을 통과한 Startup 회로 및 BGR 코어의 확정 소자 사양입니다.
+Milestone 09 완료 시점 기준, 검증을 통과한 Startup 회로 및 BGR 코어의 확정 소자 사양입니다.
 
+* **BGR 코어 핵심 능동 소자 (미스매치 억제를 위한 4배 스케일링):**
+  * `XM_top1/2/5` (PMOS 전류 거울): `pfet_g5v0d10v5` $W = 20.0\,\mu\text{m} / L = 4.0\,\mu\text{m}$ ($mult = 4$)
+  * `XM3/XM4` (NMOS 등화쌍): `nfet_g5v0d10v5` $W = 20.0\,\mu\text{m} / L = 4.0\,\mu\text{m}$ ($mult = 2$)
+* **BGR 코어 Active Mirror Cascode 및 Bias 회로:**
+  * 등화쌍 차폐 Cascode (`XM3c/XM4c`): `nfet_g5v0d10v5` $W = 10.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ ($mult = 2$)
+  * Cascode Gate Bias 브랜치:
+    * `XM_cn_mir` (상단 PMOS 미러): `pfet_g5v0d10v5` $W = 10.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ ($mult = 1$, 게이트: `V_gate_top`)
+    * `XM_cn_d2/d1` (NMOS diode 2단): `nfet_g5v0d10v5` $W = 2.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ ($mult = 1$)
+    * `R_cn` (GND 기준 저항): `res_high_po_0p69` $L = 91.5\,\mu\text{m}$ (실효 저항값 $\approx 45.7\,\text{k}\Omega$)
 * **Startup 회로 (4소자 최종 사이징):**
-  * PMOS 감지단 (`XM_su1a/b/c`): `pfet_g5v0d10v5` $W = 0.42\,\mu\text{m} / L = 20.0\,\mu\text{m}$ 3개 직렬 스택 (게이트: `V_bias_n`, 소스/벌크: `VAPWR`) $\rightarrow$ 누설 전류 억제용
-  * NMOS 풀다운 (`XM_pd`): `nfet_g5v0d10v5` $W = 12.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ 단일 소자 (게이트: `VBE1` — 감지점, 소스/벌크: `GND`)
-  * 기동 NMOS 스위치 (`XM_su_n1`): `nfet_g5v0d10v5` $W = 1.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ (게이트: `sense_out`, 드레인: `V_gate_top`, 소스: `V_su_mid`)
-  * 전류 제한 NMOS 다이오드 (`XM_su_n2`): `nfet_g5v0d10v5` $W = 1.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ (다이오드 결선, 게이트/드레인: `V_su_mid`, 소스/벌크: `GND`)
+  * PMOS 감지단 (`XM_su1a/b/c`): `pfet_g5v0d10v5` $W = 0.42\,\mu\text{m} / L = 20.0\,\mu\text{m}$ 3개 직렬 스택 (게이트: `V_bias_n`, 소스/벌크: `VAPWR`)
+  * NMOS 풀다운 (`XM_pd`): `nfet_g5v0d10v5` $W = 12.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ 단일 소자 (게이트: `VBE1` — 감지점)
+  * 기동 NMOS 스위치 (`XM_su_n1`): `nfet_g5v0d10v5` $W = 1.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ (게이트: `sense_out`)
+  * 전류 제한 NMOS 다이오드 (`XM_su_n2`): `nfet_g5v0d10v5` $W = 1.0\,\mu\text{m} / L = 2.0\,\mu\text{m}$ (다이오드 결선)
+* **스키매틱-레이아웃 이원화 설계 방침:**
+  * **방침:** "스키매틱 = 단일 심볼(보정 L), 레이아웃 = 2.95k 유닛 (W0.69/L2.79) 어레이, LVS 는 저항값 매칭"
+  * **보정 L 계산 수식:**
+    * $W = 0.69\,\mu\text{m}$ 기준 ($R_{sheet} = 491.36\,\Omega/\mu\text{m}$, $R_{con} = 389.90\,\Omega$, $L_{unit} = 4.416\,\mu\text{m}$):
+      $$L_{total} = N \times 4.416 + (2N - 2) \times 0.79351\,\text{[µm]}$$
+    * **$R_1$** (PTAT, 6 유닛): $L_{total} = \mathbf{34.431\,\mu\text{m}}$ ($17.70\,\text{k}\Omega$)
+    * **$R_6, R_7$** (CTAT, 41 유닛 - **N=41 최적화**): $L_{total} = \mathbf{244.537\,\mu\text{m}}$ ($120.95\,\text{k}\Omega$)
+    * **$R_2$** (Output, 41 유닛): $L_{total} = \mathbf{244.537\,\mu\text{m}}$ ($120.95\,\text{k}\Omega$)
+  * **스위치 단락 제약:** 직렬 트림 스택 단락 오차 1% 미만 조건 충족을 위해 스위치 $\frac{W}{L} \ge 860$ ($W = 430\,\mu\text{m} / L = 0.5\,\mu\text{m}$) 설계 적용.
+
+### 6.5. 몬테카를로 분석 및 면적 스케일링 결과 (Monte Carlo & Area Scaling)
+* **목표:** 기준 전압 $V_{ref}$의 절대값 3-sigma 산포를 감축하기 위해 오프셋의 지배 성분을 정밀 분석하고 소자 면적 스케일링을 수행.
+* **진단 요약 (20 samples):**
+  * 로컬 미스매치(MM)의 단독 산포가 $\sigma = 4.58\%$ (분산 기여율 $91.5\%$)로 가장 지배적임을 파악.
+  * 글로벌 공정 변이(PR) 단독 산포는 $\sigma = 1.38\%$ (기여율 $8.5\%$)로 매우 작아 Banba 저항비 구조의 대칭성 강점이 재입증됨.
+* **면적 스케일링 처방:**
+  * Pelgrom 법칙($\sigma_{Vth} \propto 1/\sqrt{WL}$)에 근거하여 전류 정확도를 결정하는 `XM_top*` (PMOS 미러) 및 `XM3/XM4` (NMOS 등화쌍)의 면적($W \cdot L$)을 4배로 확장하여 미스매치를 절반 수준으로 억제.
+  * $W/L$ 종횡비를 유지함으로써 $V_{ov}$, 바이어스 전류 및 동작점을 보존하면서 오프셋 산포 성능만 안전하게 개선함. (스케일링 후 3-sigma 산포 재측정 중).
 
 ---
 
 ## 📝 7. To-Do / Open Issues (확인필요 사항)
 
-* [ ] **[Step 2.7] 실저항 소자 교체 및 특성 재스윕 (최상위 우선순위):**
-  * 회로 내 모든 이상 저항($R_1/R_6/R_7/R_2$)을 실제 고시트 poly 저항 소자(`sky130_fd_pr__res_high_po`)로 마이그레이션.
-  * **예상 영향:** 실제 저항 소자의 강한 자체 온도 계수(TC)로 인해 BGR 최적 저항값 최적점이 이동하므로 전면 온도 재스윕 및 튜닝 필요.
-  * **공정 산포 대처:** 코너별 저항 절대값 산포가 $\pm 20\%$에 달하므로, 각 코너에서 3-bit BGR 저항 트림 회로 동작 범위 및 해상도 근거 데이터 확보 필요.
-* [ ] **[Step 2.8] LDO 오차 증폭기(EA) 연동 및 보상망 설계:**
-  * BGR 출력을 입력으로 받아 안정적으로 LDO를 동작시키기 위한 전체 컨트롤 루프 설계.
+* [x] **[Step 2.7] 실저항 소자 교체 및 특성 재스윕:**
+  * 실물 저항 교체 및 $N=41$ 최적화로 $6.1\,\text{ppm}/^\circ\text{C}$ 확보 완료.
+* [x] **[Step 2.8] BGR 몬테카를로 재실행 및 트림 설계 확정:**
+  * 면적 스케일업 회로에 대한 몬테카를로 산포 재실측 완료 ($\sigma = 2.21\%$).
+  * 3-sigma 산포 $\pm 6.6\%$ 수렴을 위한 5-bit 디지털 트림(LSB 스텝 0.44%, 범위 $\pm 7.0\%$, 제어 핀 `ui_in[4:0]`) 규격 확정.
+  * Typical 중심점 오프셋 보상을 위해 고정 저항 $R_2$의 baseline 크기 미세 보정 (41 유닛 $\rightarrow$ 41.3 유닛 등가 길이 보정) 사양 확정 완료.
+* [ ] **[Step 2.9] LDO 오차 증폭기(EA) 연동 및 보상망 설계:**
+  * PMOS 입력 Folded-Cascode 증폭기 및 Miller 보상 커패시터($C_c = 12.8\,\text{pF}$), 영점 제거 저항($R_z$) 상세 설계.
+
+
+
