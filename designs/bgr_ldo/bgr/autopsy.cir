@@ -1,0 +1,4 @@
+load startup_tran.raw
+let n = length(time)-1
+print v(sense_out)[n] v(v_bias_n)[n] v(v_gate_top)[n] v(v_su_mid)[n] v(vbe1)[n] v(net1)[n]
+quit

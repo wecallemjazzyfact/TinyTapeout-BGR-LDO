@@ -10,4 +10,4 @@ source /foss/pdks/sky130A/libs.tech/xschem/xschemrc
 append XSCHEM_LIBRARY_PATH :/foss/pdks/sky130A/libs.tech/xschem/sky130_fd_pr
 
 
-set netlist_dir /foss/designs/designs/bgr_ldo/sim
+set netlist_dir /foss/designs/designs/bgr_ldo/bgr

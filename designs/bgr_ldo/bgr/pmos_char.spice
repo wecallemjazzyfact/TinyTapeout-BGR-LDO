@@ -1,0 +1,27 @@
+* PMOS Characterization for different Vov options
+.lib /foss/pdks/sky130A/libs.tech/combined/sky130.lib.spice tt
+
+Vs s 0 3.3
+Vb b 0 3.3
+
+* Config 1: W=10u, L=2u, m=4
+X1 d1 d1 s b sky130_fd_pr__pfet_g5v0d10v5 w=10 l=2 m=4
+I1 d1 0 9.68u
+
+* Config 2: W=10u, L=2u, m=3
+X2 d2 d2 s b sky130_fd_pr__pfet_g5v0d10v5 w=10 l=2 m=3
+I2 d2 0 9.68u
+
+* Config 3: W=10u, L=2u, m=2
+X3 d3 d3 s b sky130_fd_pr__pfet_g5v0d10v5 w=10 l=2 m=2
+I3 d3 0 9.68u
+
+.op
+.control
+  run
+  show x1
+  show x2
+  show x3
+  print (3.3 - v(d1)) (3.3 - v(d2)) (3.3 - v(d3))
+.endc
+.end

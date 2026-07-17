@@ -1,0 +1,23 @@
+* NMOS Characterization for sky130_fd_pr__nfet_g5v0d10v5
+.lib /foss/pdks/sky130A/libs.tech/combined/sky130.lib.spice tt
+
+* Diode-connected NMOS with ideal current source of 9.68uA
+* We test multipliers: m=2, m=3, m=4
+X1 d1 d1 0 0 sky130_fd_pr__nfet_g5v0d10v5 w=10 l=2 m=2
+I1 3.3 d1 9.68u
+
+X2 d2 d2 0 0 sky130_fd_pr__nfet_g5v0d10v5 w=10 l=2 m=3
+I2 3.3 d2 9.68u
+
+X3 d3 d3 0 0 sky130_fd_pr__nfet_g5v0d10v5 w=10 l=2 m=4
+I3 3.3 d3 9.68u
+
+.op
+.control
+  run
+  show x1
+  show x2
+  show x3
+  print v(d1) v(d2) v(d3)
+.endc
+.end

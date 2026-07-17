@@ -1,0 +1,3 @@
+load slowramp.raw
+plot v(vapwr) v(vref_low) v(vbe1)
+plot v(sense_out) v(v_bias_n) v(v_gate_top)

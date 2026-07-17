@@ -29,3 +29,19 @@ Below are the project-specific guardrails and constraints that must be adhered t
 * **Schematic File Modifications:** The AI agent must **NEVER** modify schematic files (`.sch` or extension-less xschem formats) unless explicitly requested by the USER.
 * **Mandatory Backup:** If the USER explicitly requests a modification to a schematic file, the agent must create a backup copy of the file first (e.g. by appending `.bak` to the filename) before performing any edits.
 
+### 5. Schematic-First Simulation Guardrails
+* **Schematic as Golden Source (정본):**
+  * 회로 시뮬레이션의 최종 정본은 항상 **xschem schematic (.sch)** 파일이어야 합니다.
+  * AI 에이전트는 절대 `.spice` 넷리스트 파일을 직접 수동 편집하여 시뮬레이션을 수행해서는 안 됩니다.
+  * 회로 수정이 필요할 경우 반드시 **"xschem에서 Schematic 수정 ➜ 넷리스트 재추출 ➜ ngspice 시뮬레이션"** 프로세스를 엄격히 준수해야 합니다.
+
+### 6. Simulation Reporting Rules
+* **Simulation Result Verification**: 모든 시뮬레이션 보고서 작성 시, 데이터 오염 방지 및 검증 투명성을 위해 다음 3종 세트를 반드시 원문 그대로 첨부해야 합니다:
+  1. 시뮬레이션에 사용된 `.spice` 넷리스트 파일의 SHA256/MD5 지문(Checksum).
+  2. ngspice 실행 로그 첫 줄 또는 헤더에 표시된 정확한 타임스탬프.
+  3. 시뮬레이션 핵심 측정치(V_ref, V_bias, I_top 등)를 나타내는 로그의 raw 텍스트 원문 (요약 또는 재기입 금지, 복사-붙여넣기 형태).
+
+### 7. Transistor Sizing & gm/Id LUT Rules
+* **LUT-Only Device Parameters:** 소자 파라미터 수치는 LUT 조회 결과만 사용한다. 기억 기반 수치(Vth, mobility, Cox 등) 인용 금지. 조회 코드와 결과를 함께 보고하지 않은 사이징 계산은 무효.
+* **Sizing Proposal Principle:** LUT 조회로 도출한 사이징은 "제안"이며, 최종 확정은 사용자의 회로 시뮬 검증 후에만 결정한다.
+
