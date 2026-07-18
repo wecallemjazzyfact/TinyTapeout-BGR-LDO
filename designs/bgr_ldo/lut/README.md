@@ -1,69 +1,520 @@
-# gm/Id Lookup Table (LUT) Infrastructure
+# gm/Id Look-Up Table — sky130A g5v0d10v5
 
-This directory contains the common transistor characterization data and lookup utilities for $g_m/I_D$-based sizing. This asset is shared by all sub-blocks (`bgr/`, `ldo/`, and `top/`).
+BGR + LDO 프로젝트(TinyTapeout, sky130A) 공용 소자 특성 테이블.
+**최종 검증: 2026-07, 전 게이트 PASS (exit 0).**
 
-## 1. Directory Structure
-
-* **`pygmid/`**: Local copy of the `pygmid` package, making the tool self-contained and path-independent.
-* **`gen/`**: Contains the configs and scripts to generate the lookup tables:
-  * `sample_config_nfet.cfg` / `sample_config_pfet.cfg` (Reference config files)
-  * `run_sweep.py` (The ngspice 4D characterization sweep script)
-  * `verify_gmid.py` (Script to verify lookup accuracy against anchors)
-* **`data/`**: Directory where the generated 4D lookup tables (`.pkl` format) are saved:
-  * `nfet_g5v0d10v5.pkl` (NFET table)
-  * `pfet_g5v0d10v5.pkl` (PFET table)
-* **`lookup.py`**: Common Python wrapper providing `lookup` and `lookupVGS` functions.
+이 문서는 테이블의 사양·규약·정확도·사용 규칙의 **단일 정본**이다.
+여기 적힌 모든 수치는 조건(코너/온도/바이어스/W·L/geometry/추출법)과 함께만 인용한다.
+조건 없는 수치는 무효 — 이 프로젝트에서 실제로 사고가 났던 항목이다(§10 참조).
 
 ---
 
-## 2. Characterization Specifications
+## 1. 목적과 범위
 
-* **Technology Model**: SkyWater Sky130A (`tt` corner)
-* **Transistor Type**: 5V/10.5V Thick-Oxide devices:
-  * NMOS: `sky130_fd_pr__nfet_g5v0d10v5`
-  * PMOS: `sky130_fd_pr__pfet_g5v0d10v5`
-* **Transistor Dimensions**: $W = 10\,\mu\text{m}$, $N_{fing} = 1$.
-* **Sweep Grid Axes**:
-  * **$L$ (6 points)**: `[0.5, 1.0, 2.0, 4.0, 8.0, 20.0]` $\mu\text{m}$
-  * **$V_{SB}$ (4 points)**: `[0.0, 0.4, 0.8, 1.2]` V
-  * **$V_{DS}$ (7 points)**: `[0.1, 0.3, 0.6, 1.0, 1.65, 2.5, 3.3]` V
-  * **$V_{GS}$ (133 points)**: `0.0` to `3.3` V (25 mV steps)
-* **Saved Variables**: `ID`, `VT` (Threshold Voltage), `GM`, `GDS`, `CGG`, `CGS`, `CGD`, `CGB`, `VDSAT`
+Murmann gm/Id 방법론 기반 사이징을 위한 4D 소자 특성 테이블.
+회로 레벨 sweep 튜닝 대신 **역할별 gm/Id 선택 → Id/W 역산 → W 결정**의 체계적 사이징을 가능하게 한다.
+
+**적용 대상**: LDO pass device, folded-cascode EA, 부하 블록, BGR v2 저전력화 등 프로젝트 전 블록.
+**적용 밖**: 코너 영향(회로 시뮬로 검증), 레이아웃 기생(PEX로), 미스매치(MC로).
 
 ---
 
-## 3. Verification Anchors (tt corner, 27°C)
+## 2. 파일 구성
 
-To verify the generated lookup table, compare the lookup results against these known physical anchors from the simulated circuit:
+```
+lut/
+├── lookup.py                    # 조회 래퍼 (설계·스크립트가 import하는 유일한 진입점)
+├── README.md                    # 이 문서
+├── pygmid/                      # 프레임워크 (Lookup 클래스만 사용)
+├── gen/
+│   ├── run_sweep.py             # 4D 스윕 생성기 (ngspice 직접 호출)
+│   ├── verify_gmid.py           # 검증 스크립트 (순수 python, ngspice 불요)
+│   ├── a1b_remeasure.sp         # A1b/A2b 앵커 재측정 덱
+│   └── sample_config_*.cfg      # 참고용 (실제 스윕은 run_sweep.py 내부 정의 사용)
+└── data/
+    ├── nfet_g5v0d10v5.pkl       # 9.9 MB
+    └── pfet_g5v0d10v5.pkl       # 9.9 MB
+```
 
-* **NFET $V_{th}$ at $L = 4.0\,\mu\text{m}$, $V_{DS} = 0.25\,\text{V}$**:
-  * **$V_{SB} = 0.0\,\text{V}$**: $V_{th} \approx 0.647\,\text{V}$
-  * **$V_{SB} = 0.78\,\text{V}$** (Body Effect): $V_{th} \approx 1.068\,\text{V}$
-* **PFET $V_{th}$ at $L = 0.5\,\mu\text{m}$, $V_{DS} = 1.5\,\text{V}$**:
-  * **$V_{SB} = 0.0\,\text{V}$**: $V_{th} \approx 0.871\,\text{V}$
+**중요**: `sample_config_*.cfg`는 스윕을 구동하지 않는다. 격자 정의는 `run_sweep.py` 모듈 상단(10~25행)의
+`L_list / VSB_list / VGS_list / VDS_list`가 유일한 소스이며 nfet·pfet이 이를 공유한다.
 
 ---
 
-## 4. Usage Example in Python
+## 3. 테이블 사양
 
-To perform lookups, add the `lut/` directory to your python path and use the common wrapper:
+| 항목 | 값 |
+| :--- | :--- |
+| 소자 | `sky130_fd_pr__nfet_g5v0d10v5`, `sky130_fd_pr__pfet_g5v0d10v5` (thick-ox 3.3V 도메인) |
+| 코너 / 온도 | `tt` / 27 °C **단일** |
+| 기준 폭 | **W = 10 µm**, `nf=1`, `m=1` |
+| geometry | `ad/as/pd/ps/nrd/nrs/sa/sb/sd` **생략(PDK 기본값)** — 앵커 덱과 정합시키기 위함 (§5.4) |
+| 배열 형상 | `(L, VGS, VDS, VSB)` = **(6, 135, 34, 5)** = 137,700 점 |
+
+**격자 축**
+
+| 축 | 점수 | 값 |
+| :--- | :---: | :--- |
+| `L` | 6 | 0.5, 1, 2, 4, 8, 20 µm (bsimg4 연속 bin 상한 20 µm) |
+| `VGS` | 135 | 0 ~ 3.3 V, 25 mV 균일 133점 **+ 앵커점 0.920, 1.176 삽입** |
+| `VDS` | 34 | 0 ~ 3.3 V, 100 mV 균일 |
+| `VSB` | 5 | 0, 0.4, **0.78**, 0.8, 1.2 V (0.78은 A2 앵커점) |
+
+**저장 변수 (9종)**: `ID, VT, GM, GDS, CGG, CGS, CGD, CGB, VDSAT`
+**파생 가능**: gm/Id, Id/W, gm/gds, f_T = gm/(2π·CGG), Vov
+
+**격자 설계 근거**
+- **VDS 100 mV 균일**: 최초 7점 비균일(0.1/0.3/0.6/1.0/1.65/2.5/3.3) 안은 포화 무릎 부근 gds 보간 오차가 크다.
+  실측으로 검증됨 — BGR `XM_top1`의 실동작점 VDS=0.301 V는 vdsat=0.158 V 바로 위(무릎)인데 GDS 오차 +2.31%.
+  7점 격자였다면 이 지점이 0.1↔0.3 구간 선형보간에 걸려 수십 % 틀렸을 것.
+- **VSB에 0.78 삽입**: A2 앵커(바디이펙트 축)를 격자 정점에 올리기 위함. 0.8과 20 mV 간격이라 다소 조밀하나 무해.
+- **VGS 25 mV**: log 도메인 보간과 결합해 실회로 off-grid 점에서 ID 오차 1% 이내 확인(§8.3).
+
+---
+
+## 4. 부호 규약 (Sign Convention) — 최종
+
+### 4.1 저장 규약
+
+**두 소자 모두 동일**:
+- `ID, VT, VDSAT, GM, GDS, CGG` → **양수 크기(magnitude)**
+- `CGS, CGD, CGB` → **signed 유지** (ngspice raw를 한 번 부호 반전한 값)
+
+**캡을 signed로 두는 이유 (중요)**
+1. `CGD`는 포화 영역에서 물리적으로 **0을 교차**한다. 저장 시 `abs()`를 걸면 이 교차 정보가 파괴되고
+   보간이 접힌 곡선을 통과한다. 실측: pfet CGD의 18,137/137,700 점이 음수.
+2. `CGG == CGS + CGD + CGB` 전하보존이 **파싱·저장·인덱싱 전 경로의 체크섬**으로 작동한다.
+   검증에서 실측 오차 0.000%.
+3. 조회 시에만 `abs()`를 적용한다(§6.2). 보간 → abs 순서라 정보 손실이 없다.
+
+### 4.2 raw → stored 변환표 (`run_sweep.py`의 `assign_parameter` sign_factor)
+
+| 변수 | wrdata 컬럼 | ngspice raw 부호 (nfet) | nfet factor | ngspice raw 부호 (pfet) | pfet factor | 저장 결과 |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| `ID`  | 1 (`i(Vds)`) | **음수** | **−1.0** | **양수** | **+1.0** | 양수 |
+| `GM`    | 2 | 양수 | +1.0 | 양수 | +1.0 | 양수 |
+| `GDS`   | 3 | 양수 | +1.0 | 양수 | +1.0 | 양수 |
+| `CGG`   | 4 | 양수 | +1.0 | 양수 | +1.0 | 양수 |
+| `CGS`   | 5 | 음수 | −1.0 | 음수 | −1.0 | signed (대부분 양수) |
+| `CGD`   | 6 | 부호 가변 | −1.0 | 부호 가변 | −1.0 | signed (0 교차) |
+| `CGB`   | 7 | 음수 | −1.0 | 음수 | −1.0 | signed |
+| `VT`    | 8 | 양수 | +1.0 | **양수** | **+1.0** | 양수 |
+| `VDSAT` | 9 | 양수 | +1.0 | **양수** | **+1.0** | 양수 |
+
+**ID만 nfet/pfet의 factor가 다른 이유**: 테스트벤치 결선 차이다.
+- nfet: `Vds d 0`, 소스 접지. 전원이 드레인으로 전류를 공급 → `i(Vds)` 음수.
+- pfet: `Vs s 0 3.3`, `Vds d s`. 전류가 소자를 거쳐 드레인으로 나와 Vds로 유입 → `i(Vds)` 양수.
+
+**pfet `VT`/`VDSAT`이 양수인 것은 반직관적이지만 실측 사실이다.** 별도 덱(`pfraw.sp`, W=10 L=0.5,
+VSG=1.3 VSD=1.5, tt/27)에서 `[vth] = +9.322932e-01`, `[vdsat] = +2.896890e-01` 확인.
+따라서 pfet에 `-1.0`을 걸면 **틀린다**. (이 프로젝트에서 실제로 한 번 잘못 뒤집었다 — §10.3)
+
+### 4.3 수치 잡음 허용
+
+정상 테이블에도 소량의 음수가 남는다. `VDS = 0` 열에서 전류가 0이고 ngspice가 수치 먼지를 반환하기 때문이다.
+
+| 실측 예 | 값 | 전체 스케일 | 판정 |
+| :--- | :--- | :--- | :--- |
+| nfet `ID` 음수 170점 | min −7.30e−22 A | 3.38e−3 A | 먼지 |
+| nfet `GM` 음수 6점 | min −3.12e−33 S | 1.54e−3 S | 먼지 |
+| pfet `ID` 음수 465점 | min −5.55e−17 A | 1.60e−3 A | 먼지 |
+
+**판정 기준**: `x < −1e−9 × max|x|` 인 값만 부호 위반으로 센다 (`lookup.sign_violation()`).
+"음수가 하나라도 있으면 오류"로 판정하면 **정상 테이블의 조회를 막는다** — 실제로 그 버그를 냈다(§10.2).
+참고로 진짜 부호 오류는 전혀 다르게 생겼다: pfet ID가 뒤집혔을 때 **99.4%가 음수, min = −1.6e−3 A(full scale)**였다.
+
+---
+
+## 5. 생성 파이프라인 (`gen/run_sweep.py`)
+
+### 5.1 개요
+pygmid의 `sweep` 모듈은 Cadence Spectre 전용(`pysweep.scs`, `SpectreSimulator`, `psf_utils`)이라
+ngspice에서 구동 불가. 따라서 **자체 스윕 + pygmid 포맷 컨버터**로 우회한다(Plan B).
+조회부인 `pygmid.Lookup`은 시뮬레이터 독립이므로 그대로 사용한다.
+
+### 5.2 실행 구조
+`(L, VSB)` 조합마다 ngspice를 1회 배치 호출. 소자당 6 × 5 = **30회**, 총 60회.
+각 호출은 세 개의 `wrdata` 출력을 낸다.
+
+1. **균일 스윕**: `dc Vgs 0→3.3 step 0.025` × `Vds 0→3.3 step 0.1` → 133 × 34 = 4,522점
+   (pfet은 부호 반전: `0→−3.3`, step `−0.025` / `−0.1`)
+2. **앵커 런 1**: VGS = 0.920 고정, VDS만 34점
+3. **앵커 런 2**: VGS = 1.176 고정, VDS만 34점
+
+### 5.3 앵커점 삽입 인덱스 매핑
+
+균일 133점에서 0.900=idx36, 0.925=idx37, 1.175=idx47, 1.200=idx48.
+여기에 0.920·1.176을 넣고 정렬하면 최종 135점 격자에서:
+
+| 최종 idx | VGS | 출처 |
+| :---: | :---: | :--- |
+| 0 ~ 36 | 0.000 ~ 0.900 | 균일 0:37 |
+| **37** | **0.920** | **앵커 런 1** |
+| 38 ~ 48 | 0.925 ~ 1.175 | 균일 37:48 (11점) |
+| **49** | **1.176** | **앵커 런 2** |
+| 50 ~ 134 | 1.200 ~ 3.300 | 균일 48:133 (85점) |
+
+합계 37 + 1 + 11 + 1 + 85 = 135 ✓
+
+**검증**: 잘못 꽂히면 `[2]` 게이트의 "ID increasing with VGS"가 해당 지점에서 꺾여 소량(0.1~1%) violate로 잡힌다.
+현재 실측 **0.00% violate** — 매핑 정합 확인.
+
+### 5.4 geometry 정합 (필수)
+
+스윕 넷리스트는 `ad/as/pd/ps/nrd/nrs/sa/sb/sd`를 **생략**한다.
+근거: 검증 앵커 덱(`bgr/anchor_n1.spice`, `anchor_n2.spice`, `anchor_p1.spice`)이 이들을 생략(PDK 기본값)하기 때문.
+
+**이 정합이 깨지면 ±2% 기준을 통과할 수 없다.** 실측 확인:
+동일 바이어스에서 기본 geometry 7.646 µA/µm vs 기생 강제 제거(`nrd=0 nrs=0` 등) 7.871 µA/µm = **2.9% 차이**.
+
+주의: BGR 넷리스트 소자들은 `ad=5.8 as=5.8 pd=40.58 ps=40.58 nrd=0.0145 nrs=0.0145`를 명시한다.
+접합 캡(ad/as/pd/ps)은 gm/gds/cgg에 무관하고 nrd/nrs 0.0145 sq는 µA급에서 무시 가능하므로
+BGR 교차검증(§8.3)에 영향이 없었다. **다만 pass device(4 mA, W=400)에서는 직렬저항이 유의미해질 수 있으므로
+LUT 예측과 실회로 op를 반드시 대조할 것.**
+
+### 5.5 재생성 절차
+
+```bash
+# 전체 (nfet + pfet)  — ngspice 호출이므로 bash -l -c 필수
+docker exec iic-osic-tools_xvnc_uid_1000 bash -l -c \
+  'cd /foss/designs/designs/bgr_ldo/lut/gen && python3 run_sweep.py 2>&1 | tail -20'
+
+# 한쪽만
+docker exec iic-osic-tools_xvnc_uid_1000 bash -l -c \
+  'cd /foss/designs/designs/bgr_ldo/lut/gen && python3 -c "import run_sweep; run_sweep.run_pfet_sweep()" 2>&1 | tail -5'
+
+# 검증 (ngspice 불요 → bash -c 로 충분)
+docker exec iic-osic-tools_xvnc_uid_1000 bash -c \
+  'cd /foss/designs/designs/bgr_ldo/lut/gen && python3 verify_gmid.py; echo EXIT=$?'
+```
+
+**실측 소요 시간**: nfet 14분 23초, pfet 11분 45초 (합 약 26분).
+**재스윕 시 `data/*.pkl`은 덮어써진다.** 스윕 후 반드시 두 파일의 mtime이 갱신됐는지 확인할 것 —
+한쪽만 갱신된 stale 상태가 실제로 오진의 원인이 됐다(§10.3).
+
+---
+
+## 6. 조회 API (`lookup.py`)
+
+### 6.1 함수
 
 ```python
-import os
-import sys
+import sys; sys.path.insert(0, '/foss/designs/designs/bgr_ldo/lut')
+import lookup as lut
 
-# Add lut directory to python path
-sys.path.insert(0, '/foss/designs/designs/bgr_ldo/lut')
-
-import lookup
-
-# Example 1: Look up gm/Id and Id for a given VGS
-gm = lookup.lookup('nfet', 'GM', L=4e-6, VGS=1.0, VDS=0.25, VSB=0.0)
-id_val = lookup.lookup('nfet', 'ID', L=4e-6, VGS=1.0, VDS=0.25, VSB=0.0)
-gmid = gm / id_val
-print(f"gm/Id ratio: {gmid:.2f} V^-1")
-
-# Example 2: Look up VGS for a target gm/Id ratio
-vgs_needed = lookup.lookupVGS('nfet', GM_ID=10.0, L=4e-6, VDS=0.25, VSB=0.0)
-print(f"Required VGS for gm/Id=10: {vgs_needed:.3f} V")
+lut.lookup(device, outvar, log_id=True, **bias)   # W=10µm, m=1 기준 절대값
+lut.predict(device, outvar, W_um, m=1, **bias)    # 실소자로 스케일
+lut.lookupVGS(device, **kwargs)                   # GM_ID 또는 ID_W → VGS
+lut.axes(device)                                  # {'L','VGS','VDS','VSB'} 배열
+lut.table(device)                                 # 원시 dict (감사용)
+lut.audit(device)                                 # 변수별 건강 리포트
+lut.sign_violation(arr)                           # (유의미 음수 개수, min, 임계값)
 ```
+
+- `device`: `'nfet'` | `'pfet'`
+- `bias`: `L`(미터, **격자값만**), `VGS`, `VDS`, `VSB` (볼트, 크기)
+- 예: `lut.lookup('pfet', 'ID', L=2e-6, VGS=1.176, VDS=1.0, VSB=0.0)` → `3.0009e-06`
+
+### 6.2 래퍼가 추가하는 것
+
+| 기능 | 내용 |
+| :--- | :--- |
+| **L축 가드** | 격자 밖 L은 `LUTRangeError`. L축은 비균일이고 단채널 거동이 L에 선형이 아니므로 보간 금지. |
+| **log 도메인 ID** | `log(ID)` 보간 후 `exp()` 복원. 약반전에서 ID는 지수적이라 선형보간 오차가 크다. `log_id=False`로 끌 수 있으나 디버깅 전용. |
+| **부호 위반 시 예외** | `LUTSignError` 발생, 조회 거부. **조용한 보정을 하지 않는다** (§10.2). |
+| **캡 abs** | `CGS/CGD/CGB`만 보간 결과에 `abs()`. `ID/VT/VDSAT`에는 적용 안 함 — 음수 반환은 버그 신호로 남아야 한다. |
+| **W bin 경고** | `predict()`에서 unit W < 5 µm이면 stderr 경고. |
+
+### 6.3 스케일링 규칙
+
+```
+실소자 값 = lookup(...) × (W_um / 10) × m
+```
+
+- 강도량(`VT`, `VDSAT`, 비율)은 스케일하지 않는다.
+- **ngspice `@m.x<inst>.<model>[id]`는 이미 m을 포함**한다. 따라서 위 식의 결과와 직접 비교하면 된다.
+- 실검증: BGR `XM_top1` (W=20, m=4) → scale = 8 → 예측 1.036e−5 vs 실측 1.0253e−5 (**+1.05%**).
+
+---
+
+## 7. 검증 체계 (`gen/verify_gmid.py`)
+
+순수 python(ngspice 불요). **깨진 테이블에서도 죽지 않고 어느 컬럼이 틀렸는지 이름을 댄다.**
+
+| 섹션 | 내용 | 게이트 |
+| :--- | :--- | :---: |
+| `[0]` 격자 인벤토리 | 축 길이·배열 형상. 격자 변동과 nfet/pfet 비대칭이 여기서 먼저 드러난다 | 형상 불일치 |
+| `[1]` 부호 감사 | 변수별 min/max, raw 음수 vs 유의미 음수. 패치할 컬럼을 지목 | 유의미 음수 |
+| `[2]` 무결성 게이트 | 전하보존, ID 양수, ID-VGS 단조, VT-VSB 단조 | 전부 |
+| `[3]` 격자 앵커 | A1b/A2b(nfet W=10), A3(pfet W=10). 좌표마다 `on`/`interp`/`EXTRAP` 표시 | ±2% |
+| `[4]` 실회로 앵커 | BGR XM3/XM3c/XMtop1. 전 좌표 off-grid | ID·GM ±5%, CGG ±10% |
+| `[5]` 참고 앵커 | probe2 pfet (W=400, 기본 geometry) | 정보용 |
+
+**`on`/`interp`/`EXTRAP` 표시가 핵심 장치다.** off-grid 점인데 오차 0.000%가 나오면 그건 정확도가 아니라
+기대값이 테이블에서 유래했다는 신호다. 이 표시가 없어서 한 번 오판했다(§10.4).
+
+---
+
+## 8. 검증 앵커 전체 (tt / 27 °C)
+
+### 8.1 격자 정점 앵커
+
+**A1 / A1b — nfet L=2 µm, VGS=0.92 V, VDS=1.0 V, VSB=0**
+
+| | A1 (W=4 µm) | A1b (W=10 µm) | 비고 |
+| :--- | ---: | ---: | :--- |
+| `ID` | 2.1011 µA | 5.345498 µA (5.345498e-06 A) | |
+| `GM` | 25.067 µS | 62.91698 µS (6.291698e-05 S) | |
+| `GDS` | 48.953 nS | 71.20622 nS (7.120622e-08 S) | |
+| `CGG` | — | 41.79828 fF (4.179828e-14 F) | a1b_remeasure.sp 실측 |
+| `VT` | 0.80193 V | 0.7976068 V | |
+| `VDSAT` | 0.12209 V | 0.1206887 V | |
+| gm/Id | 11.93 V⁻¹ | 11.77009 V⁻¹ | moderate inversion |
+| **gm/gds** | **512** | **883.588** | **§9.1 참조 — 둘 다 옳다** |
+| 출처 | `bgr/anchor_n1.spice`, 02 문서 | `wscale.sp` (당세션) | |
+
+**A2 / A2b — 동일 소자, VSB = 0.78 V (바디이펙트 축)**
+
+| | A2 (W=4 µm) | A2b (W=10 µm) | 비고 |
+| :--- | ---: | ---: | :--- |
+| `ID` | 16.035 nA | 41.13047 nA (4.113047e-08 A) | |
+| `VT` | 1.07310 V | 1.068964 V | |
+| `VDSAT` | — | 41.33217 mV (4.133217e-02 V) | |
+| ΔVT (VSB 0→0.78) | +271 mV | **+271.36 mV** | |
+
+*   **LUT 조회 대조**: A1b 6개 전부 0.0000% 오차, A2b VT/VDSAT 0.0000% 오차, ID +0.0043% 오차 (약반전 지수 기울기에 부동소수 좌표 오차가 증폭된 것, uV급. 합격선 대비 460배 여유).
+
+ΔVT는 폭에 거의 무관하며 조건 변동에 가장 둔감하다 → **가장 robust한 앵커**.
+
+**A3 — pfet L=2 µm, W=10 µm, VSG=1.176 V, VSD=1.0 V, VSB=0**
+
+| 항목 | 값 |
+| :--- | ---: |
+| `ID` | 3.0009 µA |
+| `GM` | 30.312 µS |
+| `GDS` | 172.18 nS |
+| `VT` | 1.02434 V |
+| `VDSAT` | 0.15956 V |
+| gm/Id | 10.10 V⁻¹ |
+| gm/gds | 176.05 |
+
+출처: `bgr/anchor_p1.spice`, 02 문서. **테이블과 폭이 같아 가장 엄격한 직접 앵커.**
+기대값(anchor 덱)과 조회값(run_sweep 앵커 런)이 서로 다른 넷리스트·다른 시점인데
+**전 항목 0.00% 일치** → 부호·파싱·인덱싱·저장·조회 전 경로 및 geometry 정합의 독립 증명.
+
+### 8.2 참고 앵커 — probe2 (정보용, 판정 제외)
+
+pfet L=0.5 µm, VSG=1.3 V, VSD=1.5 V, VSB=0, **기본 geometry**
+
+| | W=400 (probe2) | W=10 (`pfraw.sp`) | LUT 조회 | LUT vs W=10 |
+| :--- | ---: | ---: | ---: | ---: |
+| Id/W | 7.646 µA/µm | 7.7878 | 7.7878 | **0.00%** |
+| gm/W | 37.18 µS/µm | 37.024 | 37.024 | 0.00% |
+| gds/W | 1.4537 µS/µm | 1.4345 | 1.4345 | 0.00% |
+| cgg/W | 0.8154 fF/µm | 0.81772 | 0.81772 | 0.00% |
+| vdsat | 0.2825 V | 0.28969 | 0.28969 | 0.00% |
+
+**LUT는 동일 폭(W=10) 실측과 완전히 일치하고, W=400과만 ~2% 차이난다.**
+→ 이 차이는 테이블 오차가 아니라 **잔여 폭 의존성**이다(§9.2).
+
+probe2 원본 실측(W=400): `id=3.058402 mA`, `gm=14.87254 mS`, `gds=581.4709 µS`,
+`cgg=326.1773 fF`, `cgd=2.479913 fF`, `vdsat=0.2825014 V`
+
+### 8.3 실회로 앵커 — BGR `.op` (VAPWR=3.3 V, tt/27)
+
+**전 좌표 off-grid.** 실사용 조건에서의 보간 품질 측정.
+
+| 소자 | `XM3` | `XM3c` | `XM_top1` |
+| :--- | :--- | :--- | :--- |
+| 소자형 | nfet | nfet | pfet |
+| W / L / m | 20 / 4 / 2 | 10 / 2 / 2 | 20 / 4 / 4 |
+| scale | 4 | 2 | 8 |
+| VGS | 1.190078 | 1.299742 | 1.176203 |
+| VDS | 0.4381737 | 0.7517368 | 0.3011255 |
+| VSB | 0.778899 | **1.21717 (격자 밖)** | 5.60124e−5 |
+| `ID` 실측 | 1.025296e−5 | 1.025296e−5 | 1.025294e−5 |
+| `GM` 실측 | 1.304483e−4 | 1.327897e−4 | 1.126772e−4 |
+| `GDS` 실측 | 5.977988e−7 | 2.174945e−7 | 9.622210e−7 |
+| `CGG` 실측 | 3.355136e−13 | 8.026672e−14 | 5.127140e−13 |
+| **ID 오차** | **−0.04%** | **+0.94%** | **+1.05%** |
+| **GM 오차** | +0.21% | −0.03% | +0.62% |
+| **CGG 오차** | +0.57% | +0.01% | +0.12% |
+| **GDS 오차** | +9.57% | −3.21% | +2.31% |
+
+`XM_top1`은 VDS=0.301 V가 vdsat=0.158 V 바로 위(포화 무릎)로, VDS 100 mV 격자의 실효성을 시험한다 → GDS +2.31%.
+`XM3c`는 VSB가 격자 상한 1.2를 17 mV 초과한 외삽인데도 ID +0.94% → 소폭 외삽은 안전.
+
+---
+
+## 9. 정확도 한계와 물리적 특성
+
+### 9.1 gds의 폭 bin 경계 (W ≈ 5 µm) — **설계 규칙의 근거**
+
+nfet L=2, VGS=0.92, VDS=1.0, VSB=0에서 폭만 바꿔 측정:
+
+| W (µm) | 3 | 4 | **5** | 6 | 8 | 10 | 12 | 20 | 40 |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| gds/W (nS/µm) | 19.68 | 12.24 | **7.02** | 7.09 | 7.13 | 7.12 | 7.12 | 7.10 | 7.09 |
+| gm/gds | — | 512 | — | — | — | 884 | — | 885 | 886 |
+
+**W ≥ 5 µm에서 1.5% 이내 평탄. W=3, 4만 이탈.**
+
+이것은 매끄러운 협폭 물리가 아니라 **모델 bin 경계**로 보인다. 근거: 같은 조건에서
+Id/W는 −1.7%, gm/W는 −0.4%만 변하는데 **gds/W만 +72%** 튄다. 협폭 물리(STI 스트레스 등)라면
+이동도·Vth를 흔들어 세 양이 함께 움직여야 한다. gds를 지배하는 CLM/DIBL 계열 파라미터만
+bin 간 불연속인 것이 sky130 모델의 전형적 signature.
+
+**intrinsic gain(gm/gds)은 이론대로 L의 함수이고 W와 무관하다** — W ≥ 10에서 884~886, 편차 0.2%.
+A1(W=4)의 512는 다른 bin 파라미터가 계산한 값으로, **A1과 A1b는 둘 다 옳다. 화해시키려 하지 말 것.**
+
+> **설계 규칙 ①**: 유닛 핑거는 **W ≥ 5 µm, 권장 10 µm**(테이블 기준폭). 면적은 `m`으로 확보.
+
+### 9.2 잔여 폭 의존성 (~2%)
+
+W ≥ 5 bin 안에서도 W=10 ↔ W=400 사이에 Id/W가 1.85% 차이난다(§8.2).
+
+> **설계 규칙 ②**: 대형 소자는 **`m` × (W=10 핑거)** 로 구성한다. 예: pass device W=400 → `m=40, W=10`.
+> LUT 예측 정확도가 올라가고 레이아웃 관점에서도 이쪽이 정석이다.
+
+### 9.3 변수별 정확도
+
+| 변수 | 격자 정점 | off-grid 실회로 | 설계 시 전제 |
+| :--- | :---: | :---: | :--- |
+| `ID` | 0.00% | −0.04 ~ **+1.05%** | 신뢰. 사이징 1차 근거로 사용 가능 |
+| `GM` | 0.00% | −0.03 ~ +0.62% | 신뢰. UGF/gm 예산에 사용 가능 |
+| `CGG` | — | +0.01 ~ +0.57% | 신뢰. 보상망 설계에 사용 가능 |
+| `GDS` | 0.00% | −3.2 ~ **+9.6%** | **한 자릿수 나쁨** |
+| `VT`, `VDSAT` | 0.00% | — | 격자 정점 기준 |
+
+> **설계 규칙 ③**: gds는 EA 이득 계산의 분모다. **LUT 기반 이득 예측은 ±10~20% 오차를 전제로 쓰고,
+> 확정은 회로 시뮬로.** 이득 마진이 빠듯한 설계는 LUT만으로 판정하지 않는다.
+
+### 9.4 `[vth]`의 의미 — 정밀 사이징에 쓰지 말 것
+
+ngspice가 반환하는 `[vth]`는 **VDS 무의존 zero-bias 계열 문턱**이며 동작점 실효 문턱이 아니다.
+
+실측 (nfet L=4, W=10, VGS=1.0, VSB=0):
+
+| 온도 | VDS=0.1 V | VDS=1.65 V | 차이 |
+| :--- | ---: | ---: | ---: |
+| 27 °C | 0.8001171 | 0.8001228 | 6 ppm |
+| 125 °C | 0.6738075 | 0.6738210 | 20 ppm |
+
+DIBL이 있다면 불가능한 수준의 무반응 → `[vth]`는 바이어스 의존값이 아니다.
+반면 **VSB 의존성(바디이펙트)과 온도 의존성은 정상 동작**하므로 그 용도로는 유효하다.
+
+참고로 constant-current 방식 문턱은 다른 값이다: `vt_cc = 0.7736 V`
+(L=4, W=10, VDS=0.1, I_c = 0.1 µA × W/L = 0.25 µA 기준).
+
+> **설계 규칙 ④**: 반전 정도 판단과 정밀 사이징은 **gm/Id 와 vdsat**으로 한다. `[vth]`는 sanity 참고용.
+
+### 9.5 VT의 L 비단조성 (RSCE)
+
+nfet `[vth]` (tt/27, VSB=0, W=10):
+
+| L (µm) | 0.5 | 1 | 2 | 4 | 8 | 20 |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| VT (V) | 0.8361 | 0.8151 | 0.7976 | 0.8001 | 0.7932 | 0.7925 |
+
+L=2에서 극소 후 L=4에서 반등 — reverse short channel effect. **L에 대해 단조롭지 않으므로
+L 보간은 금지**(`lookup.py`가 강제).
+
+### 9.6 VSB 외삽
+
+격자 상한은 1.2 V. `XM3c`의 1.21717 V(17 mV 초과)에서 ID +0.94%로 양성.
+**LDO folded cascode에서 VSB가 1.2를 크게 넘는 소자가 나오면 격자 확장을 검토할 것.**
+
+---
+
+## 10. 사용 규칙 요약 및 사고 이력
+
+### 10.1 사용 규칙 (Do / Don't)
+
+**Do**
+1. 소자 수치는 `lut/lookup.py` 조회 또는 당세션 ngspice 실측만 인용.
+2. 유닛 핑거 W ≥ 5 µm(권장 10), 면적은 `m`으로.
+3. `L`은 격자값만: {0.5, 1, 2, 4, 8, 20} µm.
+4. 스케일 = `(W_um / 10) × m`. ngspice `@m[id]`는 m 포함.
+5. `ID`는 항상 log 보간(기본값).
+6. 모든 기록 수치에 조건 병기.
+7. LUT 사이징은 **제안**이며 확정은 회로 시뮬 후.
+
+**Don't**
+1. `L` 보간 금지 (§9.5).
+2. `[vth]`로 정밀 사이징 금지 (§9.4).
+3. gds를 1% 정밀도로 신뢰 금지 (§9.3).
+4. 캡을 저장 시 `abs()` 금지 (§4.1).
+5. 부호 위반을 조용히 보정 금지 (§10.2).
+6. 코너를 이 테이블에서 읽으려 하지 말 것 — tt 전용, 코너는 회로 시뮬로 (Murmann 표준 플로우).
+
+### 10.2 사고 ①: 조용한 클리핑
+
+초기 `lookup.py`가 log 보간 전 `np.maximum(ID, 1e-25)`로 음수를 클립했다.
+pfet ID가 전면 음수였던 상태에서 **테이블 전체가 1e−25로 접혀** 조회가 정확히 `1e−25`를 반환했고,
+스케일 8을 곱해 `8.0000e-25`라는 **그럴듯한 숫자**가 나왔다. GM/GDS/CGG(선형 경로)는 멀쩡해서
+버그가 한 변수에만 국한된 것처럼 보였고, 원인 추적에 한 사이클을 썼다.
+
+> **교훈**: 잘못된 테이블은 **숫자를 반환하면 안 된다.** 현재는 `LUTSignError`로 조회를 거부한다.
+
+### 10.3 사고 ②: stale pkl로 코드 역추론
+
+`sign_factor=1.0`인데 저장 데이터가 음수인 것을 보고 "raw가 음수"라고 역추론해
+pfet 3개 변수의 부호를 뒤집는 패치를 했다. **틀렸다.** 그 pkl은 구 버전(`6,133,34,4`) 산물이었고
+당시 코드가 만든 것이 아니었다. 재스윕 26분 후 여전히 음수인 것을 보고서야 원래 코드가 옳았음이 드러났다.
+
+> **교훈**: 코드의 동작을 **데이터로 역추론하지 말 것.** 데이터의 생성 시점을 먼저 확인한다.
+> 재스윕 후 `data/*.pkl` 양쪽 mtime을 반드시 확인.
+
+### 10.4 사고 ③: 보고서의 PASS ≠ 검증
+
+AI가 작성한 "전 항목 PASS" 보고서를 받았으나, 실제로는 (a) 실행 출력과 디스크 상태가 불일치했고
+(b) 일부 기대값이 갱신돼 있었다. **배열 크기 산술 하나**(`6×133×34×4 = 108,528`)로 "격자 삽입 완료"
+주장이 무너졌고, pkl 직접 로드로 부호 문제가 드러났다.
+
+> **교훈**: 검증은 **직접 실행 출력 + 원시 데이터**로만. 보고서는 증거가 아니다.
+> 검증이 실패하면 기준값이 아니라 파이프라인을 고친다. 기대값을 바꿔야 한다면 사유와 원본을 반드시 병기.
+
+### 10.5 폐기값: "0.647 V" 계열
+
+`nfet Vth(VSB=0, tt) = 0.647 V`, `(ss) = 0.716 V`, `(VSB=0.78) = 1.068 V` 는 **폐기됨. 인용 금지.**
+
+**폐기 근거**
+1. repo 전체 grep에서 이 수치들의 1차 출처가 없다. 시뮬 로그·CSV·설계 문서 어디에도 없고,
+   AI가 인계문서를 받아 적은 파생 파일(`verify_gmid.py`, `README.md`)에만 존재했다.
+2. 전 L 격자의 `[vth]`(tt/27/VSB=0)는 0.79 ~ 0.84 V 범위 (§9.5). 0.647과 불일치.
+3. 자체 모순: `1.068 − 0.800 = +268 mV`로 문서의 바디이펙트 "+270 mV"와 정합한다.
+   즉 1.068은 **0.800 계열**이지 0.647 계열이 아니다.
+4. 온도설 기각: 125 °C `[vth]` 실측은 0.674 V로 0.647과 다르다.
+5. 02_LUT_앵커.md §3.1이 이미 독립적으로 폐기 처분했다 —
+   "검증 없이 유입된 수치적 가정", 처방은 "A1 실측 0.80193 V를 Golden 앵커로 정정".
+
+**대체**: A1/A1b/A2/A2b (§8.1).
+**이 사건이 "조건·출처 없는 수치는 앵커 자격이 없다"는 프로젝트 규칙의 존재 이유다.**
+
+---
+
+## 11. 트러블슈팅
+
+| 증상 | 원인 | 조치 |
+| :--- | :--- | :--- |
+| `ngspice: command not found` | `bash -c`는 PATH 미로드. python subprocess도 이 PATH를 상속 | ngspice를 부르는 모든 실행(스크립트 포함)은 **`bash -l -c`** |
+| `LUTSignError` | `run_sweep.py`의 sign_factor 오류 **또는** pkl이 stale | §4.2 표와 대조 → 재스윕 → mtime 확인 |
+| `[0]` 형상 불일치 | 격자 정의 변경 후 한쪽만 재스윕 | 양쪽 재스윕 |
+| off-grid 점인데 오차 0.000% | 기대값이 테이블 유래일 가능성 | `[on]`/`[interp]` 표시 확인, 기대값 provenance 추적 |
+| `LUTRangeError` (L) | 격자 밖 L 조회 | 격자값 사용, 또는 격자 확장 후 재스윕 |
+| ngspice `.control`에서 명령이 무시됨 | **`;`는 ngspice에서 주석** | 한 줄에 명령 두 개 금지 |
+| 넷리스트 소자값 grep이 이상함 | continuation(`+`) 줄에 `m`/`mult`가 숨음 | `grep -A1` 사용 |
+
+---
+
+## 12. 상태
+
+**2026-07 검증 통과 (exit 0).** 전 게이트 PASS:
+격자 인벤토리 대칭, 부호 감사 무위반, 전하보존 0.000%, ID/VT 단조성 0.00% violate,
+A1b/A2b/A3 격자 앵커 ±0.01% 이내, BGR 실회로 앵커 ID ≤ +1.05% / GM ≤ +0.62% / CGG ≤ +0.57%.
+
+**A1b VT/VDSAT provenance 확정 완료**:
+`gen/a1b_remeasure.sp`를 통한 독립 재측정으로 A1b/A2b 전체 변수의 물리 원천이 완전히 확정되어 미결 상태를 해제했습니다.
+또한 A1b의 CGG 특성은 BGR `XM3` 실소자 시뮬레이션 결과와도 교차 일치합니다 (XM3 CGG 335 fF를 유닛 W=10/L=4로 환산하면 83.9 fF, 앵커 A1b L=2의 41.8 fF를 2배 연장 시 83.6 fF로 **0.4% 편차 내 정합**).
+
+**후속 블록에서 이 테이블을 쓸 때**: §10.1 규칙을 따르고, 사이징 결과는 반드시 회로 시뮬로 확정한다.
