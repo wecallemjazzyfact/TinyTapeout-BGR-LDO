@@ -2,8 +2,8 @@
 
 ### TL;DR (3줄 요약)
 1. TinyTapeout 아날로그 설계를 위한 도커 컨테이너 실행 환경, 프로젝트 디렉토리 트리 및 GUI 툴(Xschem/Magic) 구동 절차를 규정합니다.
-2. SkyWater 130nm PDK의 핵심 소자(5V NMOS/PMOS, 고시트 저항, PNP BJT, MiM 커패시터)의 모델명과 이산 빈(Bin) 경계 한계를 분석했습니다.
-3. pygmid Spectre 전용 한계 우회 방안, 몬테카를로 split 구동 제어법 및 3대 ngspice 실행 가드레일을 구축하여 검증 무결성을 확보했습니다.
+2. SkyWater 130nm PDK의 핵심 소자(5V NMOS/PMOS, 고시트 저항, PNP BJT, MiM 커패시터)의 모델명과 이산 빈(Bin) 경계 한계($L \le 20\,\mu\text{m}$) 등 공정 함정을 요약했습니다.
+3. 몬테카를로 외부 루프 구성법, 다이오드 결선식 PMOS 특성화 레시피, pygmid의 Spectre 종속 우회 방안 및 ngspice 실행 가드레일 3종을 제공합니다.
 
 ---
 
@@ -48,6 +48,7 @@ c:\Users\aa\Desktop\school\TinyTapeout\
 ├─ 01_BGR_최종스펙.md
 ├─ 02_LUT_앵커.md
 ├─ 03_PDK_환경.md
+├─ 04_LDO_스펙.md           # LDO 목표 스펙 및 아키텍처
 ├─ WORKSPACE.md
 ├─ RESTART_GUIDE.md
 ├─ tapeout-guardrails.md
@@ -60,11 +61,17 @@ c:\Users\aa\Desktop\school\TinyTapeout\
 │     ├─ REFERENCE_NOTES.md
 │     ├─ bgr/                # BGR 스키매틱 및 ngspice testbench 폴더
 │     ├─ ldo/                # LDO 설계 및 시뮬레이션 환경 폴더
+│     │  └─ DECISIONS.md    # LDO 판정 기록 (근거·대체 이력의 정본)
 │     ├─ top/                # BGR + LDO 통합 칩 스키매틱 및 핀 매핑 폴더
 │     ├─ layout/             # Magic 레이아웃 (.mag) 및 GDS/LEF 산출물
 │     ├─ milestones/         # 01~09 개발 마일스톤 증거 보관실
 │     ├─ work/               # 로컬 DRC 및 LVS 검증용 임시 폴더
 │     └─ lut/                # gm/Id Look-Up Table 프로젝트 공용 폴더
+│        ├─ README.md       # LUT 정본 (사양·부호규약·정확도·사고이력)
+│        ├─ lookup.py       # 조회 API
+│        ├─ design.py       # 사이징 계층 (curves/vgs_at/size/charts)
+│        ├─ gen/            # run_sweep.py, verify_gmid.py, 앵커 덱
+│        └─ data/           # nfet/pfet_g5v0d10v5.pkl
 ```
 
 ---
@@ -78,31 +85,58 @@ c:\Users\aa\Desktop\school\TinyTapeout\
 #### NMOS 트랜지스터
 *   **PDK 모델명**: `sky130_fd_pr__nfet_g5v0d10v5`
 *   **특징**: 5V/10.5V Thick-Oxide 고전압 NMOS 소자. LDO 오차 증폭기의 하단 스택 및 BGR active mirror 하단 평형 제어 장치에 사용.
-*   **바디 효과 주의 사항**: 벌크가 접지(0V)되고 소스가 공중으로 뜨는 회로 구성(예: 등화쌍 XM3/XM4, 소스 전위 $pprox 0.78	ext{V}$) 시, $V_{SB} pprox 0.78\,	ext{V}$에 의한 바디 효과로 인해 문턱 전압 $V_{thn}$이 **`0.798 V ➔ 1.069 V`**로 $271\,	ext{mV}$가량 치솟는 물리 현상이 존재함. 따라서 전압 헤드룸 예산 설계 시 $V_{GS}$ 상승에 따른 마진 하락을 선대입하여 계산해야 합니다.
+*   **바디 효과 주의 사항**: 벌크가 접지(0V)되고 소스가 공중으로 뜨는 회로 구성(예: 등화쌍 XM3/XM4, 소스 전위 $\approx 0.78\text{V}$) 시, $V_{SB} \approx 0.78\,\text{V}$에 의한 바디 효과로 인해 문턱 전압 $V_{thn}$이 **`0.798 V ➔ 1.069 V`**로 $271\,\text{mV}$가량 치솟는 물리 현상이 존재함. 따라서 전압 헤드룸 예산 설계 시 $V_{GS}$ 상승에 따른 마진 하락을 선대입하여 계산해야 합니다.
 
 #### PMOS 트랜지스터
 *   **PDK 모델명**: `sky130_fd_pr__pfet_g5v0d10v5`
 *   **특징**: 5V/10.5V Thick-Oxide 고전압 PMOS 소자. BGR 메인 바이어스 거울 및 LDO 패스 소자(Pass Device)로 사용.
-*   **L 치수 제한 (PDK Binning 함정)**: sky130 bsimg4 모델 카드의 구간 경계(bin) 정의 상, 단일 FET의 최대 채널 길이는 **`20 µm`**로 단단히 묶여 있습니다. 만약 스타트업 감지 소자 설계 시 누설 전류 극소화를 위해 단일 트랜지스터 $L = 60\,\mu	ext{m}$로 넷리스트를 작성하면 `could not find a valid modelname` 에러가 떨어지며 시뮬레이션이 붕괴합니다. 따라서 $L > 20\,\mu	ext{m}$의 초대형 L이 필요한 경우 반드시 복수의 서브 소자를 **직렬 스택(Series Stack)** 형태로 결선하여 유효 $L$을 확보해야 합니다.
+*   **L 치수 제한 (PDK Binning 함정)**: sky130 bsimg4 모델 카드의 구간 경계(bin) 정의 상, 단일 FET의 최대 채널 길이는 **`20 µm`**로 단단히 묶여 있습니다. 만약 스타트업 감지 소자 설계 시 누설 전류 극소화를 위해 단일 트랜지스터 $L = 60\,\mu\text{m}$로 넷리스트를 작성하면 `could not find a valid modelname` (혹은 `no model available`) 에러가 떨어지며 시뮬레이션이 붕괴합니다. 따라서 $L > 20\,\mu\text{m}$의 초대형 L이 필요한 경우 반드시 복수의 서브 소자를 **직렬 스택(Series Stack)** 형태로 결선하여 유효 $L$을 확보해야 합니다.
 
 #### 고시트 폴리 저항 (High-Sheet Poly Resistor)
 *   **PDK 모델명**: `sky130_fd_pr__res_high_po_0p69`
-*   **특징**: 고정밀 고저항용 폴리실리콘 저항 ($W=0.69\,\mu	ext{m}$ 고정, 시트 저항 $pprox 2\,	ext{k}\Omega/	ext{sq}$).
-*   **온도 곡률 2차 보상**: 저항 소자의 2차 온도 계수인 `tc2 = +1.22 ppm/°C²`의 강한 양의 곡률이 BJT $V_{BE}$ 전압의 음의 비선형 곡률($T \ln(T)$ 표류)을 보완하여 BGR 출력 곡선의 S자 굴곡을 평탄화시키는 온도 2차 보상(Cubic Curvature Compensation) 기작이 존재합니다. 단, 저항 헤드의 접촉 저항($R_{head} pprox 780\,\Omega$) 성분이 기생 기여하므로 유닛 셀 단위 매칭 시 $R_{head}$를 합산한 실효 저항비를 매칭해야 합니다.
+*   **특징**: 고정밀 고저항용 폴리실리콘 저항 ($W=0.69\,\mu\text{m}$ 고정, 시트 저항 $\approx 2\,\text{k}\Omega/\text{sq}$).
+*   **온도 곡률 2차 보상**: 저항 소자의 2차 온도 계수인 `tc2 = +1.22 ppm/°C²`의 강한 양의 곡률이 BJT $V_{BE}$ 전압의 음의 비선형 곡률($T \ln(T)$ 표류)을 보완하여 BGR 출력 곡선의 S자 굴곡을 평탄화시키는 온도 2차 보상(Cubic Curvature Compensation) 기작이 존재합니다. 단, 저항 헤드의 접촉 저항($R_{head} \approx 780\,\Omega$) 성분이 기생 기여하므로 유닛 셀 단위 매칭 시 $R_{head}$를 합산한 실효 저항비를 매칭해야 합니다.
 
 #### PNP 바이폴라 (BJT)
 *   **PDK 모델명**: `sky130_fd_pr__pnp_05v5_W0p68L0p68`
-*   **특징**: 에미터 면적 $0.68	imes0.68\,\mu	ext{m}^2$ 규격의 바이폴라 소자. BGR 코어의 PTAT 전압 발생 축으로 사용.
-*   **실효 에미터 비 정정**: BGR 매칭 비율을 $1:8$ (N=8)로 설정하고 단일 분지에 $3\,\mu	ext{A}$를 주입할 때, 에미터 주변부 효과(Periphery Effect)에 따른 전류 이탈로 인해 실효 면적비는 $N_{eff} pprox 7.77$로 떨어집니다. 이로 인해 PTAT 기준 전압이 이론치($V_T \ln(8) pprox 53.78\,	ext{mV}$) 대비 $-1.4\%$ 감소한 **$\Delta V_{BE} = 53.02\,	ext{mV}$**로 고정되므로, 저항 비율 산출 계산 시 실측된 $53.02\,	ext{mV}$를 물리 기준으로 사용해야 정밀한 Zero-TC 튜닝이 가능합니다.
+*   **특징**: 에미터 면적 $0.68\times0.68\,\mu\text{m}^2$ 규격의 바이폴라 소자. BGR 코어의 PTAT 전압 발생 축으로 사용.
+*   **실효 에미터 비 정정**: BGR 매칭 비율을 $1:8$ (N=8)로 설정하고 단일 분지에 $3\,\mu\text{A}$를 주입할 때, 에미터 주변부 효과(Periphery Effect)에 따른 전류 이탈로 인해 실효 면적비는 $N_{eff} \approx 7.77$로 떨어집니다. 이로 인해 PTAT 기준 전압이 이론치($V_T \ln(8) \approx 53.78\,\text{mV}$) 대비 $-1.4\%$ 감소한 **$\Delta V_{BE} = 53.02\,\text{mV}$**로 고정되므로, 저항 비율 산출 계산 시 실측된 $53.02\,\text{mV}$를 물리 기준으로 사용해야 정밀한 Zero-TC 튜닝이 가능합니다.
+
+---
 
 ### 3.2. MiM 커패시터 명세 및 공정 산포
-*   **PDK 모델명**: `cap_mim_m3_1` 및 `cap_mim_m3_2`
-*   **단위 면적 커패시턴스 (camimc)**:
-    *   **Typical (대표치)**: $2.00\,	ext{fF}/\mu	ext{m}^2$ (`2.00e-15` F/um^2)
-    *   **Cap-Low 코너 (최소값 코너)**: $1.778\,	ext{fF}/\mu	ext{m}^2$ (`1.778e-15` F/um^2, 대표치 대비 **-11.1%**)
-    *   **Cap-High 코너 (최대값 코너)**: $2.231\,	ext{fF}/\mu	ext{m}^2$ (`2.231e-15` F/um^2, 대표치 대비 **+11.5%**)
-*   **적층형 결선 특성**: `cap_mim_m3_1`과 `cap_mim_m3_2`는 동일한 단위 면적 커패시턴스(`camimc`) 파라미터를 사용합니다. 레이아웃 상에서 동일 풋프린트로 적층(Stacking)하여 병렬 결선할 경우, 면적 증가 없이 **$4.0\,	ext{fF}/\mu	ext{m}^2$**의 단위 면적 용량을 안전하게 설계할 수 있습니다.
-*   **안정성 평가 최악 조건**: 몬테카를로 분석 및 코너 시뮬레이션 시 글로벌 `-11%`가 감쇄되는 `cap_low` 변이 지점이 LDO 오차 증폭기의 위상 마진(Phase Margin) 감쇄 및 BGR 기동 시간 루프 지연 평가에서 가장 보수적이고 불리한 최악 조건(Worst-case corner)을 형성하므로, 루프 안정성 보상 설계의 검증 기준으로 고정해야 합니다.
+
+*   **PDK 모델명**: `cap_mim_m3_1` (met3 / capm), `cap_mim_m3_2` (met4 / cap2m)
+*   **단위 면적 용량 (`camimc`)**:
+
+| 코너 | 값 | 대표치 대비 |
+| :--- | :---: | :---: |
+| **Typical** | `2.00 fF/µm²` (`2.00e-15` F/µm²) | — |
+| **cap_low** | `1.778 fF/µm²` | **`-11.1%`** |
+| **cap_high** | `2.231 fF/µm²` | `+11.5%` |
+
+*   **적층 특성**: 두 소자는 동일한 `camimc`를 사용합니다. 동일 풋프린트로 적층·병렬 결선하면
+    면적 증가 없이 **$4.0\,\text{fF}/\mu\text{m}^2$**를 확보할 수 있습니다.
+*   **배치 이점**: MiM은 **met3~met4 층**이므로 액티브 회로 위에 겹쳐 배치할 수 있습니다.
+    LDO의 $C_{out}$처럼 큰 용량이 필요한 경우 **실면적 벌금이 거의 없습니다.**
+    단 (a) 하판 아래에 스위칭 회로를 두면 보상·출력 노드에 직접 주입되므로 배치에 주의하고,
+    (b) `cap_mim_m3_2`의 상판 `cap2m`이 met5 인접 층이므로 **TinyTapeout의 met5 금지 규칙과
+    간섭이 없는지 확인**해야 합니다 (`cap_mim_m3_1` 단층은 $2.0\,\text{fF}/\mu\text{m}^2$로 확실히 안전).
+*   **안정성 평가 최악 조건**: 글로벌 **`cap_low` ($-11\%$)** 가 LDO 위상 마진 감쇄와
+    BGR 기동 루프 지연 양쪽에서 가장 보수적인 조건을 형성하므로,
+    **루프 안정성 검증의 고정 기준 코너**로 사용합니다.
+
+### 3.3. thin-ox MOS 커패시터 — $C_{out}$ 용도로 기각
+
+*   **기각 사유**: thin-ox MOS 커패시터의 절대 최대 정격이 $\approx 1.95\,\text{V}$인데,
+    LDO의 **오버슈트 하드 스펙이 정확히 $1.95\,\text{V}$**입니다.
+    즉 스펙을 위반하는 순간 **디캡이 가장 먼저 파괴되는 소자**가 되는 구조이므로 채택하지 않습니다.
+    → $C_{out}$은 §3.2의 MiM 적층을 사용합니다.
+*   **참고 — thick-ox $C_{ox}$ 역산치**: `pfet_g5v0d10v5` $W=400/L=0.5$ (기본 geometry,
+    $V_{SG}=1.3$, $V_{SD}=1.5$, tt/27) 실측 $C_{gg} = 326.18\,\text{fF}$를 게이트 면적
+    $200\,\mu\text{m}^2$로 나누면 $1.63\,\text{fF}/\mu\text{m}^2$이고, 포화 영역의 $\approx \tfrac{2}{3}C_{ox}$
+    관계에서 **$C_{ox} \approx 2.4\,\text{fF}/\mu\text{m}^2$**입니다.
+    (thin-ox 값은 당세션 미실측 — 인용 시 조건 병기 필요)
 
 ---
 
@@ -120,7 +154,7 @@ c:\Users\aa\Desktop\school\TinyTapeout\
 ## 5. 핵심 캐릭터리제이션 시뮬레이션 레시피
 
 ### 5.1. 다이오드 연결형 PMOS 특성화 기법 (Diode-connected Characterization)
-*   **원인/배경**: 일반 2차 자승 법칙(Square-law)은 Moderate Inversion($V_{ov} pprox 50 \sim 130\,	ext{mV}$) 영역에서 쇼트 채널 효과로 인해 크게 이탈합니다. 원하는 바이어스 전류($I_{bias} = 9.68\,\mu	ext{A}$)를 공급하기 위한 정확한 소자 면적 및 게이트 드라이브 헤드룸 전압을 도출하기 위해, 트랜지스터를 다이오드로 묶고 강제 전류원으로 동작점을 찾는 기법이 사용됩니다.
+*   **원인/배경**: 일반 2차 자승 법칙(Square-law)은 Moderate Inversion($V_{ov} \approx 50 \sim 130\,\text{mV}$) 영역에서 쇼트 채널 효과로 인해 크게 이탈합니다. 원하는 바이어스 전류($I_{bias} = 9.68\,\mu\text{A}$)를 공급하기 위한 정확한 소자 면적 및 게이트 드라이브 헤드룸 전압을 도출하기 위해, 트랜지스터를 다이오드로 묶고 강제 전류원으로 동작점을 찾는 기법이 사용됩니다.
 *   **시뮬레이션 덱 코드 ( pm_char.spice )**:
     ```spice
     * PMOS 동작점 직접 도출 테스트 덱
@@ -140,9 +174,9 @@ c:\Users\aa\Desktop\school\TinyTapeout\
     
     .op
     .control
-    run
-    show xm1  ; vgs, vds, vth, gm, gds, vdsat 목록 직접 확인
-    print (3.3 - v(d)) ; Vsg(=Vsd) 실측값 터미널 출력
+      run
+      show xm1  ; vgs, vds, vth, gm, gds, vdsat 목록 직접 확인
+      print (3.3 - v(d)) ; Vsg(=Vsd) 실측값 터미널 출력
     .endc
     .end
     ```
@@ -151,17 +185,39 @@ c:\Users\aa\Desktop\school\TinyTapeout\
     docker exec iic-osic-tools_xvnc_uid_1000 bash -l -c "cd /foss/designs/designs/bgr_ldo/bgr && ngspice -b pm_char.spice"
     ```
 
----
-
-## 6. pygmid 프레임워크 한계 및 ngspice 우회 방안
-*   ** Specter 전용 제약**: python gm/Id 프레임워크인 `pygmid` 패키지의 원본 데이터 추출 모듈(`sweep`)은 내부적으로 Cadence Spectre 전용 시뮬레이션 환경 파서(`pysweep.scs`, `SpectreSimulator` 인터페이스, `psf_utils` 이진 데이터 추출 라이브러리)에 완전 종속되어 개발되었습니다.
-*   **오픈소스 우회 설계**: 오픈소스 시뮬레이터인 ngspice 환경에서는 해당 모듈의 직접 구동이 불가능하므로, 당사는 ngspice 배치 시뮬레이션 데이터를 직접 파싱하여 4차원 바이어스 어레이 데이터 테이블을 재구성하는 독자적인 추출 스크립트(`run_sweep.py`)를 개발하였습니다.
-*   **데이터 연동**: 추출이 끝난 pickle 형식의 소자 테이블(`.pkl`) 데이터는 `pygmid.Lookup` 클래스와 호환되도록 데이터 포맷을 정합하였으며, 최종 사이징 분석 단계에서는 pygmid의 보간 및 조회 API를 그대로 재사용(Wrapper 모듈 `lookup.py` 사용)하도록 인프라를 확정지었습니다.
 
 ---
 
-## 7. ngspice 시뮬레이션 개발 실행 규칙 (Execution Guardrails)
+## 6. pygmid 프레임워크 한계 및 ngspice 우회
 
-1.  **컨테이너 기반 실행 보장 (PATH 상속)**: python `subprocess` 등을 사용하여 ngspice 배치를 백그라운드로 자동 실행하는 스크립트도 셸 환경의 PATH 및 환경 변수 종속성을 그대로 상속받도록 반드시 **`docker exec -l`** 또는 **`bash -l -c`** 셸 옵션을 매핑하여 컨테이너 환경 내에서 실행되도록 보장해야 합니다.
-2.  **control 블록 내부 세미콜론(;) 사용 제한**: ngspice의 `.control` ~ `.endc` 실행 제어 블록 내부에서 **세미콜론(`;`)은 주석 시작 기호**로 동작합니다. 따라서 복수의 ngspice 명령어를 한 줄에 줄여 쓰기 위해 `;`로 구분하여 넷리스트를 작성하면, 뒤쪽 명령어 전체가 주석으로 간주되어 무시됩니다. 한 라인에는 반드시 단 하나의 명령어만 분리하여 기재해야 합니다.
-3.  **넷리스트 Continuation (+) 라인 확인**: xschem 등에서 스키매틱을 통해 SPICE 넷리스트를 자동 추출할 때, 긴 인스턴스 라인은 줄바꿈 기호인 **`+`** 라인으로 나뉘어 기재됩니다. 이 때 `m` (multiplier) 또는 `mult`와 같은 스케일 파라미터가 continuation 라인 밑으로 숨는 경우가 잦으므로, 넷리스트 grep 조사 시에는 오판 방지를 위해 반드시 **`grep -A1 "소자명"`** 형태로 다음 행까지 조사하여 정밀한 치수를 검증해야 합니다.
+*   **Spectre 전용 제약**: python gm/Id 프레임워크 `pygmid`의 데이터 추출 모듈(`sweep`)은
+    Cadence Spectre 전용 구성요소(`pysweep.scs`, `SpectreSimulator` 인터페이스,
+    `psf_utils` 이진 파서)에 완전히 종속되어 있어 ngspice에서 구동할 수 없습니다.
+*   **우회 설계**: ngspice 배치 출력을 직접 파싱하여 4D 바이어스 배열을 재구성하는
+    자체 스크립트 `lut/gen/run_sweep.py`를 개발했습니다.
+*   **데이터 연동**: 산출된 `.pkl`은 `pygmid.Lookup` 클래스와 호환되도록 포맷을 정합했으며,
+    조회부(보간 API)는 시뮬레이터 독립이므로 그대로 재사용합니다 (래퍼 `lut/lookup.py`).
+*   **재생성 소요**: nfet 14분 23초 + pfet 11분 45초 (총 약 26분).
+    상세 사양·부호 규약·정확도는 `lut/README.md`가 정본입니다.
+
+---
+
+## 7. ngspice 실행 가드레일 (사고 이력 기반)
+
+1.  **PATH 상속 — `bash -l -c` 필수**
+    `bash -c`는 로그인 프로파일을 읽지 않아 PATH에 ngspice가 없습니다(`command not found`).
+    **python `subprocess`로 ngspice를 호출하는 스크립트도 마찬가지**입니다 —
+    파이썬이 상속받는 PATH가 셸의 PATH이기 때문입니다.
+    파일 조작만 하는 명령은 `bash -c`로 충분하지만, **툴을 실행하는 순간 `bash -l -c`** 로 바꾸십시오.
+2.  **`.control` 블록에서 세미콜론(`;`)은 주석**
+    ngspice의 `.control` ~ `.endc` 내부에서 `;`는 주석 시작 기호입니다.
+    한 줄에 명령 두 개를 `;`로 이어 쓰면 **뒤쪽이 통째로 무시**되므로,
+    한 라인에는 반드시 명령 하나만 기재합니다.
+3.  **넷리스트 grep은 `grep -A1`**
+    xschem이 추출한 넷리스트에서 긴 인스턴스 라인은 `+` continuation으로 나뉘며,
+    `m`(multiplier)이나 `mult` 같은 스케일 파라미터가 **다음 줄에 숨는 경우가 잦습니다.**
+    소자 치수 검증 시에는 반드시 `grep -A1 "소자명"` 으로 다음 행까지 확인하십시오.
+4.  **재생성 후 산출물 mtime 확인**
+    스윕·MC 등 장시간 작업 후에는 **모든 산출물의 갱신 시각을 확인**합니다.
+    한쪽만 갱신된 stale 파일로 코드 동작을 역추론하다 26분 재작업이 발생한 이력이 있습니다.
+    **코드의 동작을 데이터로 역추론하지 말고, 데이터의 생성 시점을 먼저 확인하십시오.**
