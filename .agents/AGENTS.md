@@ -45,3 +45,11 @@ Below are the project-specific guardrails and constraints that must be adhered t
 * **LUT-Only Device Parameters:** 소자 파라미터 수치는 LUT 조회 결과만 사용한다. 기억 기반 수치(Vth, mobility, Cox 등) 인용 금지. 조회 코드와 결과를 함께 보고하지 않은 사이징 계산은 무효.
 * **Sizing Proposal Principle:** LUT 조회로 도출한 사이징은 "제안"이며, 최종 확정은 사용자의 회로 시뮬 검증 후에만 결정한다.
 
+### 8. OPEN_ITEMS.md Guardrails (A/B/C/D/E Labels)
+* **Canonical Source:** `designs/bgr_ldo/ldo/OPEN_ITEMS.md` is the single canonical source for A/B/C/D/E labels.
+* **Allowed Actions:** File reflection, maintaining table format consistency, git commits.
+* **Prohibited Actions:** ID creation, status changes (`OPEN`/`PARTIAL`/`CLOSED`/`VOID`), item deletion, running simulations, ID number reuse (use `VOID` instead of deletion).
+* **Commit Message Format:** The first line of commit messages modifying `OPEN_ITEMS.md` must list affected IDs (e.g., `docs(open-items): D6 CLOSED — ...`).
+* **Undefined Labels:** If a label is found in a document without a definition in `OPEN_ITEMS.md`, do NOT fix it; report it to the USER immediately.
+
+
