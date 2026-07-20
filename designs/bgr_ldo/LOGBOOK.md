@@ -262,24 +262,41 @@
   * 지난 추정("리포 W=2 가정 오류로 4.3배 불일치")을 철회함. 재조사 결과 리포의 vth(L=2)=0.774V는 고VDS DIBL 반영값으로 당사 실측 0.802V(VDS=1.0V)와 정합하며, 전류 차이 역시 이 28mV vth 차이로 설명됨. 4.3배 불일치는 당사 구 미니스윕의 6배 계통 오염이 진짜 원인이었음.
 - **향후 계획:** 확정된 앵커를 검증에 활용하여 LUT 생성을 완료하고, LDO 설계를 착수함.
 
-## [2026-07] EA 바이어스 탭(IB_EA) 신설 및 검증
-- **배경:** LDO 오차 증폭기(EA) 구동을 위한 바이어스 전류로 BGR 메인 미러 브랜치 전류($10.25294\,\mu\text{A}$)의 $1/4$ 스케일 복사 탭을 신설함 (선래 2건 `XXM_bias_mir` $\rightarrow$ `V_bias_n`, `XXM_cn_mir` $\rightarrow$ `V_casc_n`에 이은 3번째 바이어스 복사 분기).
-- **소자 추가 및 캐스코드 적용 사유:**
-  * 소자 구성: `XXM_tap_top` (`pfet_g5v0d10v5` W20/L4 m1) + `XXM_tap_casc` (`pfet_g5v0d10v5` W10/L2 m1) 2개 소자 추가
-  * 캐스코드 필수 사유: ① 수신단 LDO EA 입력 트랜지스터 드레인 전압($V_{DS}$) 정합 확보 ② BGR 게이트 노드(`V_gate_top`)로의 오차 증폭기 과도 스위치 노이즈 유입 차폐
-- **실측 특성 검증 결과:**
-  * **출력 전류:** **`IB_EA = 2.5642 µA`** (조건: tt / 27 °C, VAPWR 3.3 V, $V(IB\_EA) = 0.95\,\text{V}$) — 공칭 목표치 $2.5632\,\mu\text{A}$ 대비 **`+0.04%`** 정합
-  * **Compliance 전압 범위:** **`0.00 V ~ 3.00 V`** ($\pm 1\%$ 유효 전류 보장 대역, 역산 $R_{out} \approx 820\,\text{M}\Omega$)
-  * **온도 특성 (-40 / 27 / 125 °C):** **`2.6376 / 2.5669 / 2.4156 µA`** ($\text{TC} = -524\,\text{ppm}/^\circ\text{C}$) — ![IB_EA 온도 특성](file:///c:/Users/aa/Desktop/school/TinyTapeout/designs/bgr_ldo/milestones/10_ibea_tap/fig18_ibea_temp.png)
-  * **몬테카를로 산포 ($\sigma$):** **`2.53 %`** ($N=100$, MM+PR), $\text{corr}(V_{ref}, IB\_EA) = +0.692$
-  * **최악 코너 ($ss / -40^\circ\text{C}$):** **`2.6823 µA`** (`+4.6%` 변동)
-- **물리 검증 (비율계량 온도 보존 증명):**
-  * $I = V_{BE} / R_{poly} \implies dI/I = -dR/R$. PDK 폴리 저항(`res_high_po_0p69`) TC1 $+514\,\text{ppm}/^\circ\text{C}$ $\rightarrow$ 이론 예측 $-514$ vs 실측 **$-524\,\text{ppm}/^\circ\text{C}$** (오차 $1.9\%$).
-  * LDO 분압 저항망도 동일 폴리 저항 기반이므로 $I_{EA} / I_{min}$ 비율이 온도 불변으로 유지되며, 이에 따라 $g_{m,EA} / g_{m,pass}$ 비율 및 LDO 위상 마진(Phase Margin)이 전 온도 대역에서 보존되는 비율계량 설계의 실측 근거를 확보함.
-- **회계 원칙 및 코어 무섭동 입증:**
-  * 회계 원칙: BGR 코어 공칭 $I_Q = 59.73\,\mu\text{A}$ 행은 코어 정본 기준으로 불변 유지. 탭 복사 $2.564\,\mu\text{A}$는 LDO EA 계정으로 이관 (전체 칩 물리 총소모 전류 = $62.3\,\mu\text{A}$ @ 3.3V).
-  * 코어 무섭동: 탭 추가 후에도 $V_{ref}$ `1.18659 V`, TC `7.5 ppm/°C`, Line Regulation `0.0840 %/V`, `XM_top1` 전류 `10.25294 µA`로 100% 동일함 (게이트 DC 개방 결선).
-- **신규 리스크 E6 (기동 중 pass 게이트 부유) BGR측 입력 데이터 산출:**
-  * BGR 기동 활성화 시점 $V_{alive}$ / $t_{alive}$ 분석을 완료함.
-  * 기동 램프율 경계 경계치: **$\approx 90\,\text{mV}/\mu\text{s}$** (최악 조건 $ss / -40^\circ\text{C}$ 기준). LDO 설계팀에 입력 데이터를 전달하여 pass 소자 게이트 클램프 회로 자리 예약을 확정함.
+## [2026-07] EA 바이어스 탭(IB_EA) 신설
+- **배경:** LDO EA 바이어스 마스터를 BGR 메인 미러의 1/4 브랜치 복사($2.5632\,\mu\text{A}$)로 확정함 (LDO 채팅 판정). 기각 대안: $V_{ref} \rightarrow \text{V-to-I}$ 서보 회로, 별도 constant-$g_m$ 셀 (둘 다 새 루프·기동·오프셋 검증 부담 추가됨). 미러 재사용은 단 소자 2개 추가로 완결됨.
+- **선례:** BGR 넷리스트가 이미 동일 패턴 2회 사용 — `XXM_bias_mir` ($\rightarrow V_{bias\_n}$), `XXM_cn_mir` ($\rightarrow V_{casc\_n}$). 이번이 세 번째 복사 분기 적용임.
+- **캐스코드 2가지 적용 사유:** (i) 수신단이 NMOS 다이오드($\approx 0.9 \sim 1.0\,\text{V}$)라 $V_{DS}$가 메인과 다르므로 $V_{DS}$ 정합으로 복사 오차 억제 (ii) $V_{gate\_top}$ 루프 노드를 출력 스위칭 노이즈로부터 차폐.
+- **소자를 셀 내부에 두고 전류 핀만 내보낸 이유:** $V_{gate\_top}$은 BGR 피드백 루프의 핵심 노드라 핀으로 빼 칩을 가로지르면 RO(100 MHz급)·부하 스위칭이 결합해 전 미러 전류를 변조함 ($V_{ref}$ 리플 유발). 전류 핀 `IB_EA`는 수신단 임피던스가 $1/g_m$ (수 $\text{k}\Omega$)이라 노이즈 결합에 둔감함.
+- **결과:** $I_{B,EA} = 2.564228\,\mu\text{A}$ ($+0.04\%$), compliance $0 \sim 3.00\,\text{V}$, $R_{out} \approx 820\,\text{M}\Omega$, $\text{TC} = -524\,\text{ppm}/^\circ\text{C}$, $\sigma = 2.63\%$. 코어 무섭동 (`XM_top1` @m[id] $1.025294\times 10^{-5}\,\text{A}$ 6자리 동일).
+
+## [2026-07] 벌크 결선 오류 4건 정정
+- **발견 경위:** 플랫 TB ➔ 계층 심볼 분리 작업 중 넷리스트 4번째 단자 점검 과정에서 발견. 등화쌍 cascode 수술 당시 $V_{casc\_n}$ bias 분기를 추가하며 유입된 것으로 추정됨.
+- **내용:**
+  * `XXM_cn_d1`, `XXM_cn_d2`: 벌크가 `net9` (자기 소스)로 부유 ➔ `VGND`로 수정. (nfet 벌크는 p-기판이므로 dnwell 없이 부유 웰은 물리적으로 불가능)
+  * `XXM4`, `XXM4c`: 벌크가 글로벌 `0` ➔ `VGND` 포트로 수정 (LVS 미스매치 방지).
+- **회로 영향:** $V_{casc\_n} = 2.4829 \rightarrow 2.6086\,\text{V}$ ($+126\,\text{mV}$, 바디 효과 정상 반영), $V_{mid1} = 1.9628 \rightarrow 1.9687\,\text{V}$, line reg $= 0.0840 \rightarrow 0.0834\,\%/\text{V}$.
+- **★ 영향 없음이 확인된 항목과 그 이유:**
+  * $V_{min}$ (tt $2.190$ / ss$-40$ $2.380$ / ff$125$ $2.050\,\text{V}$) 세 코너 $\pm 0\,\text{mV}$, $V_{alive}$ 전 램프율 $\pm 1\,\text{mV}$ 이내, $I_{B,EA}$ 3 pA, $V_{ref}$ 1 µV, TC $7.5\,\text{ppm}/^\circ\text{C}$ 동일.
+  * 이유: VAPWR 하한을 정하는 임계 스택은 `VAPWR` ➔ PMOS cascode ➔ `V_mid1` 이고 `V_mid1` 은 `XM3` 의 $V_{GS}$가 전류로 고정하므로 $+6\,\text{mV}$만 이동함. $V_{casc\_n}$은 GND 기준 diode+저항 스택이라 VAPWR과 함께 오르내리며 고정 문턱을 만들지 않음 — 등화쌍 cascode 수술로 line reg를 잡은 것과 동일한 성질이 기동 특성에서도 작동함.
+- **교훈:** 넷리스트 검수 시 D/G/S 뿐만 아니라 4번째 단자(벌크)를 반드시 확인한다.
+
+## [2026-07] 계층 심볼화 (bgr_core)
+- **작업:** `bgr_core_tb.sch` (플랫)에서 코어를 `bgr_core.sch`로 분리하고 심볼 생성.
+- **핀 4개:** `.subckt bgr_core VAPWR VREF_LOW IB_EA VGND`
+  * `*.iopin VAPWR`, `*.opin VREF_LOW`, `*.opin IB_EA`, `*.iopin VGND`
+- **LVS 대비:** 서브회로 내부의 글로벌 `0` 참조를 전부 `VGND` 포트로 교체.
+- **등가성 검증 (동일 op, 플랫 vs 계층):**
+  * $v(vref\_low)$: `1.186591` = `1.186591`
+  * $v(v\_casc\_n)$: `2.608633` = `2.608633`
+  * $v(v\_mid1)$: `1.968699` = `1.968699`
+  * `XM_top1` id: `1.025294e-05` = `1.025294e-05`
+  * `tap` id: `2.564175` vs `2.564245 µA` (70 pA, 부하 방식 차이)
+  * $-i(vsource)$: `62.27277` vs `62.27285 µA`
+- **이원화 유지:** 플랫 TB(`bgr_core_tb.sch`)는 BGR 내부 검증 스크립트(`mc_loop_tap.py`, staircase, ramp) 재사용용, 계층 TB(`bgr_core_tb2.sch`)는 심볼/통합 검증용으로 병행 유지. 회로 변경 시 양쪽 스키매틱 모두 반영 필요.
+
+## [2026-07] E6 리스크 관련 BGR 측 입력 데이터 산출
+- **분석:** $V_{alive} / t_{alive}$ 표 (7점) 및 경계 램프율 ss/$-40 \approx 90\,\text{mV}/\mu\text{s}$, tt $\approx 117\,\text{mV}/\mu\text{s}$ 산출 완료.
+- **★ 판정:** 게이트 노출은 최악 코너 전용이 아니라 전 코너 현상 (tt @$330\,\text{mV}/\mu\text{s}$에서도 $333\,\text{mV}$ 노출). 최악 노출 창 $1.47\,\mu\text{s}$ (ss/$-40$ @$330\,\text{mV}/\mu\text{s}$).
+- **검출 주의사항:** TB의 이상 전압원 부하($0.95\,\text{V}$)가 램프 초기에 tap PMOS의 드레인-웰 접합을 순바이어스시켜 $t=0$에 $3.18\,\mu\text{A}$가 잡힘. "앞에서부터 90% 도달점"을 찾으면 index 0($VAPWR=0$)이 반환되므로 뒤에서부터 탐색해야 함. 실제 EA 수신단은 접지 기준 다이오드라 이 현상은 TB 전용임.
+
 

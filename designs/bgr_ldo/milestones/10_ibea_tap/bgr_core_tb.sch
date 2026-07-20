@@ -206,11 +206,10 @@ N -960 -310 -960 -260 {lab=cn_mid}
 N -960 -280 -900 -280 {lab=cn_mid}
 N -900 -280 -900 -230 {lab=cn_mid}
 N -920 -230 -900 -230 {lab=cn_mid}
-N -1010 -340 -960 -340 {lab=#net9}
-N -1010 -340 -1010 -230 {lab=#net9}
-N -1010 -230 -960 -230 {lab=#net9}
-N -1010 -230 -1010 -160 {lab=#net9}
-N -1010 -160 -960 -160 {lab=#net9}
+N -1010 -340 -960 -340 {lab=0}
+N -1010 -340 -1010 -230 {lab=0}
+N -1010 -230 -960 -230 {lab=0}
+N -1010 -230 -1010 -160 {lab=0}
 N -240 -430 -240 -330 {lab=V_mid1}
 N -960 -200 -960 -60 {lab=#net9}
 N -960 -0 -960 70 {lab=0}
@@ -247,6 +246,8 @@ N 90 70 400 70 {lab=0}
 N 400 -220 440 -220 {lab=0}
 N 440 -220 440 -160 {lab=0}
 N 400 -160 440 -160 {lab=0}
+N -1010 -160 -1010 -30 {lab=0}
+N -70 -230 90 -230 {lab=0}
 C {pnp_05v5.sym} -370 10 0 0 {name=XQA
 model=pnp_05v5_W0p68L0p68
 m=1
@@ -414,8 +415,6 @@ nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
 sa=0 sb=0 sd=0
 model=pfet_g5v0d10v5
 spiceprefix=X
-}
-C {lab_pin.sym} -70 -250 0 1 {name=p4 sig_type=std_logic lab=0
 }
 C {lab_pin.sym} 90 -390 0 1 {name=p5 sig_type=std_logic lab=VREF_LOW
 }

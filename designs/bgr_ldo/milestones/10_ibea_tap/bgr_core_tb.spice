@@ -49,10 +49,10 @@ XXM4c V_gate_top V_casc_n net5 0 sky130_fd_pr__nfet_g5v0d10v5 L=2 W=10 nf=1 ad=2
 + sa=0 sb=0 sd=0 mult=2 m=2
 XXM_cn_mir V_casc_n V_gate_top VAPWR VAPWR sky130_fd_pr__pfet_g5v0d10v5 L=2 W=10 nf=1 ad=2.9 as=2.9 pd=20.58 ps=20.58 nrd=0.029
 + nrs=0.029 sa=0 sb=0 sd=0 mult=1
-XXM_cn_d2 V_casc_n V_casc_n cn_mid net9 sky130_fd_pr__nfet_g5v0d10v5 L=2 W=2 nf=1 ad=0.58 as=0.58 pd=4.58 ps=4.58 nrd=0.145
-+ nrs=0.145 sa=0 sb=0 sd=0 mult=1
-XXM_cn_d1 cn_mid cn_mid net9 net9 sky130_fd_pr__nfet_g5v0d10v5 L=2 W=2 nf=1 ad=0.58 as=0.58 pd=4.58 ps=4.58 nrd=0.145 nrs=0.145
+XXM_cn_d2 V_casc_n V_casc_n cn_mid 0 sky130_fd_pr__nfet_g5v0d10v5 L=2 W=2 nf=1 ad=0.58 as=0.58 pd=4.58 ps=4.58 nrd=0.145 nrs=0.145
 + sa=0 sb=0 sd=0 mult=1
+XXM_cn_d1 cn_mid cn_mid net9 0 sky130_fd_pr__nfet_g5v0d10v5 L=2 W=2 nf=1 ad=0.58 as=0.58 pd=4.58 ps=4.58 nrd=0.145 nrs=0.145 sa=0
++ sb=0 sd=0 mult=1
 XR_cn 0 net9 0 sky130_fd_pr__res_high_po_0p69 L=91.5 mult=1
 XXM_tap_top net_tap V_gate_top VAPWR VAPWR sky130_fd_pr__pfet_g5v0d10v5 L=4 W=20 nf=1 ad=5.8 as=5.8 pd=40.58 ps=40.58 nrd=0.0145
 + nrs=0.0145 sa=0 sb=0 sd=0 mult=1
