@@ -52,4 +52,11 @@ Below are the project-specific guardrails and constraints that must be adhered t
 * **Commit Message Format:** The first line of commit messages modifying `OPEN_ITEMS.md` must list affected IDs (e.g., `docs(open-items): D6 CLOSED — ...`).
 * **Undefined Labels:** If a label is found in a document without a definition in `OPEN_ITEMS.md`, do NOT fix it; report it to the USER immediately.
 
+### 9. BOOKKEEPING.md Guardrails
+* **Canonical Source:** `designs/bgr_ldo/ldo/BOOKKEEPING.md` is the canonical ledger for prediction ↔ measurement comparisons.
+* **Append-Only Principle:** Add new rows only; NEVER edit, delete, or reorder existing prediction/measurement rows or move Section 1.4 entries.
+* **Prohibited Actions:** Estimating/interpolating numbers, modifying existing text/numbers, creating entries without explicit conditions, rounding user-provided digits, running simulations, fixing omissions/contradictions without reporting.
+* **Commit Message Format:** The first line of commit messages modifying `BOOKKEEPING.md` must describe what was recorded and include relevant labels (e.g., `docs(bookkeeping): res_high_po 3점 피팅 추가 — ...`).
+
+
 
