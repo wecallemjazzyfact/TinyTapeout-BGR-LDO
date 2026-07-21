@@ -75,7 +75,7 @@ docs(open-items): D6 CLOSED, D7 재정의 — pfet CGDO=0.194171 fF/um (tt)
 | A2 | BGR 트림 방향성 | CLOSED | 상향 확보 가능. 창 비대칭화 (고정부 38.9유닛) |
 | A3 | 노이즈 `13~19 µV/√Hz` | CLOSED | devstdin **밴드갭** 값. 우리 소자 아님 |
 | A4 | `Cc = 12.8 pF` | CLOSED | devstdin 복사값. Task 2의 **출력** |
-| A5 | `C_out` 소자·밀도 | **OPEN** | MiM 적층 **불가**(E4) → 2.0 fF/µm². 하이브리드 재검토 |
+| A5 | `C_out` 소자·밀도 | **CLOSED** | cap_mim_m3_1 m=44 (30 pF), C_c m=4 (2.72 pF), 동일 유닛 48개 |
 | A6 | RO `f≈196 MHz, I 37~50 µA` | PARTIAL | 손계산. 실제 50~75 µA 예상. **E3의 상한 제약을 받음** |
 | A7 | 타일 폭 | **CLOSED** | `DIEAREA (0 0)(145360 225760)`, `UNITS 1000` → **145.36 × 225.76 = 32,816 µm²** |
 | B1 | dropout 200/300 mV | CLOSED | A1 파생이라 무효 → C4로 재산출 |
@@ -99,9 +99,10 @@ docs(open-items): D6 CLOSED, D7 재정의 — pfet CGDO=0.194171 fF/um (tt)
 | **D7** | pass 접합캡 `Cdb`/`Csb` | OPEN | **grep 아닌 `.op` 측정으로 전환.** D4와 같은 덱 |
 | **D8** | MiM `cpmimc` / 직렬 R (`r1`,`r2`) | OPEN | 둘레항과 ESR. C_out 설계 |
 | **D10** | BGR 탭 브랜치 실측 | **OPEN** | 막는 것: Task 6 통합. 증거: 인계 문서 체크리스트 #1~5 |
+| **D11** | res_high_po_0p69 절대 산포 sigma(R) | **OPEN (부분 해소)** | 3점 피팅 확정, in-circuit 검증 완료 |
 | E1 | NMOS 입력 V_ICM | CLOSED | 마진 34 mV → PMOS 입력 |
 | E2 | `nfet_01v8` LUT 부재 | **VOID** | E1이 PMOS로 귀결되어 소멸 |
-| **E3** | 오버슈트 하드스펙 위반 | **OPEN** | Rz 필수 + release 램프. §2 |
+| **E3** | 오버슈트 하드스펙 위반 | **CLOSED** | 부하 스위치 엣지 ≥ 1.5 µs (하한 1.0 µs) 전류제한 드라이버 구동 |
 | **E4** | met5 금지 → MiM 적층 불가 | **CLOSED** | `cap2m` 상판이 via4→met5. A5 재개 사유 |
 | **E5** | W 상한의 실체 | **CLOSED(판정)** | C3/C4 아님. **I_Q ≤ 150 µA → m ≤ 60**. §2 |
 | **E6** | 기동 중 pass 게이트 부유 | **OPEN** | $C_c$ 부트스트랩 $V_{LDO} \to V_{APWR}$ 추종 (1.95V 초과 위험). 막는 것: Task 5 & Task 3 게이트 클램프 예약 |
@@ -109,6 +110,24 @@ docs(open-items): D6 CLOSED, D7 재정의 — pfet CGDO=0.194171 fF/um (tt)
 ---
 
 ## 2. 주요 항목 상세
+
+### A5 — C_out 소자 선택 **[CLOSED]**
+
+결정: cap_mim_m3_1 단층, W=L=18.3147 um 유닛 x 44 (m=44) = 30.000 pF.
+      C_c는 동일 유닛 x 4 (m=4) = 2.7273 pF. 비 정확히 11.000.
+      총 48유닛, 간격 0.84 um 포함 실효 면적 약 17,540 um^2.
+
+근거: (a) DRC capm.6이 capm 최대 치수를 20 um로 제한 — 단일 플레이트 불가.
+      (b) 동일 유닛 공유로 C_c/C_out 비가 공정·온도에 구조적으로 불변.
+          p2/UGF = (g_m,pass/g_m,EA)(C_c/C_out)/beta 이므로 이 비가 곧 위상마진이다.
+      (c) MF는 용량을 곱하지 않는다. m=N을 써야 한다 (MF=1과 MF=4 모두 678.9244 fF,
+          MF=4 m=4가 2715.698 fF). MF는 미스매치 sigma를 sqrt(N)로 나누는 항에
+          들어가므로 MC 시에는 m과 함께 적는다.
+      (d) 에지 바이어스 0.040 um 보정 필요:
+          C = 2.0(W-0.040)(L-0.040) + 0.19*2[(W-0.040)+(L-0.040)]  [fF, um]
+
+레이아웃 제약(Task 8 입력): capm.3 met3 0.14 um 둘러쌈, capm.2a 유닛 간 0.84 um,
+      capm.11 무관 met3와 1.34 um 이격. 48유닛 배열 주변으로 met3 라우팅이 밀린다.
 
 ### D6 — 게이트 오버랩 **[CLOSED]**
 
@@ -126,7 +145,7 @@ docs(open-items): D6 CLOSED, D7 재정의 — pfet CGDO=0.194171 fF/um (tt)
 | :--- | ---: | ---: |
 | fs | 0.13840 | −28.7% |
 | ff | 0.15249 | −21.5% |
-| **tt** | **0.19417** | — |
+| **tt** | **0.19417</b> | — |
 | ss | 0.23688 | +22.0% |
 | **sf** | **0.25544** | **+31.6%** |
 
