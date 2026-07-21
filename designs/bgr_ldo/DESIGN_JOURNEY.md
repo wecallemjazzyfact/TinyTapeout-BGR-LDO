@@ -1,4 +1,4 @@
-# BGR Core Design Journey (v1 ~ v6)
+,# BGR Core Design Journey (v1 ~ v6)
 
 This document records the step-by-step engineering journey, design decisions, failure analyses, and verified results for the Bandgap Reference (BGR) core.
 
@@ -117,6 +117,9 @@ graph TD
 
 ---
 
+## LDO (v7~)
+LDO 설계 및 통합 단계의 히스토리를 이하에 기술합니다.
+
 # 제2부 — LDO
 
 ## 설계 사슬: W는 마지막에 나온다
@@ -125,7 +128,6 @@ gm/Id 방법론의 요지는 사고의 역전이다. W를 먼저 정하고 시�
 스펙에서 출발해 gm/Id → 전류 → 전류밀도 조회 → W 순으로 내려온다.
 이 프로젝트에서 그 사슬은 다음과 같이 흘렀다.
 
-```
   면적 예산 + I_Q < 150 µA + 오버슈트 < 1.95 V
       ↓
   [Task 1] pass PMOS : m=40 × W10, L=0.5 µm
@@ -144,7 +146,6 @@ gm/Id 방법론의 요지는 사고의 역전이다. W를 먼저 정하고 시�
       ↓
   [Task 4] 폐루프 검증에서 C_out · R_z 확정
            C_out = 30 pF, R_z = 3유닛
-```
 
 C_out이 마지막인 이유: C_out은 안정도가 아니라 과도 드룹이 정한다. C_out을 줄이면
 UGF를 올려야 하고, UGF는 g_m,EA로 사야 하며, 그것은 I_Q다. 30 pF는
