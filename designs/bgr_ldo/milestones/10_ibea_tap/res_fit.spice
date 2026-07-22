@@ -1,0 +1,43 @@
+* res_high_po 파라미터 실측
+.lib /foss/pdks/sky130A/libs.tech/combined/sky130.lib.spice tt
+Xr00 n00 0 0 sky130_fd_pr__res_high_po_0p69 L=1.077 mult=1
+Vr00 n00 0 1.0
+Xr01 n01 0 0 sky130_fd_pr__res_high_po_0p69 L=2 mult=1
+Vr01 n01 0 1.0
+Xr02 n02 0 0 sky130_fd_pr__res_high_po_0p69 L=5 mult=1
+Vr02 n02 0 1.0
+Xr03 n03 0 0 sky130_fd_pr__res_high_po_0p69 L=10 mult=1
+Vr03 n03 0 1.0
+Xr04 n04 0 0 sky130_fd_pr__res_high_po_0p69 L=30 mult=1
+Vr04 n04 0 1.0
+Xr05 n05 0 0 sky130_fd_pr__res_high_po_0p69 L=50 mult=1
+Vr05 n05 0 1.0
+Xr10 n10 0 0 sky130_fd_pr__res_high_po_2p85 L=10 mult=1
+Vr10 n10 0 1.0
+Xr11 n11 0 0 sky130_fd_pr__res_high_po_2p85 L=30 mult=1
+Vr11 n11 0 1.0
+Xr12 n12 0 0 sky130_fd_pr__res_high_po_2p85 L=50 mult=1
+Vr12 n12 0 1.0
+Xr20 n20 0 0 sky130_fd_pr__res_high_po_5p73 L=10 mult=1
+Vr20 n20 0 1.0
+Xr21 n21 0 0 sky130_fd_pr__res_high_po_5p73 L=30 mult=1
+Vr21 n21 0 1.0
+Xr22 n22 0 0 sky130_fd_pr__res_high_po_5p73 L=50 mult=1
+Vr22 n22 0 1.0
+.control
+op
+echo ===RESFIT===
+print i(vr00)
+print i(vr01)
+print i(vr02)
+print i(vr03)
+print i(vr04)
+print i(vr05)
+print i(vr10)
+print i(vr11)
+print i(vr12)
+print i(vr20)
+print i(vr21)
+print i(vr22)
+.endc
+.end

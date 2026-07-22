@@ -94,8 +94,32 @@ c:\Users\aa\Desktop\school\TinyTapeout\
 
 #### 고시트 폴리 저항 (High-Sheet Poly Resistor)
 *   **PDK 모델명**: `sky130_fd_pr__res_high_po_0p69`
-*   **특징**: 고정밀 고저항용 폴리실리콘 저항 ($W=0.69\,\mu\text{m}$ 고정, 시트 저항 $\approx 2\,\text{k}\Omega/\text{sq}$).
-*   **온도 곡률 2차 보상**: 저항 소자의 2차 온도 계수인 `tc2 = +1.22 ppm/°C²`의 강한 양의 곡률이 BJT $V_{BE}$ 전압의 음의 비선형 곡률($T \ln(T)$ 표류)을 보완하여 BGR 출력 곡선의 S자 굴곡을 평탄화시키는 온도 2차 보상(Cubic Curvature Compensation) 기작이 존재합니다. 단, 저항 헤드의 접촉 저항($R_{head} \approx 780\,\Omega$) 성분이 기생 기여하므로 유닛 셀 단위 매칭 시 $R_{head}$를 합산한 실효 저항비를 매칭해야 합니다.
+*   **특징**: 고정밀 고저항용 폴리실리콘 저항 ($W=0.69\,\mu\text{m}$ 고정).
+*   **확정 모델 파라미터 및 저항 합성식** (LDO 3점 피팅 + BGR 단독 실측 잔차 0.007 + in-circuit 3중 검증):
+    *   **단위 저항률 (`sheet`)**: **`470.976 Ω/µm`** (시트 저항 교차 검증: $463.5\,\Omega/\mu\text{m}$)
+    *   **헤드 접촉 저항 (`head1`)**: **`262.85 Ω/단자`** (소자당 2헤드 고정 기생 저항 = **`525.70 Ω`**)
+    *   **유닛 저항 실측치 ($L=4.416\,\mu\text{m}$)**: **`2605.5 Ω`**
+    *   **N개 직렬 유닛 합성 길이 공식**: **`L_total = 5.5322 N - 1.1162`** $(\mu\text{m})$ (역산: $N = (L + 1.1162) / 5.5322$)
+    *   **최소 저항 하한**: **`525.70 Ω`** (컨택 2헤드 전압 강하 기생분)
+    *   **실제 BGR 소자 실측**: $R_1 = 16,742\,\Omega$ ($L=34.431\,\mu\text{m}$), $R_2=R_6=R_7 = 115,697\,\Omega$ ($L=244.537\,\mu\text{m}$), 실효 저항비 $R_2/R_1 = 6.911$
+    *   **변종 저항 실측치 (참고용)**:
+        *   `res_high_po_2p85`: `sheet` = $113.901\,\Omega/\mu\text{m}$, `head1` = $71.61\,\Omega$
+        *   `res_high_po_5p73`: `sheet` = $56.642\,\Omega/\mu\text{m}$, `head1` = $36.38\,\Omega$
+        *   (W비 스케일 정합 확인됨. 필요시 저저항 경로용 가용, 트림엔 `0p69` 유지)
+*   **온도 곡률 2차 보상**: 저항 소자의 2차 온도 계수인 `tc2 = +1.22 ppm/°C²`의 강한 양의 곡률이 BJT $V_{BE}$ 전압의 음의 비선형 곡률($T \ln(T)$ 표류)을 보완하여 BGR 출력 곡선의 S자 굴곡을 평탄화시키는 온도 2차 보상(Cubic Curvature Compensation) 기작이 존재합니다.
+
+#### 저항 코너 구조 (`corner_factor` 메커니즘)
+*   **sky130 폴리 시트 수식**:
+    $$\text{sw\_sky130\_fd\_pr\_\_res\_high\_po\_rs} = \{325.0 + \text{corner\_factor} \times 45.0\} + \text{MC\_PR\_SWITCH} \times \text{GAUSS}(0, 0.035, 1) \quad [\Omega/\square]$$
+*   **트랜지스터 코너 종속성**: `corner_factor`는 독립된 변수가 아니라 트랜지스터 코너(`tt`/`ss`/`ff`)가 설정하는 전역 변수입니다. 즉, 저항 코너는 독립 설정되지 않고 트랜지스터 코너에 종속됩니다 (경로: `parameters_res_high.spice`, 각 FET 코너 섹션이 include).
+*   **직관과 반대인 코너 동작 ($T=27\,^\circ\text{C}$ 실측 $R_{2,\text{eff}}$)**:
+    *   **`ff` 코너**: $122.18\,\text{k}\Omega$ ($\text{corner\_factor} > 0 \rightarrow$ **저항 High**)
+    *   **`tt` 코너**: $115.75\,\text{k}\Omega$
+    *   **`ss` 코너**: $113.93\,\text{k}\Omega$ ($\text{corner\_factor} < 0 \rightarrow$ **저항 Low**)
+    *   저항 스프레드 $\text{ff}/\text{ss} = +6.8\%$.
+*   **물리적 귀결**: $I_{B,\text{EA}}$와 $I_{\text{div}}$가 동일한 `res_high_po`를 공유하므로, `corner_factor`가 비(ratio)에서 완벽히 상쇄됩니다. **비율계량(Ratiometric) 방식이 PDK 모델 레벨에서 구조적으로 보증됨**을 입증합니다.
+
+
 
 #### PNP 바이폴라 (BJT)
 *   **PDK 모델명**: `sky130_fd_pr__pnp_05v5_W0p68L0p68`
