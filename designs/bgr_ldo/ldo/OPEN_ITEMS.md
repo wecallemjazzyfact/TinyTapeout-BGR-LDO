@@ -99,12 +99,13 @@ docs(open-items): D6 CLOSED, D7 재정의 — pfet CGDO=0.194171 fF/um (tt)
 | **D7** | pass 접합캡 `Cdb`/`Csb` | OPEN | **grep 아닌 `.op` 측정으로 전환.** D4와 같은 덱 |
 | **D8** | MiM `cpmimc` / 직렬 R (`r1`,`r2`) | OPEN | 둘레항과 ESR. C_out 설계 |
 | **D10** | BGR 탭 브랜치 실측 | **OPEN** | 막는 것: Task 6 통합. 증거: 인계 문서 체크리스트 #1~5 |
+| **D21** | thin-ox 실회로 앵커 | **CLOSED** | 부하싱크(`m=4`, geometry명시) 앵커 등록. $R_{on}=22.88\,\Omega$ |
 | E1 | NMOS 입력 V_ICM | CLOSED | 마진 34 mV → PMOS 입력 |
 | E2 | `nfet_01v8` LUT 부재 | **VOID** | E1이 PMOS로 귀결되어 소멸 |
-| **E3** | 오버슈트 하드스펙 위반 | **CLOSED** | 슬루 지배. 부하 엣지 ≥ 1.5 µs 제한으로 해소 |
+| **E3** | 오버슈트 하드스펙 위반 | **CLOSED** | 슬루 지배. RC 드라이버 엣지 1.85 µs로 해소 |
 | **E4** | met5 금지 → MiM 적층 불가 | **CLOSED** | `cap2m` 상판이 via4→met5. A5 재개 사유 |
 | **E5** | W 상한의 실체 | **CLOSED(판정)** | C3/C4 아님. **I_Q ≤ 150 µA → m ≤ 60**. §2 |
-| **E6** | 기동 중 pass 게이트 부유 | **OPEN** | $C_c$ 부트스트랩 $V_{LDO} \to V_{APWR}$ 추종 (1.95V 초과 위험). 막는 것: Task 5 & Task 3 게이트 클램프 예약 |
+| **E6** | 기동 중 pass 게이트 부유 | **CLOSED** | BGR startup 전코너 검증 완료로 fail-safe 미채택 확정 |
 
 ---
 
@@ -162,29 +163,12 @@ rs2 b1 c1 'r2'  tc1={tc1rvia3} tc2={tc2rvia3}
 미확인: `cpmimc`(둘레 용량), `r1`/`r2`(met3·via3 직렬저항).
 **ESR은 `C_out`에 LHP 영점을 만들므로 안정도에 유리할 수도 있다** — 정량화 필요.
 
-### E3 — 부하 과도 시 V_out 1.95 V 초과 **[CLOSED]**
+### E3 — 부하 슬루 제약 **[CLOSED]**
 
-**결론**: 오버슈트는 소신호가 아니라 슬루 지배. 1.95 V를 무제한 엣지로 지키려면
-      초과 전하가 C_out × 150 mV = 4.5 pC 이내여야 하고 4 mA에서 그것은 1.1 ns라
-      물리적으로 불가능하다. 부하가 우리 소유이므로 슬루를 제한해 구조적으로 해결한다.
-
-**제약**: 부하 스위치 엣지 시간 >= 1.5 us (설계목표), 1.0 us (하드 하한).
-      양방향(on/off 모두). I_step >= 1 mA인 싱크에 적용.
-      100 uA급(RO enable)은 제외 — 100 ns에서도 1.840 V(마진 110 mV)로 통과.
-
-**근거 (실소자, 폴리 기준 바이어스)**:
-  2 mA / 100 ns : hh/-40 1.9487 (통과) / tt/27 1.9713 FAIL / ll/125 2.0093 FAIL
-  2 mA / 1 us   : ll/125 1.8652  PASS 마진 85 mV, 드룹 192 -> 61 mV
-  4 mA / 1 us   : ll/125 1.8960  PASS 마진 54 mV
-  4 mA / 1.5 us : ll/125 1.8768  PASS 마진 73 mV
-  125 C가 최악 — I_EA ~ 1/R_poly가 R_poly TC +514 ppm/C로 -4.8% 감소,
-  슬루율 4.77 -> 4.54 V/us.
-
-**구현**: 싱크 스위치 게이트를 전류제한 드라이버(L이 긴 약한 인버터, 약 180 nA)로 구동.
-      순수 RC는 3.0 MOhm = 폴리 1075유닛이라 불가. 상세 사이징은 Task 5.
-
-**측정 절차 제약**: 4 mA 인가 시 V_out이 1.711 V까지 하강(-89 mV).
-      RO 주파수 측정은 부하 전환 후 정착 대기 필요.
+슬루 드라이버(RC, R_slew 295.0k + C_slew 2.727p)로 구현 완료. 게이트 엣지
+1.85us 양방향(코너산포 포함 1.61~2.09us, 하한 1.0us 통과). release/인가
+양쪽 검증 통과(REPLY_LDO_TO_BGR_SLEWDRV 참조). 브랜치 3->1 통합에 따라
+부하스펙 4mA->2.10mA 변경(§04_LDO_스펙 §2 반영).
 
 ### A5 — C_out 소자 선택 **[CLOSED]**
 
@@ -243,9 +227,23 @@ D6 보정 후 (UGF 5.3 MHz, $C_{out}$ 30 pF, 입력쌍 gm/Id 16, 총 EA ≈ 4·I
 * **막는 것**: Task 6 부하 블록 시스템 통합
 * **증거**: `00_인계_통합.md` 체크리스트 #1~5 항목
 
-### E6 — 기동 중 pass 게이트 부유 **[OPEN]**
+### D21 — thin-ox 실회로 앵커 **[CLOSED]**
 
-* **내용**: LDO 기동 과도 구간에서 $C_c$ 부트스트랩 커패시턴스로 인해 pass TR 게이트 노드가 플로팅/추종하며 $V_{LDO}$가 $V_{APWR}$ (3.3V)까지 오버슈트하는 위험. thin-ox (1.8V 정격) 부하의 1.95V 절대 한계 초과 우려.
-* **막는 것**: Task 5 (과도응답/기동 특성 검증)
-* **대책**: Task 3 스키매틱 설계 시 게이트 노드 클램프(Clamp) 스위치/회로 자리 예약
+LDO 부하싱크(nfet_01v8 W10 L0.15 m4, geometry명시, VGS=1.8 VDS=45.08mV
+VSB=0, tt/27)로 등록 완료. 실측 ID=1.9706mA gds=0.05930S(intrinsic,
+LUT대비+1.9%) Vth=0.72775V Cgg=40.887fF(triode). secant Ron=22.88옴은
+LUT(1/gds)대비+16.7%이나, 이 차이는 직렬성분(nrd/nrs, ~3.3옴)과
+secant/tangent 원리적 괴리(~2.7옴)로 분해됨(BGR REPLY_BGR_RON_GEO A/B대조).
+결론: triode 영역 Ron은 LUT 조회가 아니라 geometry명시 .op로 확정할 것
+(BGR lut/README.md 신설 규율과 동일).
+
+### E6 — 기동 중 pass 게이트 부유 — fail-safe 클램프 불채택 **[CLOSED]**
+
+BGR startup 전코너(staircase/slow-ramp, ss/-40 포함) 검증을 근거로
+LDO 자체 fail-safe 미채택 확정. 3소자 NMOS 소스팔로워 안은 바디효과로
+pass 게이트를 2.03V까지밖에 못 올려(그때 |Vsg|=1.27V > |Vth|=1.0V)
+원리적으로 pass를 못 끔을 계산·시뮬로 확인. 5소자 안(PMOS풀업+인버터2단)은
+가능하나 잔여리스크 대비 복잡도 과대. BGR 동의(REPLY_BGR_CBYP_CONFIRM,
+REPLY_BGR_RON_GEO §6).
+
 
