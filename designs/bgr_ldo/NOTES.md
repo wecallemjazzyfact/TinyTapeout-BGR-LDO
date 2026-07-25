@@ -338,9 +338,11 @@ Milestone 10 완료 시점 기준, 검증을 통과한 Startup 회로, BGR 코�
 
 ## 🔌 8. Task 6 통합 인터페이스 (LDO와 동결 확정)
 
-* **`bgr_core` 핀 포트 (4핀 고정):**
-  * 포트 구성: `VAPWR` / `VREF_LOW` / `IB_EA` / `VGND` (`.subckt bgr_core VAPWR VREF_LOW IB_EA VGND`, 심볼 `bgr/bgr_core.sym`).
-  * 트림 탭 추가 시 포트 뒤쪽에 append 배치. `bias_ok` 신호는 출력하지 않음.
+* **`bgr_core` 핀 포트 (8핀 확정):**
+  * 포트 구성: `.subckt bgr_core VAPWR VREF_LOW IB_EA TRIM0 TRIM1 TRIM2 TRIM3 VGND`
+  * ★ `VGND`가 맨 뒤로 이동함 (이전 임시 구성 `...VGND TRIM0...`에서 확정 포트로 변경).
+  * 계층 심볼: `bgr/bgr_core.sym` (8핀), 신규 `bgr/trim_sw.sym` (13핀, `nfet_01v8` 4개).
+  * 핀 매핑: `TRIM[3:0]` ↔ `ui_in[3:0]`, `ua[1]` = VDDC ($V_{out}=1.800\,\text{V}$) 트림 기준.
 * **E6 게이트 클램프 회로 (C안 확정):**
   * LDO가 $V_{NB1}$ 전위($> \approx 0.9\,\text{V}$)를 자체 판정하여 thick-oxide 다이오드 2단으로 클램프 구현.
   * A안(`sense_out` 재사용) 기각 — 극성 반대, 판정 시점 이름 불일치, 고임피던스 문제.
@@ -363,6 +365,28 @@ Milestone 10 완료 시점 기준, 검증을 통과한 Startup 회로, BGR 코�
   * E3 부하 슬루 제약 ($\ge 1\,\mu\text{s}$)이 PG 오검출을 전파 억제함.
 * **Soft-Start 불채택:**
   * 인러시 전하량이 $54\,\text{pC}$에 불과하며, 출력 램프 하강/상승은 $V_{ref}$ 기동 시간이 구조적으로 제공함.
+* **$C_{byp}$ 기동 상호작용 확인 완료:**
+  * `VREF_LOW` 노드에 $C_{byp} = 2.045\,\text{pF}$ ($m=3$) 부하를 직접 연결해도 BGR staircase 기동 파형(`tt` / `ss-40`)이 골든 파형과 100% 일치하며 $V_{alive}$ 3점이 전혀 변하지 않음.
+  * 기동 램프 지연 시간상수 $\tau = R_{out} C_{byp} \approx 121\,\text{k}\Omega \times 2.045\,\text{pF} = 248\,\text{ns}$는 BGR 기동 시간축($\mu\text{s}$ 대역) 대비 현저히 작아 기동 루프에 영향을 주지 않음을 확증함.
+* **Task 6 통합 최종 실측 성과:**
+  * 24개 통합 조건 (코너 $\times$ 온도 $\times$ 부하) 전 영역에서 최악 PM **`59.3°`** (`ll` / 125 °C / $I_{min}$), 최악 GM **`10.1 dB`** (`hh` / −40 °C / 2 mA) 달성.
+  * 트림 전 출력 전압 $V_{out} = \mathbf{1.780\,\text{V}}$, 오차 증폭기 하단 바이어스 전위 $V_{NB1} = \mathbf{1.111989\,\text{V}}$로 정합 수렴 완료.
+
+---
+
+## 🎨 9. 트림 레이아웃 고려사항 (Magic 단계)
+
+* **저항 그룹 배치:**
+  * $R_1$ ($34.4\,\mu\text{m}$) + $R_6$ + $R_7$ ($244.5 \times 2\,\mu\text{m}$) + $R_2$ 5개 세그먼트를 하나의 서펜타인(serpentine) 어레이로 공통 중심(common-centroid) 배치.
+  * $R_6 = R_7 = R_{2,total}$ 1:1:1 매칭이 곡률 보상을 유지하므로, 작은 세그먼트($b_0 \sim b_3$)를 저항 어레이 중앙에 배치하여 에칭 균일도를 확보.
+* **미세 세그먼트 유닛 매칭:**
+  * $b_0$ ($L = 1.27\,\mu\text{m}$)를 고정부 $XR2fix$ ($L = 229\,\mu\text{m}$)와 동일한 폭 및 방향 유닛의 일부로 그려야 공정 매칭이 유지됨.
+* **트림 스위치 (`trim_sw`) 레이아웃:**
+  * `trim_sw` (thin-ox)는 저항 어레이 바깥 별도 확산 영역에 배치하며, 공통 substrate tap은 `VGND`에 결합.
+  * `n_b0` ~ `n_b3` 스위치 배선은 met1을 사용하여 최대한 짧게 직결 (기생 저항이 LSB 저항에 직접 가산되는 것 방지).
+* **레이아웃 양자화 고려:**
+  * 스키매틱 저항 치수($R_1 / R_2$ 6.4 / 44.4u)가 정수 유닛이 아님. 정수 체인 구현 시 비율 오차 $-1.12\%$ 발생으로 TC 재검증 필요. $R_2 : R_6 : R_7$ 3벌 동일 + $R_1$ 단일 방식 검토 (트림 창 재계산 필요).
+
 
 
 

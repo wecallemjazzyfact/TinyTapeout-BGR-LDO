@@ -248,6 +248,7 @@ N 440 -220 440 -160 {lab=0}
 N 400 -160 440 -160 {lab=0}
 N -1010 -160 -1010 -30 {lab=0}
 N -70 -230 90 -230 {lab=0}
+N -1020 -570 -960 -570 {lab=V_casc_n}
 C {pnp_05v5.sym} -370 10 0 0 {name=XQA
 model=pnp_05v5_W0p68L0p68
 m=1
@@ -625,7 +626,7 @@ sa=0 sb=0 sd=0
 model=pfet_g5v0d10v5
 spiceprefix=X
 }
-C {lab_pin.sym} -960 -600 0 0 {name=p14 sig_type=std_logic lab=V_casc_n
+C {lab_pin.sym} -1010 -570 0 0 {name=p14 sig_type=std_logic lab=V_casc_n
 }
 C {lab_pin.sym} -720 -630 2 0 {name=p15 sig_type=std_logic lab=V_gate_top
 }

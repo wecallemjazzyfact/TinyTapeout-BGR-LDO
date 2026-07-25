@@ -76,7 +76,7 @@ docs(open-items): D6 CLOSED, D7 재정의 — pfet CGDO=0.194171 fF/um (tt)
 | A3 | 노이즈 `13~19 µV/√Hz` | CLOSED | devstdin **밴드갭** 값. 우리 소자 아님 |
 | A4 | `Cc = 12.8 pF` | CLOSED | devstdin 복사값. Task 2의 **출력** |
 | A5 | `C_out` 소자·밀도 | **CLOSED** | cap_mim_m3_1 단층, W=L=18.3147 µm 유닛 × 44 (m=44) = 30.000 pF |
-| A6 | RO `f≈196 MHz, I 37~50 µA` | PARTIAL | 손계산. 실제 50~75 µA 예상. **E3의 상한 제약을 받음** |
+| A6 | RO 전류 미확정 | **CLOSED** | $I_{RO} = 95.07\,\mu\text{A}$ ($f_{osc} = 110.89\,\text{MHz}$), $I_{max} = 2.13\,\text{mA}$ |
 | A7 | 타일 폭 | **CLOSED** | `DIEAREA (0 0)(145360 225760)`, `UNITS 1000` → **145.36 × 225.76 = 32,816 µm²** |
 | B1 | dropout 200/300 mV | CLOSED | A1 파생이라 무효 → C4로 재산출 |
 | B2 | I_load,max | CLOSED | **4 mA.** 근거는 PDN 강하·gm 변동폭 |
@@ -100,12 +100,15 @@ docs(open-items): D6 CLOSED, D7 재정의 — pfet CGDO=0.194171 fF/um (tt)
 | **D8** | MiM `cpmimc` / 직렬 R (`r1`,`r2`) | OPEN | 둘레항과 ESR. C_out 설계 |
 | **D10** | BGR 탭 브랜치 실측 | **OPEN** | 막는 것: Task 6 통합. 증거: 인계 문서 체크리스트 #1~5 |
 | **D21** | thin-ox 실회로 앵커 | **CLOSED** | 부하싱크(`m=4`, geometry명시) 앵커 등록. $R_{on}=22.88\,\Omega$ |
+| **D22** | BGR MC 평균 이동 | **OPEN** | $V_{ref}$ MC 평균 +0.83% 이동 (1.1965 V vs 1.1866 V). BGR 소관 |
 | E1 | NMOS 입력 V_ICM | CLOSED | 마진 34 mV → PMOS 입력 |
 | E2 | `nfet_01v8` LUT 부재 | **VOID** | E1이 PMOS로 귀결되어 소멸 |
 | **E3** | 오버슈트 하드스펙 위반 | **CLOSED** | 슬루 지배. RC 드라이버 엣지 1.85 µs로 해소 |
 | **E4** | met5 금지 → MiM 적층 불가 | **CLOSED** | `cap2m` 상판이 via4→met5. A5 재개 사유 |
 | **E5** | W 상한의 실체 | **CLOSED(판정)** | C3/C4 아님. **I_Q ≤ 150 µA → m ≤ 60**. §2 |
 | **E6** | 기동 중 pass 게이트 부유 | **CLOSED** | BGR startup 전코너 검증 완료로 fail-safe 미채택 확정 |
+| **E8** | power-good 불채택 | **CLOSED** | `uo_out[0]` RO 출력이 대체 (`uo_out[1]` GND 타이오프) |
+| **E9** | 트림 창 중심 재검토 | **OPEN** | MC-C ±3σ 외삽 상단 여유 0.31%로 얇음. 고정부 38.9→39.1유닛 조정 검토. BGR 소관 |
 
 ---
 
@@ -188,6 +191,13 @@ rs2 b1 c1 'r2'  tc1={tc1rvia3} tc2={tc2rvia3}
 **레이아웃 제약(Task 8 입력)**: capm.3 met3 0.14 um 둘러쌈, capm.2a 유닛 간 0.84 um,
       capm.11 무관 met3와 1.34 um 이격. 48유닛 배열 주변으로 met3 라우팅이 밀린다.
 
+### A6 — RO 전류 미확정 **[CLOSED]**
+
+링 단독 TB 실측으로 확정: I_RO = 95.07 uA (tt/27, 1.8V, 분주기 입력부하 5fF 포함).
+f_osc = 110.89 MHz. I_avg = NCVf 관계가 5fF 추가 실험(+0.99 uA vs 예측 0.998 uA)으로
+정확히 검증되어, 부하캡·단수와 무관하게 I_RO가 소자 크기로만 정해짐이 확인됨.
+I_max = I_div(46) + I_RO(95) + I_snk(1993) = 2.13 mA.
+
 ### D11 — res_high_po_0p69 절대 공정 산포 sigma(R) **[OPEN, 부분 해소]**
 
 **해소된 부분**: 모델의 결정론적 파라미터가 3점 피팅(잔차 0.00 ohm)으로 확정됐다.
@@ -237,6 +247,11 @@ secant/tangent 원리적 괴리(~2.7옴)로 분해됨(BGR REPLY_BGR_RON_GEO A/B�
 결론: triode 영역 Ron은 LUT 조회가 아니라 geometry명시 .op로 확정할 것
 (BGR lut/README.md 신설 규율과 동일).
 
+추가 실회로 앵커: RO 링(nfet_01v8 W=0.42 / pfet_01v8 W=1, L=0.15, geometry 명시,
+tt/27, VDDC 1.8V). LUT Isat 153.6 uA 대비 실효 구동전류 95.07 uA(0.61배)로,
+포화 영역 조회값을 스위칭 회로에 그대로 쓰면 안 됨을 보인다. triode Ron 건과 함께
+"LUT 조회값은 동작 영역을 확인하고 쓸 것"의 두 번째 사례.
+
 ### E6 — 기동 중 pass 게이트 부유 — fail-safe 클램프 불채택 **[CLOSED]**
 
 BGR startup 전코너(staircase/slow-ramp, ss/-40 포함) 검증을 근거로
@@ -245,5 +260,29 @@ pass 게이트를 2.03V까지밖에 못 올려(그때 |Vsg|=1.27V > |Vth|=1.0V)
 원리적으로 pass를 못 끔을 계산·시뮬로 확인. 5소자 안(PMOS풀업+인버터2단)은
 가능하나 잔여리스크 대비 복잡도 과대. BGR 동의(REPLY_BGR_CBYP_CONFIRM,
 REPLY_BGR_RON_GEO §6).
+
+### E8 — power-good 불채택 **[CLOSED]**
+
+RO 분주 출력(`uo_out[0]`)이 기능적 power-good을 대체한다. RO는 VDDC 급전이므로
+LDO가 서지 않으면 발진하지 않고, 주파수가 출력 전압에 민감하도록 설계했으므로
+(current-starved 불채택 근거) 1비트 PG보다 해상도가 높은 정보를 준다:
+토글 없음=LDO 죽음 / 토글+예상주파수=정상 / 토글+주파수이탈=전압 이상.
+별도 PG 비교기는 소자 7~9개, I_Q +2.56 uA, 문턱 정확도·히스테리시스·과도 오검출
+검증 부담을 수반하나 온칩 소비자가 없다. `uo_out[1]`은 TT 규칙대로 GND 타이오프.
+
+### D22 — BGR MC 평균 이동 **[OPEN]**
+
+LDO 통합 MC(n=100, tt/27, MM+PR)에서 V_ref 평균이 1.19646 V로 골든(tt/27)
+1.186591 V보다 +0.83% 높게 나왔다. 미스매치가 산포뿐 아니라 평균도 이동시킨
+것으로 보인다(비선형 소자의 계통 오프셋 가능성). BGR 자체 MC에서도 동일 이동이
+관측됐는지 확인 필요. 트림 창 중심 설계의 전제에 영향.
+
+### E9 — 트림 창 중심 재검토 **[OPEN]**
+
+MC-C 결과 트림 배수 필요 범위가 ±3σ 외삽에서 0.9490~1.0627, 가용 0.934~1.066
+대비 상단 여유가 0.31%로 얇다. 분포 평균(V_out 1.7953 V)이 창 중심(1.8079 V)보다
+12.6 mV 아래인 것이 원인. 고정부를 약 0.5% 키워 창을 위로 옮기는 것(예: 38.9 →
+39.1유닛, 세그먼트 5.5유닛 유지)을 검토 요청. 단 유닛 수 정의가 문서 간 상이
+(41유닛 vs L=244.537 → 44.4유닛)하므로 BGR 자체 기준으로 확인할 것.
 
 
