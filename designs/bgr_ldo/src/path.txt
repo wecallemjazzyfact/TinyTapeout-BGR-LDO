@@ -1,1 +1,0 @@
-XSCHEM_LIBRARY_PATH: :/foss/tools/xschem/share/xschem/xschem_library/devices:/foss/tools/xschem/share/xschem/xschem_library:/foss/pdks/ciel/sky130/versions/b344c97eacc2aaf8e14ae7e43e2e9dc0871de2c0/sky130A/libs.tech/xschem:/headless/.xschem/xschem_library:/foss/pdks/sky130A/libs.tech/xschem/sky130_fd_pr
