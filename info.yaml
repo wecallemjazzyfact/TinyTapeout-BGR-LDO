@@ -29,13 +29,13 @@ pinout:
   ui[1]: "trim[1]"
   ui[2]: "trim[2]"
   ui[3]: "trim[3]"
-  ui[4]: "trim[4]"
-  ui[5]: ""
+  ui[4]: "snk_en"
+  ui[5]: "ro_en"
   ui[6]: ""
   ui[7]: ""
 
   # Outputs
-  uo[0]: "PG"
+  uo[0]: "div_out"
   uo[1]: ""
   uo[2]: ""
   uo[3]: ""
@@ -45,7 +45,7 @@ pinout:
   uo[7]: ""
 
   # Bidirectional pins
-  uio[0]: "LDO_EN"
+  uio[0]: ""
   uio[1]: ""
   uio[2]: ""
   uio[3]: ""
@@ -55,12 +55,14 @@ pinout:
   uio[7]: ""
 
   # Analog pins - make sure to also set "analog_pins" above, else the pins won't be connected
-  ua[0]: "VREF"
-  ua[1]: "VLDO"
+  ua[0]: "VDDC (LDO 1.8V output, sensing only)"
+  ua[1]: "VREF_LOW (bandgap 1.2V reference)"
   ua[2]: ""
   ua[3]: ""
   ua[4]: ""
   ua[5]: ""
+  ua[6]: ""
+  ua[7]: ""
 
 # Do not change!
 yaml_version: 6
