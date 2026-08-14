@@ -1,0 +1,49 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1785283877
+<< pwell >>
+rect -235 -826 235 2188
+<< psubdiff >>
+rect -199 2118 -103 2152
+rect 103 2118 199 2152
+rect -199 2056 -165 2118
+rect -199 -756 -165 -694
+rect 165 2056 199 2118
+rect 165 -756 199 -694
+rect -199 -790 -103 -756
+rect 103 -790 199 -756
+<< psubdiffcont >>
+rect -103 2118 103 2152
+rect -199 -694 -165 2056
+rect 165 -694 199 2056
+rect -103 -790 103 -756
+<< locali >>
+rect -199 2118 -103 2152
+rect 103 2118 199 2152
+rect -199 2056 -165 2118
+rect -199 -756 -165 -694
+rect 165 2056 199 2118
+rect 165 -756 199 -694
+rect -199 -790 -103 -756
+rect 103 -790 199 -756
+<< metal1 >>
+rect -59 1992 59 2016
+rect -59 642 59 720
+rect -59 -654 59 -642
+use sky130_fd_pr__res_high_po_0p69_XDS5SC  r0
+timestamp 1785283877
+transform 1 0 0 0 1 0
+box -69 -660 69 660
+use sky130_fd_pr__res_high_po_0p69_XDS5SC  r1
+timestamp 1785283877
+transform 1 0 0 0 1 1362
+box -69 -660 69 660
+<< labels >>
+rlabel metal1 -59 2004 59 2016 0 A
+port 1 nsew
+rlabel metal1 -59 -654 59 -642 0 B
+port 2 nsew
+rlabel psubdiffcont -103 -790 103 -756 0 VGND
+port 3 nsew
+<< end >>

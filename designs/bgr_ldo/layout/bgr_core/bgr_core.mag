@@ -1,0 +1,179 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1785380327
+<< nwell >>
+rect -400 -4000 24600 4600
+use nu_n2010  nu_n2010_0
+timestamp 1785372414
+transform 1 0 -1419 0 1 -7548
+box 1419 748 1935 2924
+use nu_n2010  nu_n2010_1
+timestamp 1785372414
+transform 1 0 -419 0 1 -7548
+box 1419 748 1935 2924
+use nu_n2010  nu_n2010_2
+timestamp 1785372414
+transform 1 0 581 0 1 -7548
+box 1419 748 1935 2924
+use nu_n2010  nu_n2010_3
+timestamp 1785372414
+transform 1 0 1581 0 1 -7548
+box 1419 748 1935 2924
+use nu_n2010  nu_n2010_4
+timestamp 1785372414
+transform 1 0 2581 0 1 -7548
+box 1419 748 1935 2924
+use nu_n2010  nu_n2010_5
+timestamp 1785372414
+transform 1 0 3581 0 1 -7548
+box 1419 748 1935 2924
+use nu_n2010  nu_n2010_6
+timestamp 1785372414
+transform 1 0 4581 0 1 -7548
+box 1419 748 1935 2924
+use nu_n2010  nu_n2010_7
+timestamp 1785372414
+transform 1 0 5581 0 1 -7548
+box 1419 748 1935 2924
+use nu_n4020  nu_n4020_0
+timestamp 1785372414
+transform 1 0 -1428 0 1 -12561
+box 1428 761 2344 4937
+use nu_n4020  nu_n4020_1
+timestamp 1785372414
+transform 1 0 172 0 1 -12561
+box 1428 761 2344 4937
+use nu_n4020  nu_n4020_2
+timestamp 1785372414
+transform 1 0 1772 0 1 -12561
+box 1428 761 2344 4937
+use nu_n4020  nu_n4020_3
+timestamp 1785372414
+transform 1 0 3372 0 1 -12561
+box 1428 761 2344 4937
+use pu_p2010  pu_p2010_0
+timestamp 1785372414
+transform 1 0 430 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_1
+timestamp 1785372414
+transform 1 0 1830 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_2
+timestamp 1785372414
+transform 1 0 3230 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_3
+timestamp 1785372414
+transform 1 0 4630 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_4
+timestamp 1785372414
+transform 1 0 6030 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_5
+timestamp 1785372414
+transform 1 0 7430 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_6
+timestamp 1785372414
+transform 1 0 8830 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_7
+timestamp 1785372414
+transform 1 0 10230 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_8
+timestamp 1785372414
+transform 1 0 11630 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_9
+timestamp 1785372414
+transform 1 0 13030 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_10
+timestamp 1785372414
+transform 1 0 14230 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_11
+timestamp 1785372414
+transform 1 0 15630 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_12
+timestamp 1785372414
+transform 1 0 17030 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_13
+timestamp 1785372414
+transform 1 0 18430 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_14
+timestamp 1785372414
+transform 1 0 19830 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_15
+timestamp 1785372414
+transform 1 0 21230 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_16
+timestamp 1785372414
+transform 1 0 22630 0 1 -3200
+box -430 -400 218 1800
+use pu_p2010  pu_p2010_17
+timestamp 1785372414
+transform 1 0 24030 0 1 -3200
+box -430 -400 218 1800
+use pu_p4020  pu_p4020_0
+timestamp 1785372414
+transform 1 0 -1419 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_1
+timestamp 1785372414
+transform 1 0 381 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_2
+timestamp 1785372414
+transform 1 0 2181 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_3
+timestamp 1785372414
+transform 1 0 3981 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_4
+timestamp 1785372414
+transform 1 0 5781 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_5
+timestamp 1785372414
+transform 1 0 7581 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_6
+timestamp 1785372414
+transform 1 0 9381 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_7
+timestamp 1785372414
+transform 1 0 11181 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_8
+timestamp 1785372414
+transform 1 0 12981 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_9
+timestamp 1785372414
+transform 1 0 14781 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_10
+timestamp 1785372414
+transform 1 0 16581 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_11
+timestamp 1785372414
+transform 1 0 18381 0 1 -748
+box 1419 748 2467 4948
+use pu_p4020  pu_p4020_12
+timestamp 1785372414
+transform 1 0 20181 0 1 -748
+box 1419 748 2467 4948
+<< end >>

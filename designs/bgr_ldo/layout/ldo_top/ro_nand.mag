@@ -1,0 +1,95 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1786460098
+<< nwell >>
+rect 0 536 436 1114
+<< psubdiff >>
+rect 0 108 436 120
+rect 0 12 36 108
+rect 400 12 436 108
+rect 0 0 436 12
+<< nsubdiff >>
+rect 36 1066 400 1078
+rect 36 970 72 1066
+rect 364 970 400 1066
+rect 36 958 400 970
+<< psubdiffcont >>
+rect 36 12 400 108
+<< nsubdiffcont >>
+rect 72 970 364 1066
+<< locali >>
+rect 36 1066 400 1078
+rect 36 970 72 1066
+rect 364 970 400 1066
+rect 36 958 400 970
+rect 0 108 436 120
+rect 0 12 36 108
+rect 400 12 436 108
+rect 0 0 436 12
+<< viali >>
+rect 92 990 344 1046
+rect 56 32 380 88
+<< metal1 >>
+rect 36 1046 400 1078
+rect 36 990 92 1046
+rect 344 990 400 1046
+rect 36 958 400 990
+rect 42 836 88 958
+rect 348 836 394 958
+rect 130 752 306 836
+rect 130 700 140 752
+rect 192 700 306 752
+rect 130 636 306 700
+rect 80 438 138 595
+rect 298 438 356 595
+rect 36 332 100 406
+rect 36 280 42 332
+rect 94 280 100 332
+rect 36 206 100 280
+rect 130 206 306 406
+rect 348 120 394 206
+rect 0 88 436 120
+rect 0 32 56 88
+rect 380 32 436 88
+rect 0 0 436 32
+<< via1 >>
+rect 140 700 192 752
+rect 42 280 94 332
+<< metal2 >>
+rect 30 752 204 764
+rect 30 700 140 752
+rect 192 700 204 752
+rect 30 688 204 700
+rect 30 332 106 688
+rect 30 280 42 332
+rect 94 280 106 332
+rect 30 268 106 280
+use sky130_fd_pr__nfet_01v8_7QQFQW  sky130_fd_pr__nfet_01v8_7QQFQW_0 /foss/designs/designs/bgr_ldo/layout/bgr_core
+timestamp 1786460098
+transform 1 0 109 0 1 337
+box -73 -157 73 157
+use sky130_fd_pr__nfet_01v8_7QQFQW  sky130_fd_pr__nfet_01v8_7QQFQW_1
+timestamp 1786460098
+transform 1 0 327 0 1 337
+box -73 -157 73 157
+use sky130_fd_pr__pfet_01v8_W5ZMD6  sky130_fd_pr__pfet_01v8_W5ZMD6_0 /foss/designs/designs/bgr_ldo/layout/bgr_core
+timestamp 1786460098
+transform -1 0 109 0 -1 700
+box -109 -198 109 164
+use sky130_fd_pr__pfet_01v8_W5ZMD6  sky130_fd_pr__pfet_01v8_W5ZMD6_1
+timestamp 1786460098
+transform 1 0 327 0 -1 700
+box -109 -198 109 164
+<< labels >>
+rlabel metal1 122 510 124 512 1 A
+port 2 n
+rlabel metal1 320 510 322 512 1 B
+port 3 n
+rlabel metal1 240 740 242 742 1 Y
+port 4 n
+rlabel metal1 200 58 202 60 1 VGND
+port 5 n
+rlabel metal1 200 1016 202 1018 0 VDDC
+port 1 nsew
+<< end >>

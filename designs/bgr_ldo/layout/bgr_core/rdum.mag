@@ -1,0 +1,33 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1785481324
+<< checkpaint >>
+rect -1446 2785 1446 3053
+rect -1446 -3053 1563 2785
+rect -1329 -3321 1563 -3053
+<< xpolycontact >>
+rect -186 -1793 -48 -1361
+rect 48 -1793 186 -1361
+<< ppolyres >>
+rect -186 1655 186 1793
+rect -186 -1361 -48 1655
+rect 48 -1361 186 1655
+<< viali >>
+rect -170 -1775 -64 -1378
+rect 64 -1775 170 -1378
+<< metal1 >>
+rect -176 -1378 -58 -1366
+rect -176 -1775 -170 -1378
+rect -64 -1775 -58 -1378
+rect -176 -1787 -58 -1775
+rect 58 -1378 176 -1366
+rect 58 -1775 64 -1378
+rect 170 -1775 176 -1378
+rect 58 -1787 176 -1775
+<< labels >>
+rlabel xpolycontact -117 -1758 -117 -1758 0 R1
+port 1 nsew
+rlabel xpolycontact 117 -1758 117 -1758 0 R2
+port 2 nsew
+<< end >>

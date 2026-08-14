@@ -1,0 +1,16 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1785570364
+<< error_p >>
+rect 23844 5760 23902 5766
+rect 23844 5726 23856 5760
+rect 23844 5720 23902 5726
+rect 23844 3650 23902 3656
+rect 23844 3616 23856 3650
+rect 23844 3610 23902 3616
+use sky130_fd_pr__nfet_01v8_D6UJCY  sky130_fd_pr__nfet_01v8_D6UJCY_0
+timestamp 1785570364
+transform 1 0 23873 0 1 4688
+box -73 -1088 73 1088
+<< end >>

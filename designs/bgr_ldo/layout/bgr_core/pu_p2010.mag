@@ -1,0 +1,13 @@
+magic
+tech sky130A
+timestamp 1785372414
+<< error_p >>
+rect -215 -183 -200 883
+rect -182 -150 -167 850
+rect 61 -150 76 850
+rect 94 -183 109 883
+use sky130_fd_pr__pfet_g5v0d10v5_3XTGEW  sky130_fd_pr__pfet_g5v0d10v5_3XTGEW_0
+timestamp 1785372414
+transform 1 0 -53 0 1 350
+box -162 -550 162 550
+<< end >>

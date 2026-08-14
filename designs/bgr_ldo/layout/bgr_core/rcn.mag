@@ -1,0 +1,9 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1785302876
+use sky130_fd_pr__res_high_po_0p69_G8MLLQ  sky130_fd_pr__res_high_po_0p69_G8MLLQ_0
+timestamp 1785302876
+transform 1 0 771 0 1 1827
+box -771 -1827 771 1827
+<< end >>

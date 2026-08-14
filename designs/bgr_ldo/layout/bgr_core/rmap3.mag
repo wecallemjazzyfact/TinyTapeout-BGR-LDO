@@ -1,0 +1,13 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1786466086
+<< error_p >>
+rect -676 -7104 -640 -6850
+rect -422 -7640 -386 -7104
+rect 1216 -7640 1252 -6850
+use sky130_fd_pr__res_high_po_0p69_UYTYQC  sky130_fd_pr__res_high_po_0p69_UYTYQC_0
+timestamp 1786466086
+transform 1 0 288 0 1 -6899
+box -964 -741 964 701
+<< end >>

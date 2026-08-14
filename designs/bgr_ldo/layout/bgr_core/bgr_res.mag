@@ -1,0 +1,25 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1785326414
+use sky130_fd_pr__res_high_po_0p69_3MESU3  sky130_fd_pr__res_high_po_0p69_3MESU3_0
+timestamp 1785310797
+transform 1 0 888 0 1 1793
+box -888 -1793 888 1793
+use sky130_fd_pr__res_high_po_0p69_3MESU3  sky130_fd_pr__res_high_po_0p69_3MESU3_1
+timestamp 1785310797
+transform 1 0 2706 0 1 1793
+box -888 -1793 888 1793
+use sky130_fd_pr__res_high_po_0p69_3MESU3  sky130_fd_pr__res_high_po_0p69_3MESU3_2
+timestamp 1785310797
+transform 1 0 6342 0 1 1793
+box -888 -1793 888 1793
+use sky130_fd_pr__res_high_po_0p69_3MESU3  sky130_fd_pr__res_high_po_0p69_3MESU3_3
+timestamp 1785310797
+transform 1 0 8160 0 1 1793
+box -888 -1793 888 1793
+use sky130_fd_pr__res_high_po_0p69_Y74LVQ  sky130_fd_pr__res_high_po_0p69_Y74LVQ_0
+timestamp 1785311711
+transform 1 0 4524 0 1 1793
+box -888 -702 888 702
+<< end >>

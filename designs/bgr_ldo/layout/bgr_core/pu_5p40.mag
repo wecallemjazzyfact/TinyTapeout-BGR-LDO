@@ -1,0 +1,24 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1785372414
+<< error_s >>
+rect 1075 4256 1097 4387
+rect 997 202 1021 4202
+rect 1051 148 1097 4256
+rect 1075 17 1097 148
+rect 1109 4256 1131 4387
+rect 1109 148 1155 4256
+rect 1185 202 1209 4202
+rect 1109 17 1131 148
+<< nwell >>
+rect -400 -400 3000 4800
+use sky130_fd_pr__pfet_g5v0d10v5_FQWDJM  sky130_fd_pr__pfet_g5v0d10v5_FQWDJM_0
+timestamp 1785372414
+transform 1 0 563 0 1 2202
+box -658 -2297 658 2297
+use sky130_fd_pr__pfet_g5v0d10v5_FQWDJM  sky130_fd_pr__pfet_g5v0d10v5_FQWDJM_1
+timestamp 1785372414
+transform 1 0 1643 0 1 2202
+box -658 -2297 658 2297
+<< end >>

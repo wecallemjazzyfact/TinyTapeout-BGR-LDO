@@ -1,0 +1,8 @@
+magic
+tech sky130A
+timestamp 1785372414
+use sky130_fd_pr__pfet_g5v0d10v5_AVQM49  sky130_fd_pr__pfet_g5v0d10v5_AVQM49_0
+timestamp 1785372414
+transform 1 0 47 0 1 350
+box -247 -550 247 550
+<< end >>

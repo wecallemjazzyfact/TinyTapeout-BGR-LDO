@@ -1,0 +1,17 @@
+* NGSPICE file created from ro_inv.ext - technology: sky130A
+
+.subckt sky130_fd_pr__pfet_01v8_W5ZMD6 D S G w_n109_n198#
+X0 S G D w_n109_n198# sky130_fd_pr__pfet_01v8 ad=0.29p pd=2.58u as=0.29p ps=2.58u w=1u l=0.15u
+.ends
+
+.subckt sky130_fd_pr__nfet_01v8_AGPWC8 D S G VSUBS
+X0 S G D VSUBS sky130_fd_pr__nfet_01v8 ad=0.1218p pd=1.42u as=0.1218p ps=1.42u w=0.42u l=0.15u
+.ends
+
+.subckt ro_inv VGND
+Xsky130_fd_pr__pfet_01v8_W5ZMD6_0 sky130_fd_pr__pfet_01v8_W5ZMD6_0/D sky130_fd_pr__pfet_01v8_W5ZMD6_0/S
++ sky130_fd_pr__pfet_01v8_W5ZMD6_0/G sky130_fd_pr__pfet_01v8_W5ZMD6_0/D sky130_fd_pr__pfet_01v8_W5ZMD6
+Xsky130_fd_pr__nfet_01v8_AGPWC8_0 VGND sky130_fd_pr__pfet_01v8_W5ZMD6_0/S sky130_fd_pr__pfet_01v8_W5ZMD6_0/G
++ VGND sky130_fd_pr__nfet_01v8_AGPWC8
+.ends
+

@@ -1,0 +1,66 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1786460098
+<< nwell >>
+rect 0 536 218 1114
+<< psubdiff >>
+rect 0 108 218 120
+rect 0 12 36 108
+rect 182 12 218 108
+rect 0 0 218 12
+<< nsubdiff >>
+rect 36 1066 182 1078
+rect 36 970 72 1066
+rect 146 970 182 1066
+rect 36 958 182 970
+<< psubdiffcont >>
+rect 36 12 182 108
+<< nsubdiffcont >>
+rect 72 970 146 1066
+<< locali >>
+rect 36 1066 182 1078
+rect 36 970 72 1066
+rect 146 970 182 1066
+rect 36 958 182 970
+rect 0 108 218 120
+rect 0 12 36 108
+rect 182 12 218 108
+rect 0 0 218 12
+<< viali >>
+rect 92 990 126 1046
+rect 56 32 162 88
+<< metal1 >>
+rect 36 1046 182 1078
+rect 36 990 92 1046
+rect 126 990 182 1046
+rect 36 958 182 990
+rect 42 836 88 958
+rect 80 458 138 595
+rect 0 420 138 458
+rect 80 322 138 420
+rect 42 120 88 290
+rect 168 206 218 836
+rect 130 120 176 122
+rect 0 88 218 120
+rect 0 32 56 88
+rect 162 32 218 88
+rect 0 0 218 32
+use sky130_fd_pr__nfet_01v8_AGPWC8  sky130_fd_pr__nfet_01v8_AGPWC8_0 /foss/designs/designs/bgr_ldo/layout/bgr_core
+timestamp 1786460098
+transform 1 0 109 0 1 279
+box -73 -99 73 99
+use sky130_fd_pr__pfet_01v8_W5ZMD6  sky130_fd_pr__pfet_01v8_W5ZMD6_0 /foss/designs/designs/bgr_ldo/layout/bgr_core
+timestamp 1786460098
+transform 1 0 109 0 -1 700
+box -109 -198 109 164
+<< labels >>
+rlabel metal1 60 1016 62 1018 1 VDDC
+port 1 n
+rlabel metal1 20 438 22 440 1 A
+port 2 n
+rlabel metal1 190 520 192 522 1 Y
+port 3 n
+rlabel metal1 60 58 62 60 1 VGND
+port 4 n
+<< end >>

@@ -1,0 +1,8 @@
+magic
+tech sky130A
+timestamp 1785309306
+use sky130_fd_pr__res_high_po_0p69_2QTBQL  sky130_fd_pr__res_high_po_0p69_2QTBQL_0
+timestamp 1785309306
+transform 1 0 451 0 1 893
+box -444 -884 444 884
+<< end >>

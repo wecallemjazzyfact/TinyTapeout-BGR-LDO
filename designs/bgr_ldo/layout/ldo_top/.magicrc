@@ -1,0 +1,4 @@
+source /foss/pdks/sky130A/libs.tech/magic/sky130A.magicrc
+addpath /foss/designs/designs/bgr_ldo/layout/bgr_core
+drc style drc(full)
+drc euclidean on

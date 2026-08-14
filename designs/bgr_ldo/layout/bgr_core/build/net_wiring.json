@@ -1,0 +1,1482 @@
+{
+  "warnings": [
+    {
+      "label_name": "VGND",
+      "layer": "metal1",
+      "coords": [
+        -0.325,
+        -2.2
+      ],
+      "overlapping_layers": [
+        "locali",
+        "metal1"
+      ],
+      "message": "WARNING: Label 'VGND' at (-0.325, -2.2) overlaps multiple layers: ['locali', 'metal1']"
+    },
+    {
+      "label_name": "net3",
+      "layer": "metal2",
+      "coords": [
+        20.0,
+        52.35
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "nwell"
+      ],
+      "message": "WARNING: Label 'net3' at (20.0, 52.35) overlaps multiple layers: ['metal2', 'nwell']"
+    },
+    {
+      "label_name": "net6",
+      "layer": "metal2",
+      "coords": [
+        8.0,
+        53.25
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "nwell"
+      ],
+      "message": "WARNING: Label 'net6' at (8.0, 53.25) overlaps multiple layers: ['metal2', 'nwell']"
+    },
+    {
+      "label_name": "net2",
+      "layer": "metal2",
+      "coords": [
+        3.0,
+        54.15
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "nwell"
+      ],
+      "message": "WARNING: Label 'net2' at (3.0, 54.15) overlaps multiple layers: ['metal2', 'nwell']"
+    },
+    {
+      "label_name": "net_tap",
+      "layer": "metal2",
+      "coords": [
+        31.5,
+        55.05
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "nwell"
+      ],
+      "message": "WARNING: Label 'net_tap' at (31.5, 55.05) overlaps multiple layers: ['metal2', 'nwell']"
+    },
+    {
+      "label_name": "VREF_LOW",
+      "layer": "metal2",
+      "coords": [
+        55.0,
+        38.0
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "metal3"
+      ],
+      "message": "WARNING: Label 'VREF_LOW' at (55.0, 38.0) overlaps multiple layers: ['metal2', 'metal3']"
+    },
+    {
+      "label_name": "IB_EA",
+      "layer": "metal2",
+      "coords": [
+        55.0,
+        38.9
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "metal3"
+      ],
+      "message": "WARNING: Label 'IB_EA' at (55.0, 38.9) overlaps multiple layers: ['metal2', 'metal3']"
+    },
+    {
+      "label_name": "V_bias",
+      "layer": "metal2",
+      "coords": [
+        55.0,
+        39.8
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "metal3",
+        "nwell"
+      ],
+      "message": "WARNING: Label 'V_bias' at (55.0, 39.8) overlaps multiple layers: ['metal2', 'metal3', 'nwell']"
+    },
+    {
+      "label_name": "net7",
+      "layer": "metal2",
+      "coords": [
+        130.0,
+        13.21
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "nwell"
+      ],
+      "message": "WARNING: Label 'net7' at (130.0, 13.21) overlaps multiple layers: ['metal2', 'nwell']"
+    },
+    {
+      "label_name": "net8",
+      "layer": "metal2",
+      "coords": [
+        130.0,
+        15.45
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "nwell"
+      ],
+      "message": "WARNING: Label 'net8' at (130.0, 15.45) overlaps multiple layers: ['metal2', 'nwell']"
+    },
+    {
+      "label_name": "V_bias_n_uq0",
+      "layer": "metal2",
+      "coords": [
+        127.5,
+        -0.18
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "nwell"
+      ],
+      "message": "WARNING: Label 'V_bias_n_uq0' at (127.5, -0.18) overlaps multiple layers: ['metal2', 'nwell']"
+    },
+    {
+      "label_name": "VAPWR",
+      "layer": "viali",
+      "coords": [
+        30.0,
+        78.4
+      ],
+      "overlapping_layers": [
+        "nwell",
+        "viali"
+      ],
+      "message": "WARNING: Label 'VAPWR' at (30.0, 78.4) overlaps multiple layers: ['nwell', 'viali']"
+    },
+    {
+      "label_name": "VBE1",
+      "layer": "metal3",
+      "coords": [
+        100.0,
+        -2.1
+      ],
+      "overlapping_layers": [
+        "locali",
+        "metal1",
+        "metal3",
+        "viali"
+      ],
+      "message": "WARNING: Label 'VBE1' at (100.0, -2.1) overlaps multiple layers: ['locali', 'metal1', 'metal3', 'viali']"
+    },
+    {
+      "label_name": "VBE1_uq0",
+      "layer": "metal2",
+      "coords": [
+        22.5,
+        -1.0
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "psubdiffcont"
+      ],
+      "message": "WARNING: Label 'VBE1_uq0' at (22.5, -1.0) overlaps multiple layers: ['metal2', 'psubdiffcont']"
+    },
+    {
+      "label_name": "VBE1_uq0",
+      "layer": "metal2",
+      "coords": [
+        22.0,
+        -1.0
+      ],
+      "overlapping_layers": [
+        "metal2",
+        "psubdiffcont"
+      ],
+      "message": "WARNING: Label 'VBE1_uq0' at (22.0, -1.0) overlaps multiple layers: ['metal2', 'psubdiffcont']"
+    }
+  ],
+  "net_count": 38,
+  "nets": {
+    "VGND": {
+      "labels": [
+        {
+          "layer": "metal1",
+          "coords": [
+            -0.325,
+            -2.2
+          ],
+          "is_port": true
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal2": 651.364,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "viali": 37,
+        "psubdiffcont": 14,
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net4": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            12.0,
+            23.25
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "metal3": 826.3128,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net5": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            17.5,
+            22.25
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "metal3": 826.3128,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "V_casc_n": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            30.0,
+            35.4
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "metal3": 826.3128,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net3": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            20.0,
+            52.35
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net6": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            8.0,
+            53.25
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net2": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            3.0,
+            54.15
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net_tap": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            31.5,
+            55.05
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "V_mid1": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            20.0,
+            36.2
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "metal3": 826.3128,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "V_gate_top": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            25.0,
+            37.1
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "metal3": 826.3128,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "VREF_LOW": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            55.0,
+            38.0
+          ],
+          "is_port": false
+        },
+        {
+          "layer": "metal2",
+          "coords": [
+            136.62,
+            -36.5
+          ],
+          "is_port": true
+        }
+      ],
+      "label_count": 2,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal3": 826.3128,
+        "metal1": 796.2429,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14,
+        "mvnsubdiffcont": 4,
+        "viali": 37
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "IB_EA": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            55.0,
+            38.9
+          ],
+          "is_port": false
+        },
+        {
+          "layer": "metal2",
+          "coords": [
+            117.3,
+            -35.7
+          ],
+          "is_port": true
+        }
+      ],
+      "label_count": 2,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal3": 826.3128,
+        "metal1": 796.2429,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14,
+        "mvnsubdiffcont": 4,
+        "viali": 37
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "V_bias": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            55.0,
+            39.8
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal3": 826.3128,
+        "locali": 190.4269,
+        "metal1": 796.2429
+      },
+      "via_counts": {
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "VBE8": {
+      "labels": [
+        {
+          "layer": "via1",
+          "coords": [
+            78.19,
+            6.59
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "via1": 244,
+        "viali": 37,
+        "psubdiffcont": 14,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "n_r6m": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            95.0,
+            41.0
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal3": 826.3128,
+        "locali": 190.4269,
+        "metal1": 796.2429
+      },
+      "via_counts": {
+        "via1": 244,
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "n_r7m": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            95.0,
+            41.8
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal3": 826.3128,
+        "locali": 190.4269,
+        "metal1": 796.2429
+      },
+      "via_counts": {
+        "via1": 244,
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net1": {
+      "labels": [
+        {
+          "layer": "metal3",
+          "coords": [
+            50.0,
+            -0.28
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal3": 826.3128,
+        "metal1": 796.2429,
+        "metal2": 651.364,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via2": 54,
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via1": 244,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "V_bias_n": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            119.5,
+            20.0
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal3": 826.3128,
+        "locali": 190.4269,
+        "metal1": 796.2429
+      },
+      "via_counts": {
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "V_bias_uq0": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            138.0,
+            35.2
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "metal3": 826.3128,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via2": 54,
+        "psubdiffcont": 14,
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "V_gate_top_uq0": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            138.0,
+            -0.7
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "metal3": 826.3128,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14,
+        "mvnsubdiffcont": 4,
+        "viali": 37
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "V_su_mid": {
+      "labels": [
+        {
+          "layer": "metal1",
+          "coords": [
+            130.0,
+            38.15
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal1": 796.2429,
+        "metal3": 826.3128,
+        "locali": 190.4269,
+        "metal2": 651.364
+      },
+      "via_counts": {
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "cn_mid": {
+      "labels": [
+        {
+          "layer": "metal1",
+          "coords": [
+            138.0,
+            25.15
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal1": 796.2429,
+        "metal2": 651.364,
+        "metal3": 826.3128,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "psubdiffcont": 14,
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "sense_out": {
+      "labels": [
+        {
+          "layer": "metal1",
+          "coords": [
+            135.0,
+            35.7
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal1": 796.2429,
+        "metal2": 651.364,
+        "metal3": 826.3128,
+        "locali": 190.4269
+      },
+      "via_counts": {
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14,
+        "mvnsubdiffcont": 4,
+        "viali": 37
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net7": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            130.0,
+            13.21
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net8": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            130.0,
+            15.45
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "V_bias_n_uq0": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            127.5,
+            -0.18
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "mvnsubdiffcont": 4,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "n_b2": {
+      "labels": [
+        {
+          "layer": "via1",
+          "coords": [
+            130.0,
+            -17.37
+          ],
+          "is_port": false
+        },
+        {
+          "layer": "metal2",
+          "coords": [
+            115.2,
+            -24.8
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 2,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "locali": 190.4269,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "via1": 244,
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "n_b0": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            100.0,
+            -3.3
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "locali": 190.4269,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "n_b1": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            100.0,
+            -17.37
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "locali": 190.4269,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "via1": 244,
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "n_b3": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            116.0,
+            14.1
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "metal1": 796.2429,
+        "locali": 190.4269,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "via1": 244,
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "TRIM0": {
+      "labels": [
+        {
+          "layer": "metal1",
+          "coords": [
+            100.0,
+            -6.51
+          ],
+          "is_port": true
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal1": 796.2429,
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "TRIM1": {
+      "labels": [
+        {
+          "layer": "metal1",
+          "coords": [
+            130.0,
+            -6.51
+          ],
+          "is_port": true
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal1": 796.2429,
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "TRIM2": {
+      "labels": [
+        {
+          "layer": "metal1",
+          "coords": [
+            100.0,
+            -20.51
+          ],
+          "is_port": true
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal1": 11.12
+      },
+      "via_counts": {},
+      "total_rects": 1,
+      "bbox_um": [
+        86.1,
+        -20.71,
+        113.9,
+        -20.31
+      ]
+    },
+    "TRIM3": {
+      "labels": [
+        {
+          "layer": "metal1",
+          "coords": [
+            130.0,
+            -20.51
+          ],
+          "is_port": true
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal1": 796.2429,
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "via1": 244,
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "VAPWR": {
+      "labels": [
+        {
+          "layer": "viali",
+          "coords": [
+            30.0,
+            78.4
+          ],
+          "is_port": true
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal2": 651.364,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "viali": 37,
+        "mvnsubdiffcont": 4,
+        "via1": 244,
+        "via2": 54,
+        "psubdiffcont": 14
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "net9": {
+      "labels": [
+        {
+          "layer": "metal3",
+          "coords": [
+            110.0,
+            26.3
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "metal3": 826.3128,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal2": 651.364
+      },
+      "via_counts": {
+        "psubdiffcont": 14,
+        "viali": 37,
+        "via1": 244,
+        "via2": 54,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "VBE1": {
+      "labels": [
+        {
+          "layer": "metal3",
+          "coords": [
+            100.0,
+            -2.1
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 1,
+      "metal_areas_um2": {
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128,
+        "metal2": 651.364
+      },
+      "via_counts": {
+        "viali": 37,
+        "via2": 54,
+        "psubdiffcont": 14,
+        "via1": 244,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    },
+    "VBE1_uq0": {
+      "labels": [
+        {
+          "layer": "metal2",
+          "coords": [
+            22.5,
+            -1.0
+          ],
+          "is_port": false
+        },
+        {
+          "layer": "metal2",
+          "coords": [
+            22.0,
+            -1.0
+          ],
+          "is_port": false
+        }
+      ],
+      "label_count": 2,
+      "metal_areas_um2": {
+        "metal2": 651.364,
+        "locali": 190.4269,
+        "metal1": 796.2429,
+        "metal3": 826.3128
+      },
+      "via_counts": {
+        "psubdiffcont": 14,
+        "via1": 244,
+        "via2": 54,
+        "viali": 37,
+        "mvnsubdiffcont": 4
+      },
+      "total_rects": 2542,
+      "bbox_um": [
+        -1.8,
+        -36.7,
+        143.4,
+        79.2
+      ]
+    }
+  }
+}

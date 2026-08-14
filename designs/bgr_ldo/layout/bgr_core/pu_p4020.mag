@@ -1,0 +1,14 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1785372414
+<< error_p >>
+rect 1419 782 1449 4914
+rect 1485 848 1515 4848
+rect 2371 848 2401 4848
+rect 2437 782 2467 4914
+use sky130_fd_pr__pfet_g5v0d10v5_9KY2DD  sky130_fd_pr__pfet_g5v0d10v5_9KY2DD_0
+timestamp 1785372414
+transform 1 0 1943 0 1 2848
+box -524 -2100 524 2100
+<< end >>

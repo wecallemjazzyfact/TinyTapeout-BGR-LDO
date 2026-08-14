@@ -1,0 +1,13 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1785571538
+<< error_p >>
+rect 23244 5698 23302 5704
+rect 23244 5664 23256 5698
+rect 23244 5658 23302 5664
+use sky130_fd_pr__nfet_01v8_JS995W  sky130_fd_pr__nfet_01v8_JS995W_0
+timestamp 1785571538
+transform 1 0 23273 0 1 4657
+box -73 -1057 73 1057
+<< end >>

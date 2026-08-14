@@ -1,0 +1,12 @@
+magic
+tech sky130A
+timestamp 1786463914
+<< error_p >>
+rect -43 250 -25 377
+rect 84 -18 102 250
+rect 903 -18 921 377
+use sky130_fd_pr__res_high_po_0p69_8AYTJG  sky130_fd_pr__res_high_po_0p69_8AYTJG_0
+timestamp 1786463914
+transform 1 0 439 0 1 352
+box -482 -370 482 350
+<< end >>

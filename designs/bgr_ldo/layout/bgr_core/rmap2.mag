@@ -1,0 +1,12 @@
+magic
+tech sky130A
+timestamp 1786495618
+<< error_p >>
+rect -338 -3552 -320 -3425
+rect -211 -3820 -193 -3552
+rect 608 -3820 626 -3425
+use sky130_fd_pr__res_high_po_0p69_GV849E  sky130_fd_pr__res_high_po_0p69_GV849E_0
+timestamp 1786495618
+transform 1 0 144 0 1 -3450
+box -482 -370 482 350
+<< end >>
