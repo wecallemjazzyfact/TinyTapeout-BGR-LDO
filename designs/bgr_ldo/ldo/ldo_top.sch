@@ -202,10 +202,6 @@ N -770 -430 -670 -430 {lab=VAPWR}
 N -770 10 -670 10 {lab=VGND}
 N -420 -330 -420 -290 {lab=n_cl1}
 N -420 -430 -420 -390 {lab=VAPWR}
-N -980 -280 -950 -280 {lab=Trim0b}
-N -980 -260 -950 -260 {lab=Trim1b}
-N -980 -240 -950 -240 {lab=Trim2b}
-N -980 -220 -950 -220 {lab=Trim3b}
 N 1190 -180 1220 -180 {lab=VGND}
 N 1220 -180 1220 -120 {lab=VGND}
 N 1170 -210 1300 -210 {lab=drv}
@@ -235,8 +231,42 @@ N -780 -570 -780 -540 {lab=VAPWR}
 N -780 -600 -780 -570 {lab=VAPWR}
 N -780 -630 -780 -600 {lab=VAPWR}
 N -780 -670 -780 -630 {lab=VAPWR}
-N 720 -500 760 -500 {lab=#net1}
-N 720 -440 760 -440 {lab=#net2}
+N 720 -500 760 -500 {lab=SNK_EN}
+N 720 -440 760 -440 {lab=RO_EN}
+N -1050 260 -980 260 {lab=TRIM4}
+N -910 230 -910 290 {lab=Trim4b}
+N -910 350 -910 380 {lab=VGND}
+N -910 200 -870 200 {lab=VDPWR}
+N -910 320 -870 320 {lab=VGND}
+N -980 200 -950 200 {lab=TRIM4}
+N -980 200 -980 320 {lab=TRIM4}
+N -980 320 -950 320 {lab=TRIM4}
+N -870 160 -870 200 {lab=VDPWR}
+N -910 160 -870 160 {lab=VDPWR}
+N -870 320 -870 360 {lab=VGND}
+N -910 360 -870 360 {lab=VGND}
+N -910 260 -840 260 {lab=Trim4b}
+N -670 260 -600 260 {lab=TRIM5}
+N -530 230 -530 290 {lab=Trim5b}
+N -530 350 -530 380 {lab=VGND}
+N -530 200 -490 200 {lab=VDPWR}
+N -530 320 -490 320 {lab=VGND}
+N -600 200 -570 200 {lab=TRIM5}
+N -600 200 -600 320 {lab=TRIM5}
+N -600 320 -570 320 {lab=TRIM5}
+N -490 160 -490 200 {lab=VDPWR}
+N -530 160 -490 160 {lab=VDPWR}
+N -490 320 -490 360 {lab=VGND}
+N -530 360 -490 360 {lab=VGND}
+N -530 260 -460 260 {lab=Trim5b}
+N -980 -300 -950 -300 {lab=Trim0b}
+N -980 -280 -950 -280 {lab=Trim1b}
+N -980 -260 -950 -260 {lab=Trim2b}
+N -980 -240 -950 -240 {lab=Trim3b}
+N -980 -220 -950 -220 {lab=Trim4b}
+N -980 -200 -950 -200 {lab=Trim5b}
+N -910 130 -910 170 {lab=VDPWR}
+N -530 130 -530 170 {lab=VDPWR}
 C {ipin.sym} -1510 -550 0 0 {name=p14 lab=TRIM0}
 C {ipin.sym} -1510 -290 0 0 {name=p16 lab=TRIM1}
 C {ipin.sym} -1510 -10 0 0 {name=p17 lab=TRIM2}
@@ -650,22 +680,6 @@ C {lab_pin.sym} -70 -310 1 0 {name=p26 sig_type=std_logic lab=EA_Vinp
 
 }
 C {cap_mim_m3_1.sym} -420 -360 2 0 {name=C_boost model=cap_mim_m3_1 W=5 L=5 MF=1 spiceprefix=X}
-C {lab_pin.sym} -980 -260 2 1 {name=p39 sig_type=std_logic lab=Trim1b
-
-
-}
-C {lab_pin.sym} -980 -280 2 1 {name=p40 sig_type=std_logic lab=Trim0b
-
-
-}
-C {lab_pin.sym} -980 -240 2 1 {name=p41 sig_type=std_logic lab=Trim2b
-
-
-}
-C {lab_pin.sym} -980 -220 2 1 {name=p42 sig_type=std_logic lab=Trim3b
-
-
-}
 C {res_high_po_0p69.sym} 1170 -120 0 1 {name=R_slew1
 L=625.2498
 model=res_high_po_0p69
@@ -766,6 +780,114 @@ C {lab_pin.sym} 720 -500 2 1 {name=p50 sig_type=std_logic lab=SNK_EN
 }
 C {lab_pin.sym} 720 -440 2 1 {name=p51 sig_type=std_logic lab=RO_EN
 
+
+
+}
+C {ipin.sym} -1050 260 0 0 {name=p54 lab=TRIM4
+}
+C {lab_pin.sym} -840 260 2 0 {name=p55 sig_type=std_logic lab=Trim4b
+
+
+}
+C {pfet_01v8.sym} -930 200 0 0 {name=M_tip4
+W=4
+L=0.15
+nf=1
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_01v8
+spiceprefix=X
+}
+C {nfet_01v8.sym} -930 320 0 0 {name=M_tin4
+W=2
+L=0.15
+nf=1 
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=nfet_01v8
+spiceprefix=X
+}
+C {lab_pin.sym} -910 150 2 0 {name=p56 sig_type=std_logic lab=VDPWR
+
+
+}
+C {lab_pin.sym} -910 370 2 0 {name=p57 sig_type=std_logic lab=VGND
+
+
+}
+C {ipin.sym} -670 260 0 0 {name=p58 lab=TRIM5
+}
+C {lab_pin.sym} -460 260 2 0 {name=p59 sig_type=std_logic lab=Trim5b
+
+
+}
+C {pfet_01v8.sym} -550 200 0 0 {name=M_tip5
+W=4
+L=0.15
+nf=1
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=pfet_01v8
+spiceprefix=X
+}
+C {nfet_01v8.sym} -550 320 0 0 {name=M_tin5
+W=2
+L=0.15
+nf=1 
+mult=1
+ad="expr('int((@nf + 1)/2) * @W / @nf * 0.29')"
+pd="expr('2*int((@nf + 1)/2) * (@W / @nf + 0.29)')"
+as="expr('int((@nf + 2)/2) * @W / @nf * 0.29')"
+ps="expr('2*int((@nf + 2)/2) * (@W / @nf + 0.29)')"
+nrd="expr('0.29 / @W ')" nrs="expr('0.29 / @W ')"
+sa=0 sb=0 sd=0
+model=nfet_01v8
+spiceprefix=X
+}
+C {lab_pin.sym} -530 150 2 0 {name=p60 sig_type=std_logic lab=VDPWR
+
+
+}
+C {lab_pin.sym} -530 370 2 0 {name=p61 sig_type=std_logic lab=VGND
+
+
+}
+C {lab_pin.sym} -980 -280 2 1 {name=p47 sig_type=std_logic lab=Trim1b
+
+
+}
+C {lab_pin.sym} -980 -300 2 1 {name=p48 sig_type=std_logic lab=Trim0b
+
+
+}
+C {lab_pin.sym} -980 -260 2 1 {name=p52 sig_type=std_logic lab=Trim2b
+
+
+}
+C {lab_pin.sym} -980 -240 2 1 {name=p53 sig_type=std_logic lab=Trim3b
+
+
+}
+C {lab_pin.sym} -980 -220 2 1 {name=p62 sig_type=std_logic lab=Trim4b
+
+
+}
+C {lab_pin.sym} -980 -200 2 1 {name=p63 sig_type=std_logic lab=Trim5b
 
 
 }

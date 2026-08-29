@@ -181,3 +181,19 @@ repos/
 tt-analog/
 tt/
 sky130A.tech.txt
+
+# 레이아웃 중간 산출물 (2026-08-29)
+*.ext
+*.res.ext
+*.nodes
+*.sim
+*.lyrdb
+designs/bgr_ldo/layout/*/chk*.gds
+designs/bgr_ldo/layout/*/*_now*.gds
+designs/bgr_ldo/layout/*/*_chk.gds
+designs/bgr_ldo/layout/*/*.broken_bak
+designs/bgr_ldo/layout/*/d711.tcl
+designs/bgr_ldo/layout/*/loc164.tcl
+designs/bgr_ldo/layout/*/m32.tcl
+designs/bgr_ldo/layout/*/recheck.tcl
+designs/bgr_ldo/layout/*/verify.tcl

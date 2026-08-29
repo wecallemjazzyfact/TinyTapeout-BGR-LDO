@@ -7,6 +7,7 @@ F {}
 E {}
 P 4 1 -410 180 {}
 P 4 1 -410 180 {}
+P 4 1 1360 -210 {}
 N -530 -800 -350 -800 {lab=VAPWR}
 N -210 10 -170 10 {lab=VGND}
 N -210 10 -210 70 {lab=VGND}
@@ -26,10 +27,8 @@ N -390 10 -390 70 {lab=VGND}
 N -480 -190 -480 -160 {lab=VBE1}
 N -480 -190 -350 -190 {lab=VBE1}
 N 40 -50 40 0 {lab=VGND}
-N 0 0 40 0 {lab=VGND}
 N 0 -20 0 0 {lab=VGND}
 N 0 -20 0 0 {lab=VGND}
-N 0 0 0 70 {lab=VGND}
 N -130 70 0 70 {lab=VGND}
 N -520 -50 -520 0 {lab=VGND}
 N -520 0 -480 0 {lab=VGND}
@@ -215,46 +214,38 @@ N -1430 -800 -1390 -800 {lab=VAPWR}
 N -1380 70 -1150 70 {lab=VGND}
 N -350 40 -350 70 {lab=VGND}
 N -1010 -160 -1010 -30 {lab=VGND}
-N 90 70 650 70 {lab=VGND}
-N 650 30 650 70 {lab=VGND}
-N 600 0 630 -0 {lab=VGND}
-N 600 -100 630 -100 {lab=VGND}
+N 650 -70 650 -30 {lab=n_b5}
 N 600 -200 630 -200 {lab=VGND}
 N 600 -300 630 -300 {lab=VGND}
-N 600 -300 600 70 {lab=VGND}
-N 650 -270 650 -230 {lab=n_b1}
-N 650 -170 650 -130 {lab=n_b2}
-N 650 -70 650 -30 {lab=n_b3}
-N 650 -360 650 -330 {lab=n_b0}
-N 650 -360 920 -360 {lab=n_b0}
-N 920 -360 920 -220 {lab=n_b0}
-N 920 -220 950 -220 {lab=n_b0}
-N 650 -250 900 -250 {lab=n_b1}
-N 900 -250 900 -200 {lab=n_b1}
-N 900 -200 950 -200 {lab=n_b1}
-N 900 -200 900 -180 {lab=n_b1}
-N 900 -180 950 -180 {lab=n_b1}
-N 650 -160 950 -160 {lab=n_b2}
-N 900 -160 900 -140 {lab=n_b2}
-N 900 -140 950 -140 {lab=n_b2}
-N 650 -50 900 -50 {lab=n_b3}
-N 900 -120 900 -50 {lab=n_b3}
-N 900 -120 950 -120 {lab=n_b3}
-N 900 -100 950 -100 {lab=n_b3}
-N 650 70 940 70 {lab=VGND}
-N 940 -80 940 70 {lab=VGND}
-N 940 -80 950 -80 {lab=VGND}
-N 1100 -50 1100 70 {lab=VGND}
-N 940 70 1100 70 {lab=VGND}
+N 600 -400 630 -400 {lab=VGND}
+N 600 -500 630 -500 {lab=VGND}
+N 600 -400 600 -30 {lab=VGND}
+N 650 -470 650 -430 {lab=n_b1}
+N 650 -370 650 -330 {lab=n_b2}
+N 650 -270 650 -230 {lab=n_b3}
+N 650 -560 650 -530 {lab=n_b0}
+N 920 -320 950 -320 {lab=n_b1}
+N 650 -350 900 -350 {lab=n_b2}
+N 900 -350 900 -300 {lab=n_b2}
+N 900 -300 950 -300 {lab=n_b2}
+N 900 -300 900 -280 {lab=n_b2}
+N 900 -280 950 -280 {lab=n_b2}
+N 650 -260 950 -260 {lab=n_b3}
+N 900 -260 900 -240 {lab=n_b3}
+N 900 -240 950 -240 {lab=n_b3}
+N 650 -150 900 -150 {lab=n_b4}
+N 900 -220 900 -150 {lab=n_b4}
+N 900 -220 950 -220 {lab=n_b4}
+N 900 -200 950 -200 {lab=n_b4}
+N 940 -180 950 -180 {lab=n_b5}
 N 400 -540 400 -460 {lab=IB_EA}
-N 320 -360 650 -360 {lab=n_b0}
 N 90 -360 320 -360 {lab=n_b0}
 N 90 -410 90 -360 {lab=n_b0}
 N 90 -540 90 -470 {lab=VREF_LOW}
-N 1250 -180 1300 -180 {lab=TRIM0}
-N 1250 -160 1300 -160 {lab=TRIM1}
-N 1250 -140 1300 -140 {lab=TRIM2}
-N 1250 -120 1300 -120 {lab=TRIM3}
+N 1250 -280 1300 -280 {lab=TRIM1}
+N 1250 -260 1300 -260 {lab=TRIM2}
+N 1250 -240 1300 -240 {lab=TRIM3}
+N 1250 -220 1300 -220 {lab=TRIM4}
 N -1270 -530 -1250 -530 {lab=V_bias_n}
 N -1190 -620 -1190 -480 {lab=V_gate_top}
 N -1190 -620 -900 -620 {lab=V_gate_top}
@@ -314,6 +305,41 @@ N -2270 -30 -2230 -30 {lab=VGND}
 N -2250 -30 -2250 0 {lab=VGND}
 N -2250 0 -2250 30 {lab=VGND}
 N -2230 70 -2040 70 {lab=VGND}
+N 910 -180 940 -180 {lab=n_b5}
+N 1250 -300 1300 -300 {lab=TRIM0}
+N 1250 -200 1300 -200 {lab=TRIM5}
+N 1100 -100 1100 -30 {lab=VGND}
+N 90 70 600 70 {lab=VGND}
+N 600 -30 600 70 {lab=VGND}
+N 600 0 630 0 {lab=VGND}
+N 600 70 650 70 {lab=VGND}
+N 650 -50 910 -50 {lab=n_b5}
+N 910 -180 910 -50 {lab=n_b5}
+N 1100 -30 1100 70 {lab=VGND}
+N 650 70 1100 70 {lab=VGND}
+N 600 -500 600 -400 {lab=VGND}
+N 910 -450 910 -320 {lab=n_b1}
+N 650 -450 910 -450 {lab=n_b1}
+N 910 -320 920 -320 {lab=n_b1}
+N 650 -170 650 -140 {lab=n_b4}
+N 650 -80 650 -70 {lab=n_b5}
+N 600 -110 630 -110 {lab=VGND}
+N 910 -340 950 -340 {lab=n_b1}
+N 930 -360 950 -360 {lab=n_b0}
+N 930 -560 930 -360 {lab=n_b0}
+N 650 -560 930 -560 {lab=n_b0}
+N 910 -160 950 -160 {lab=n_b5}
+N 650 30 950 30 {lab=VGND}
+N 320 -360 540 -360 {lab=n_b0}
+N 540 -560 540 -360 {lab=n_b0}
+N 540 -560 650 -560 {lab=n_b0}
+N 780 -470 780 -450 {lab=n_b1}
+N 780 -560 780 -530 {lab=n_b0}
+N 760 -500 760 70 {lab=VGND}
+N 950 -140 950 30 {lab=VGND}
+N 650 30 650 70 {lab=VGND}
+N 40 0 40 70 {lab=VGND}
+N -0 -0 0 70 {lab=VGND}
 C {pnp_05v5.sym} -370 10 0 0 {name=XQA
 model=pnp_05v5_W0p68L0p68
 m=1
@@ -608,7 +634,7 @@ L=121.730
 model=res_high_po_0p69
 spiceprefix=X}
 C {res_high_po_0p69.sym} 90 -440 0 0 {name=R2fix
-L=229.410
+L=206.37
 model=res_high_po_0p69
 spiceprefix=X}
 C {lab_pin.sym} -1290 -110 2 0 {name=p11 sig_type=std_logic lab=VBE1
@@ -735,39 +761,39 @@ C {iopin.sym} -670 70 3 0 {name=p23 lab=VGND
 }
 C {opin.sym} 400 -510 0 0 {name=p5 lab=IB_EA
 }
-C {res_high_po_0p69.sym} 650 -300 0 0 {name=R2b0
+C {res_high_po_0p69.sym} 650 -500 0 0 {name=R2b0a
 L=1.27
 model=res_high_po_0p69
 spiceprefix=X}
-C {res_high_po_0p69.sym} 650 -200 0 0 {name=R2b1
-L=3.650
+C {res_high_po_0p69.sym} 650 -400 0 0 {name=R2b1
+L=1.27
 model=res_high_po_0p69
 spiceprefix=X}
-C {res_high_po_0p69.sym} 650 -100 0 0 {name=R2b2
-L=8.42
+C {res_high_po_0p69.sym} 650 -300 0 0 {name=R2b2
+L=3.65
 model=res_high_po_0p69
 spiceprefix=X}
-C {res_high_po_0p69.sym} 650 0 0 0 {name=R2b3
-L=17.96
+C {res_high_po_0p69.sym} 650 0 0 0 {name=R2b5
+L=37.25
 model=res_high_po_0p69
 spiceprefix=X}
-C {lab_pin.sym} 650 -340 0 0 {name=p7 sig_type=std_logic lab=n_b0
+C {lab_pin.sym} 650 -540 0 0 {name=p7 sig_type=std_logic lab=n_b0
 
 }
-C {lab_pin.sym} 650 -250 0 0 {name=p19 sig_type=std_logic lab=n_b1
+C {lab_pin.sym} 650 -450 0 0 {name=p19 sig_type=std_logic lab=n_b1
 
 }
-C {lab_pin.sym} 650 -150 0 0 {name=p20 sig_type=std_logic lab=n_b2
+C {lab_pin.sym} 650 -350 0 0 {name=p20 sig_type=std_logic lab=n_b2
 
 }
-C {lab_pin.sym} 650 -50 0 0 {name=p24 sig_type=std_logic lab=n_b3
+C {lab_pin.sym} 650 -250 0 0 {name=p24 sig_type=std_logic lab=n_b3
 
 }
-C {trim_sw.sym} 1100 -150 0 0 {name=x1}
-C {ipin.sym} 1300 -180 2 0 {name=p4 lab=TRIM0}
-C {ipin.sym} 1300 -160 2 0 {name=p25 lab=TRIM1}
-C {ipin.sym} 1300 -140 2 0 {name=p26 lab=TRIM2}
-C {ipin.sym} 1300 -120 2 0 {name=p27 lab=TRIM3}
+C {trim_sw.sym} 1100 -250 0 1 {name=x1}
+C {ipin.sym} 1300 -300 2 0 {name=p4 lab=TRIM0}
+C {ipin.sym} 1300 -280 2 0 {name=p25 lab=TRIM1}
+C {ipin.sym} 1300 -260 2 0 {name=p26 lab=TRIM2}
+C {ipin.sym} 1300 -240 2 0 {name=p27 lab=TRIM3}
 C {lab_pin.sym} -1260 -530 0 1 {name=p28 sig_type=std_logic lab=V_bias_n
 
 }
@@ -887,5 +913,25 @@ model=res_high_po_0p69
 spiceprefix=X}
 C {res_high_po_0p69.sym} -2270 0 0 1 {name=XDUM_RB2
 L=58.41
+model=res_high_po_0p69
+spiceprefix=X}
+C {ipin.sym} 1300 -220 2 0 {name=p30 lab=TRIM4}
+C {ipin.sym} 1300 -200 2 0 {name=p31 lab=TRIM5}
+C {res_high_po_0p69.sym} 650 -200 0 0 {name=R2b3
+L=8.42
+model=res_high_po_0p69
+spiceprefix=X}
+C {res_high_po_0p69.sym} 650 -110 0 0 {name=R2b4
+L=17.96
+model=res_high_po_0p69
+spiceprefix=X}
+C {lab_pin.sym} 650 -150 0 0 {name=p32 sig_type=std_logic lab=n_b4
+
+}
+C {lab_pin.sym} 650 -60 0 0 {name=p33 sig_type=std_logic lab=n_b5
+
+}
+C {res_high_po_0p69.sym} 780 -500 0 0 {name=R2b0b
+L=1.27
 model=res_high_po_0p69
 spiceprefix=X}

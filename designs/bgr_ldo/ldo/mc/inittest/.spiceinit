@@ -1,0 +1,3 @@
+echo SPICEINIT_LOADED_OK
+setseed 777
+option seedinfo

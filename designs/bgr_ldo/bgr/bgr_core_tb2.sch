@@ -5,9 +5,9 @@ V {}
 S {}
 F {}
 E {}
-N -210 -280 -210 -180 {lab=0}
-N -210 -280 -210 -180 {lab=0}
-N -210 -450 -210 -340 {lab=VAPWR}
+N -290 -280 -290 -180 {lab=0}
+N -290 -280 -290 -180 {lab=0}
+N -290 -450 -290 -340 {lab=VAPWR}
 N 70 -450 310 -450 {lab=VAPWR}
 N 310 -450 310 -370 {lab=VAPWR}
 N 310 -250 310 -200 {lab=0}
@@ -29,9 +29,14 @@ N -80 -320 130 -320 {lab=#net2}
 N -80 -320 -80 -260 {lab=#net2}
 N -150 -340 130 -340 {lab=#net1}
 N -150 -340 -150 -260 {lab=#net1}
-N 460 -330 530 -330 {lab=VREF_LOW}
-N 460 -290 530 -290 {lab=IB_EA}
-C {vsource.sym} -210 -310 0 0 {name=VSource value=3.3 savecurrent=false}
+N 460 -320 530 -320 {lab=VREF_LOW}
+N 460 -300 530 -300 {lab=IB_EA}
+N -290 -200 -210 -200 {lab=0}
+N -220 -360 -220 -260 {lab=#net5}
+N -220 -360 160 -360 {lab=#net5}
+N 130 -260 160 -260 {lab=#net6}
+N -290 -450 -210 -450 {lab=VAPWR}
+C {vsource.sym} -290 -310 0 0 {name=VSource value=3.3 savecurrent=false}
 C {code_shown.sym} 580 -1050 0 0 {name=SIM_CONTROL only_toplevel=false 
 value=".save all @m.xxm_su_n1.msky130_fd_pr__nfet_g5v0d10v5[id]
 .dc vsource 0 3.3 0.01
@@ -55,15 +60,17 @@ value="
 "
 spice_ignore=false
       }
-C {gnd.sym} -210 -180 0 0 {name=l8 lab=0}
+C {gnd.sym} -290 -180 0 0 {name=l8 lab=0}
 C {vsource.sym} 530 -160 0 0 {name=Vload value=0.95 savecurrent=false}
 C {gnd.sym} 530 -130 0 0 {name=l1 lab=0}
 C {lab_pin.sym} 530 -330 1 0 {name=p1 sig_type=std_logic lab=VREF_LOW}
 C {lab_pin.sym} 530 -260 2 0 {name=p2 sig_type=std_logic lab=IB_EA}
 C {lab_pin.sym} 180 -450 1 0 {name=p3 sig_type=std_logic lab=VAPWR
 }
-C {vsource.sym} -150 -230 0 0 {name=Vtrim0 value=1.8 savecurrent=false}
-C {vsource.sym} -80 -230 0 0 {name=Vtrim1 value=1.8 savecurrent=false}
-C {vsource.sym} -10 -230 0 0 {name=Vtrim2 value=1.8 savecurrent=false}
-C {vsource.sym} 60 -230 0 0 {name=Vtrim3 value=1.8 savecurrent=false}
+C {vsource.sym} -220 -230 0 0 {name=Vtrim0 value=1.8 savecurrent=false}
+C {vsource.sym} -150 -230 0 0 {name=Vtrim1 value=1.8 savecurrent=false}
+C {vsource.sym} -80 -230 0 0 {name=Vtrim2 value=1.8 savecurrent=false}
+C {vsource.sym} -10 -230 0 0 {name=Vtrim3 value=1.8 savecurrent=false}
 C {bgr_core.sym} 310 -310 0 0 {name=x1}
+C {vsource.sym} 60 -230 0 0 {name=Vtrim4 value=1.8 savecurrent=false}
+C {vsource.sym} 130 -230 0 0 {name=Vtrim5 value=1.8 savecurrent=false}

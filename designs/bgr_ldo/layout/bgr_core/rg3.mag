@@ -1,0 +1,10 @@
+magic
+tech sky130A
+timestamp 1787726166
+<< checkpaint >>
+rect -630 -630 1518 1330
+use sky130_fd_pr__res_high_po_0p69_GV849E  sky130_fd_pr__res_high_po_0p69_GV849E_0
+timestamp 0
+transform 1 0 444 0 1 350
+box -444 -350 444 350
+<< end >>

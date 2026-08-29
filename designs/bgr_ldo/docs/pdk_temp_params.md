@@ -66,38 +66,54 @@ Qsky130_fd_pr__pnp_05v5_W0p68L0p68 c b e c sky130_fd_pr__pnp_05v5_W0p68L0p68_mod
 
 ## 2. 고저항 폴리 저항 (`sky130_fd_pr__res_high_po_0p69`)
 
-### ① 온도계수 및 시트저항 수치
+### ① 시트저항 파라미터 파일 3종 및 코너 독립성
 
-| 파라미터 | 값 | 단위 | 출처 절대경로 | 행번호 | 코너 | 비고 |
+> **★ 정정 주의**: 저항 코너는 FET 코너에 종속되지 않고 **완전히 독립**입니다.
+> `tt`·`ss`·`ff` 섹션은 모두 `parameters_res_nom.spice`를 include하므로 **폴리 시트 저항($325.0\,\Omega/\square$)이 동일**합니다.
+> `corner_factor`는 전 섹션에서 `1`로 고정이며, include되는 파일에 의해 코너가 결정됩니다.
+
+| 파라미터 | 값 | 단위 | 출처 절대경로 | 행번호 | 파일 / 코너 매핑 | 비고 |
 | :--- | :---: | :---: | :--- | :---: | :---: | :--- |
-| **`TC1`** (Body 1차) | **`-1.47 × 10⁻³`** | 1/°C | `/foss/pdks/sky130A/libs.tech/combined/continuous/models_global.spice` | L85 | All | `-1470 ppm/°C` |
-| **`TC2`** (Body 2차) | **`+2.70 × 10⁻⁶`** | 1/°C² | `/foss/pdks/sky130A/libs.tech/combined/continuous/models_global.spice` | L86 | All | `+2.7 ppm/°C²` |
-| **`TNOM`** | **`30.0`** | °C | `/foss/pdks/sky130A/libs.tech/combined/continuous/models_resistors.spice` | L235 | All | 저항 기준 온도 |
-| **`rsh`** (ngspice TT) | **`325.0`** | Ω/sq | `/foss/pdks/sky130A/libs.tech/combined/continuous/parameters_res_nom.spice` | L17 | TT | 공칭 모델 시트저항 |
-| **`rsh`** (ngspice High) | **`370.0`** | Ω/sq | `/foss/pdks/sky130A/libs.tech/combined/continuous/parameters_res_high.spice` | L17 | SS | `325.0 + 45.0` |
-| **`rsh`** (ngspice Low) | **`277.0`** | Ω/sq | `/foss/pdks/sky130A/libs.tech/combined/continuous/parameters_res_low.spice` | L17 | FF | `325.0 - 48.0` |
+| **`rsh`** (`res_nom`) | **`325.0`** | Ω/sq | `/foss/pdks/sky130A/.../parameters_res_nom.spice` | L17 | `tt`, `ss`, `ff`, `sf`, `fs` 등 | `{325.0 + cf*0.0}` |
+| **`rsh`** (`res_high`) | **`370.0`** | Ω/sq | `/foss/pdks/sky130A/.../parameters_res_high.spice` | L17 | `hh`, `hl`, `ss_hh`, `ff_hh` 등 | `{325.0 + cf*45.0}` (+13.85%) |
+| **`rsh`** (`res_low`) | **`277.0`** | Ω/sq | `/foss/pdks/sky130A/.../parameters_res_low.spice` | L17 | `ll`, `lh`, `ss_ll`, `ff_ll` 등 | `{325.0 + cf*(-48.0)}` (-14.77%) |
 | **`xhrpoly`** (Magic) | **`319.8`** | Ω/sq | `/foss/pdks/sky130A/libs.tech/magic/sky130A.tech` | L5111 | Layout | `319800 mOhm/sq` |
 
-### ② 온도의존 방정식
-$$R_{body}(T) = R_{body}(T_{nom}) \cdot \left[1 + TC1 \cdot (T - T_{nom}) + TC2 \cdot (T - T_{nom})^2\right]$$
+### ② Body 및 Head 변동률 차이
+
+| 파일 | Body 시트 수식 | Body 시트 | Head 배율 수식 | Head 배율 |
+| :--- | :--- | ---: | :--- | ---: |
+| `parameters_res_nom.spice` | `{325.0 + cf*0.0}` | **325.0** Ω/□ | `{1.0 + cf*0.0}` | **1.000** |
+| `parameters_res_low.spice` | `{325.0 + cf*(-48.0)}` | **277.0** Ω/□ (−14.77%) | `{1.0 + cf*(-0.125)}` | **0.875** (−12.5%) |
+| `parameters_res_high.spice` | `{325.0 + cf*45.0}` | **370.0** Ω/□ (+13.85%) | `{1.0 + cf*0.125}` | **1.125** (+12.5%) |
+
+### ③ 온도계수 실측 정본 (Body / Head 2성분 분리)
+
+> **★ `tc1sky130_fd_pr__res_generic_pobody = -1.47e-3` (`models_global.spice` L85) 인용 오류 정정**:
+> 이 파라미터는 `res_high_po`에 적용되지 않으며, 이름이 유사한 다른 generic pobody 저항용입니다.
+> `res_high_po`의 실제 측정 TC는 **양수(+)**입니다.
+
+6점 다점 실측($L = 1, 10, 34.29, 50, 121.73, 243.46\,\mu\text{m}$, `tt`, $-40 \sim 125\,^\circ\text{C}$):
+
+$$\text{tc}_{\text{eff}}(R) = \text{TC}_{\text{body}} - \frac{(\text{TC}_{\text{body}}-\text{TC}_{\text{head}})R_{\text{head}}}{R}$$
+
+| 기준 | $\text{TC}_{\text{body}}$ | $\text{TC}_{\text{head}}$ | 비 ($\text{TC}_{\text{body}}/\text{TC}_{\text{head}}$) | 비고 |
+| :--- | :---: | :---: | :---: | :--- |
+| **$-37.5\,^\circ\text{C}$ 국소** | **`359.8 ppm/°C`** | **`79.7 ppm/°C`** | **`4.51`** | 6점 실측 2성분 피팅 RMS 0.000 ppm/°C |
+| **$30\,^\circ\text{C}$ 기준** | **`545.3 ppm/°C`** | **`120.6 ppm/°C`** | **`4.52`** | 기준 온도 환산치 (비율 완벽 일치) |
 
 ---
 
-## 3. 컨택 저항 온도계수 검증 (★ 분석 핵심)
+## 3. MC 스위치 및 BGR 함의
 
-* **Magic 상온 컨택 저항**: `152.0 Ω/contact` (`152000 mOhm`, `/foss/pdks/sky130A/libs.tech/magic/sky130A.tech` L5150~L5220)
-* **ngspice 서브회로 내부 배치 구조** (`models_resistors.spice` L212-252):
-  * `sky130_fd_pr__res_high_po` 서브회로 내부에 `rhead` (헤드/컨택 저항) 소자가 따로 수식 분리되어 존재함:
-    `rhead r0 rb rhead_model w = {weff+0.1558} l = 1`
-  * `rhead_model` 카드 수식 (`models_resistors.spice` L230):
-    `.model rhead_model r rsh = {rhead_ps*sw_poly_head_res ...}`
-  * `rhead_model` 카드 내 **`tc1`, `tc2` 온도계수 매개변수는 정의되어 있지 않음 (기본값 0)**.
-
-> **★ 핵심 결론**:
-> **"컨택 저항(Head resistance)은 온도 무의존(TC1 = 0, TC2 = 0)으로 모델링됨"**
->
-> **이론적 영향 분석**:
-> 저항 비($R_2/R_6$, $R_2/R_1$) 수식 계산 시, L에 무관하게 고정으로 붙는 헤드 저항($R_{head} \approx 345.83\,\Omega \cdot \text{head}$)은 온도가 변해도 고정($\text{TC}=0$)인 반면, 저항 몸통($R_{body}$)은 $-1470\,\text{ppm/°C}$로 변화합니다. 이로 인해 온도 변화에 따라 유효 저항 비가 미세하게 변동하여 3차 피팅 잔차(Residual) 비선형성을 유발하는 결정적 요인이 됩니다.
+* **섹션별 MC 스위치**:
+  * 기본 섹션 (`tt`, `ss`, `ff`, `ll`, `hh` 등): `MC_MM_SWITCH = 0`, `MC_PR_SWITCH = 0`
+  * `_mm` 변형 (`tt_mm`, `ll_mm` 등): `MC_MM_SWITCH = 1`, `MC_PR_SWITCH = 0` (mismatch만 켬)
+  * **저항 공정 산포(PR)는 어느 섹션도 자동으로 켜지지 않으므로**, PR을 활성화하려면 `.lib` 뒤에 `.param MC_PR_SWITCH=1`을 직접 주입해야 함.
+* **BGR 설계 함의**:
+  * $V_{\text{ref}} = \frac{R_2}{R_7}V_{BE1} + \frac{R_2}{R_1}\Delta V_{BE}$ 에서 시트 저항은 1차 상쇄됨.
+  * FET 코너(`tt`, `ss`, `ff`) 간에는 저항 파일이 `res_nom`으로 불변이므로 저항 변동이 0.
+  * `res_low` / `res_high`에서는 body와 head의 변동률 차이(+2.7%p / -1.4%p)로 인해 유효 저항비가 미세하게 드리프트(약 0.07%)하며, head/body 비중 변화로 TC가 달라지므로 **`ll` 코너에서 측정한 TC를 대표치로 인용해서는 안 됨**.
 
 ---
 
