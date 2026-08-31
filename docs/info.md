@@ -35,12 +35,17 @@ This design integrates a high-precision **Bandgap Reference (BGR)** and a high-p
 | **PSRR (DC / 100 kHz / 1 MHz)** | $V_{APWR}$ ripple rejection | **−56.5 / −27.7 / −9.2** | dB |
 | **Load Transient (1 µs)** | On-chip sink step (SNK_EN: 0 $\rightarrow$ 1) | **−55.4 / +28.8** | mV |
 | **Line Transient (10 µs)** | $V_{APWR}$ 3.0V $\leftrightarrow$ 3.6V step | **−2.49 / +1.95** | mV |
-| **Temperature Drift (tt, −40 to 85°C)** | 125°C temperature span | **1.701 (7.56 ppm/°C)** | mV |
-| **Corner Drift (ss, ff, sf)** | −40°C to 85°C | **1.87 ~ 2.47 (8.3 ~ 11.0 ppm/°C)** | mV |
-| **Corner Drift (`fs` corner)** | Fast PMOS / Slow NMOS corner | **4.964 (22.03 ppm/°C)** | mV |
+| **Temperature Drift (typ)** | tt / ss / ff, −40 to 125 °C, 166-pt sweep | **2.11 ~ 2.62 (7.1 ~ 8.8 ppm/°C)** | mV |
+| **Temperature Drift (worst)** | `sf` 3.36 / `fs` 5.00, −40 to 125 °C | **5.00 (16.9 ppm/°C)** | mV |
+| **Temperature Drift (0 to 70 °C)** | all corners, commercial range | **≤ 2.33** | mV |
 | **VGND On-Chip IR Drop** | Max load current condition | **21.3** | mV |
 
-> **Note on `fs` Corner TC**: The `fs` corner exhibits a higher temperature coefficient ($22\text{ ppm/°C}$) primarily at −40°C due to NMOS/PMOS asymmetry. Even with this variation, the total output voltage stays well within the $\pm 36\text{ mV}$ target budget ($1.8013\text{ V} \sim 1.8063\text{ V}$).
+> **Note on temperature behaviour**: measured with a 1 °C DC sweep from 125 °C down to −40 °C (166 points per corner), not a 3-point interpolation. The curve is third-order — it peaks near +5 °C, dips near +95 °C, and turns up again toward +125 °C. The `fs` corner (fast NMOS / slow PMOS) shows a sharp ~2.7 mV rise between −40 and −37 °C: the slow-PMOS mirror in the bandgap loses drive at low temperature. Above −37 °C it is as flat as the other corners (6.10 ppm/°C over −35…120 °C). Forward and reverse sweeps agree to 0.001 mV at −40 °C. All corners stay well inside the ±36 mV budget.
+
+
+![Monte-Carlo trim compression](mc6_summary.png)
+
+![Temperature coefficient per corner](tc6_corners.png)
 
 ---
 
@@ -101,8 +106,39 @@ Because TRIM5 (18,198 $\Omega$) slightly exceeds the sum of the lower 5 bits (17
 | **`uo[0]`** | Digital Out | `div_out` | Divided RO Clock Output | Divide-by-16 diagnostic clock |
 
 ### Measurement Steps
-1. Measure **`ua[1]`** (`VREF_LOW`) using a high-impedance DMM (nominally ~1.205 V at code 28).
-2. Measure **`ua[0]`** (`VDDC`) with a DMM or oscilloscope. Verify output voltage stabilizes at 1.800 V.
-3. Configure **`ui_in`** according to the LUT Trim Table to verify trim steps and tuning range.
-4. Set **`ui[4]` = 1** (`snk_en`) to engage on-chip sink load (~1.5 mA) and observe load regulation.
-5. Set **`ui[5]` = 1** (`ro_en`) to enable the diagnostic ring oscillator; measure the output frequency on **`uo[0]`** (`div_out`).
+
+1. Measure **`ua[0]`** (`VDDC`) with a DMM — nominally 1.800 V at code 28.
+   This is the regulated output and drives 1.5 mA, so probe loading is
+   negligible (a 100 kΩ load shifts it by only 0.019 mV).
+2. Derive the reference from it rather than probing `ua[1]`:
+   $$V_{REF\_LOW} = \frac{V_{DDC}}{1.4936}$$
+   The divider ratio is constant to four decimal places across all five
+   process corners.
+3. Configure **`ui_in`** per the LUT table to verify trim steps and range.
+4. Set **`ui[4]` = 1** (`snk_en`) for the on-chip ~1.5 mA sink load and
+   observe load regulation.
+5. Set **`ui[5]` = 1** (`ro_en`) to enable the ring oscillator and measure
+   the divide-by-16 output on **`uo[0]`**. Output ripple while running is
+   1.41 mV p-p on `V_DDC`.
+
+### ★ Caution — `ua[1]` (`VREF_LOW`) is unbuffered
+
+`VREF_LOW` connects directly to the error-amplifier gate with no output
+buffer. Current drawn from this pin collapses the bandgap, and because the
+LDO references it, the 1.8 V output follows:
+
+| load on ua[1] | current | ΔV_REF | ΔV_DDC |
+| :--- | ---: | ---: | ---: |
+| 10 MΩ (typical DMM) | 0.12 µA | −14.0 mV | −20.9 mV |
+| 5 MΩ (10 MΩ board + DMM) | 0.24 µA | −27.7 mV | −41.3 mV |
+| 1 MΩ (1× scope probe) | 1.08 µA | −126.7 mV | −189.3 mV |
+
+Demoboard revisions differ — the latest carries ESD diodes with no pull-down,
+the previous one has 10 MΩ mounted. With the 10 MΩ board a standing −20.9 mV
+offset is present even with nothing attached.
+
+These are DC offsets and are absorbed by re-trimming (code 28 → 26 recovers
+1.800 V under a 10 MΩ load, −2.97 mV residual), but the offset exists only
+while the pin is loaded. **Leave `ua[1]` unconnected in normal use.** If it
+must be measured directly, buffer it with a CMOS-input op-amp such as
+OPA333 or LMP7721 (pA-range input bias current).
