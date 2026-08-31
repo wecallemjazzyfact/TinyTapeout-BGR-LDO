@@ -94,7 +94,7 @@ Because TRIM5 (18,198 $\Omega$) slightly exceeds the sum of the lower 5 bits (17
 | Pin | Direction | Signal | Function | Note |
 | :--- | :---: | :--- | :--- | :--- |
 | **`ua[0]`** | Analog Out | `VDDC` | Regulated 1.8 V LDO Output | Sensing only (on-chip pass device) |
-| **`ua[1]`** | Analog Out | `VREF_LOW` | 1.20 V Bandgap Reference Output | Reference monitoring |
+| **`ua[1]`** | Analog Out | `VREF_LOW` | 1.20 V Bandgap Reference Output | ★ Unbuffered, high-Z — see Caution below |
 | **`ui[0]`** | Digital In | `trim[1]` | BGR Trim Bit 1 | Internal code bit 1 |
 | **`ui[1]`** | Digital In | `trim[2]` | BGR Trim Bit 2 | Internal code bit 2 |
 | **`ui[2]`** | Digital In | `trim[3]` | BGR Trim Bit 3 | Internal code bit 3 |
